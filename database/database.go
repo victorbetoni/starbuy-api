@@ -40,5 +40,8 @@ func Connect() (err error) {
 }
 
 func GrabDB() *sqlx.DB {
+	if err := db.Ping(); err != nil {
+		Connect()
+	}
 	return &db
 }
