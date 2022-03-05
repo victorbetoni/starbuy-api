@@ -1,6 +1,9 @@
 package util
 
 import (
+	"errors"
+
+	"github.com/badoux/checkmail"
 	"github.com/spf13/viper"
 )
 
@@ -27,4 +30,16 @@ func LoadConfig(path string, config *Config) (exception error) {
 
 	exception = viper.Unmarshal(&config)
 	return
+}
+
+func ValidateEmail(email string) error {
+	if email == "" {
+		return errors.New("Email inválido")
+	}
+
+	if err := checkmail.ValidateFormat(email); err != nil {
+		return errors.New("Email inválido")
+	}
+
+	return nil
 }
