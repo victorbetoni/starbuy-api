@@ -27,10 +27,10 @@ func Connect(db *sqlx.DB) (err error) {
 	dataSource := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=require", DBConfig.HostAddress, DBConfig.Port, DBConfig.Username, DBConfig.Password, DBConfig.Schema)
 
-	database, err := sqlx.Open(DBConfig.Driver, dataSource)
-	*db = *database
-	if err != nil {
-		return
+	var database *sqlx.DB
+	if database, err = sqlx.Open(DBConfig.Driver, dataSource); err != nil {
+		return err
 	}
+	*db = *database
 	return
 }
