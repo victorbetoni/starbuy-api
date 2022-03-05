@@ -2,7 +2,10 @@ package main
 
 import (
 	"authentication-service/database"
+	"authentication-service/router"
 	"fmt"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -17,15 +20,7 @@ func main() {
 
 	defer db.Close()
 
-	logins := []database.Login{}
-
-	err = db.Select(&logins, "SELECT * FROM login")
-	if err != nil {
-		panic(err.Error())
-	}
-
-	for _, row := range logins {
-		fmt.Println(row)
-	}
+	router := router.Build()
+	log.Fatal(http.ListenAndServe(":5000", router))
 
 }
