@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 type Login struct {
@@ -12,7 +13,10 @@ type Login struct {
 	Password string `db:"password"`
 }
 
-func Connect(db *sqlx.DB) (err error) {
+var db sqlx.DB
+
+// Connect vai criar uma conexão com o banco utilizando as variáveis de ambiente definidas na config
+func Connect() (err error) {
 	var DBConfig util.Config
 
 	fmt.Println("Starting authentication service...")
@@ -31,6 +35,10 @@ func Connect(db *sqlx.DB) (err error) {
 	if database, err = sqlx.Open(DBConfig.Driver, dataSource); err != nil {
 		return err
 	}
-	*db = *database
+	db = *database
 	return
+}
+
+func GrabDB() *sqlx.DB {
+	return &db
 }
