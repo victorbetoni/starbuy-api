@@ -16,21 +16,25 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.Error(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 
 	var login database.Login
 	if err = json.Unmarshal(body, &login); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
+		return
 	}
 
 	db := database.GrabDB()
 	var recorded database.Login
 	if err = db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	if err = security.ComparePassword(recorded.Password, login.Password); err != nil {
 		responses.Error(w, http.StatusUnauthorized, err)
+		return
 	}
 
 	responses.JSON(w, http.StatusOK, err)
@@ -41,11 +45,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.Error(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 
-	var data database.PasswordBindedUser
+	var data database.User
 	if err = json.Unmarshal(body, &data); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
+		return
 	}
 
 	db := database.GrabDB()
@@ -59,6 +65,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		err := db.Get(nil, key)
 		if (err != nil && err != sql.ErrNoRows) || err == nil {
 			responses.Error(w, http.StatusBadRequest, errors.New(value))
+			return
 		}
 	}
 
@@ -66,6 +73,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	tx.MustExec("INSERT INTO users VALUES (:username, :email, :name, :gender, :registration, :gender, :birthdate, :seller)", &data)
 	if err := tx.Commit(); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	responses.JSON(w, http.StatusCreated, nil)

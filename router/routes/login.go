@@ -7,12 +7,12 @@ import (
 
 var loginRoutes = []Route{
 	{
-		URI:    "login",
+		URI:    "/login",
 		Method: http.MethodPost,
 		Action: controllers.Login,
 	},
 	{
-		URI:    "register",
+		URI:    "/register",
 		Method: http.MethodPost,
 		Action: controllers.Register,
 	},

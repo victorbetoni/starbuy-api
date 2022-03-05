@@ -21,11 +21,7 @@ type User struct {
 	Registration string `db:"registration" json:"registration"`
 	Birthdate    string `db:"birthdate" json:"birthdate"`
 	Seller       bool   `db:"seller" json:"seller"`
-}
-
-type PasswordBindedUser struct {
-	User
-	Password string
+	Password     string
 }
 
 var db sqlx.DB
