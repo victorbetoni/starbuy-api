@@ -14,8 +14,6 @@ var loginRoutes = []Route{
 	{
 		URI:    "register",
 		Method: http.MethodPost,
-		Action: func(w http.ResponseWriter, r *http.Request) {
-
-		},
+		Action: controllers.Register,
 	},
 }

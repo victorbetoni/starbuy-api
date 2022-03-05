@@ -13,6 +13,21 @@ type Login struct {
 	Password string `db:"password"`
 }
 
+type User struct {
+	Username     string `db:"username" json:"username"`
+	Email        string `db:"email" json:"email"`
+	Name         string `db:"name" json:"name"`
+	Gender       int    `db:"gender" json:"gender"`
+	Registration string `db:"registration" json:"registration"`
+	Birthdate    string `db:"birthdate" json:"birthdate"`
+	Seller       bool   `db:"seller" json:"seller"`
+}
+
+type PasswordBindedUser struct {
+	User
+	Password string
+}
+
 var db sqlx.DB
 
 // Connect vai criar uma conexão com o banco utilizando as variáveis de ambiente definidas na config
