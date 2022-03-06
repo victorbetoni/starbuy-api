@@ -7,18 +7,22 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Config struct {
+type GlobalConfig struct {
 	HostAddress string `mapstructure:"HOST_ADDRESS"`
 	Port        string `mapstructure:"PORT"`
 	Username    string `mapstructure:"USER"`
 	Password    string `mapstructure:"PASSWORD"`
 	Schema      string `mapstructure:"SCHEMA"`
 	Driver      string `mapstructure:"DRIVER"`
+	Secret      string `mapstruct:"JWT_SIGN"`
+	PortAPI     int    `mapstruct:"API_PORT"`
 }
 
-func LoadConfig(path string, config *Config) (exception error) {
+var config GlobalConfig
+
+func LoadConfig(path string, config *GlobalConfig) (exception error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
+	viper.SetConfigName("db")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()
@@ -42,4 +46,8 @@ func ValidateEmail(email string) error {
 	}
 
 	return nil
+}
+
+func GrabConfig() GlobalConfig {
+	return config
 }

@@ -3,15 +3,18 @@ package main
 import (
 	"authentication-service/database"
 	"authentication-service/router"
-	"authentication-service/security"
+	"authentication-service/util"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-const port = 5000
-
 func main() {
+
+	var config util.GlobalConfig
+	util.LoadConfig(".", &config)
+
+	port := config.PortAPI
 
 	var err = database.Connect()
 	var db = database.GrabDB()
@@ -22,11 +25,6 @@ func main() {
 	}
 
 	defer db.Close()
-
-	erroFoda := security.ComparePassword("$2a$10$wmNoJX3C9tyC4Wie9KeIj.v1P6waCEa1omgRBQNMPGFOOJESTqk/i", "lool")
-	if erroFoda != nil {
-		fmt.Println(erroFoda.Error())
-	}
 
 	router := router.Build()
 	fmt.Println("Listening and serving port ", port)
