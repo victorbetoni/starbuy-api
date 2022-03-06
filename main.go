@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -15,8 +16,12 @@ func main() {
 
 	util.LoadConfig(".")
 
-	port := util.GrabConfig().PortAPI
-	var err = database.Connect()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = string(util.GrabConfig().PortAPI)
+	}
+
+	err := database.Connect()
 	var db = database.GrabDB()
 	if err != nil {
 		panic(err.Error())
@@ -25,6 +30,10 @@ func main() {
 	}
 
 	defer db.Close()
+
+	port, err := os.Getenv("PORT")
+	if err != nil {
+	}
 
 	router := router.Build()
 	fmt.Println("Listening and serving port ", port)
