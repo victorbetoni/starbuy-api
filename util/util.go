@@ -14,7 +14,7 @@ type GlobalConfig struct {
 	Password    string `mapstructure:"PASSWORD"`
 	Schema      string `mapstructure:"SCHEMA"`
 	Driver      string `mapstructure:"DRIVER"`
-	Secret      string `mapstruct:"JWT_SIGN"`
+	Secret      []byte `mapstruct:"JWT_SIGN"`
 	PortAPI     int    `mapstruct:"API_PORT"`
 }
 

@@ -18,7 +18,7 @@ func GenerateToken(username string) string {
 
 	var config = util.GrabConfig()
 
-	str, err := token.SignedString([]byte(config.Secret))
+	str, err := token.SignedString(config.Secret)
 
 	if err != nil {
 		log.Fatal(err)
