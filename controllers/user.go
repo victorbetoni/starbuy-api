@@ -3,6 +3,7 @@ package controllers
 import (
 	"authentication-service/database"
 	"authentication-service/model"
+	"authentication-service/repository"
 	"authentication-service/responses"
 	"authentication-service/security"
 	"database/sql"
@@ -11,6 +12,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -77,5 +80,19 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func QueryUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Path)
+	queried := mux.Vars(r)["username"]
+	fmt.Println(queried)
+	var user model.User
+
+	if err := repository.DownloadUser(queried, &user); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNotFound, err)
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	fmt.Println(user)
+	responses.JSON(w, http.StatusOK, user)
 }
