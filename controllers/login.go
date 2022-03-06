@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"authentication-service/database"
+	"authentication-service/model"
 	"authentication-service/responses"
 	"authentication-service/security"
 	"database/sql"
@@ -12,21 +13,39 @@ import (
 	"net/http"
 )
 
-func Login(w http.ResponseWriter, r *http.Request) {
+type Login struct {
+	Username string `db:"username"`
+	Password string `db:"password"`
+}
+
+type IncomingUser struct {
+	Username       string `json:"username"`
+	Email          string `json:"email"`
+	Name           string `json:"name"`
+	Gender         int    `json:"gender"`
+	Registration   string `json:"registration"`
+	Birthdate      string `json:"birthdate"`
+	Seller         bool   `json:"seller"`
+	Password       string `json:"password"`
+	ProfilePicture string `json:"profile_picture"`
+	City           string `json:"city"`
+}
+
+func Auth(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.Error(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 
-	var login database.Login
+	var login Login
 	if err = json.Unmarshal(body, &login); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
 	}
 
 	db := database.GrabDB()
-	var recorded database.Login
+	var recorded Login
 	if err = db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
@@ -48,7 +67,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data database.IncomingUser
+	var data IncomingUser
 	if err = json.Unmarshal(body, &data); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -61,7 +80,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Sprintf("SELECT * FROM users WHERE email='%s'", data.Email):       "Email já está em uso",
 	}
 
-	var found database.User
+	var found model.User
 	for key, value := range testQueries {
 		err := db.Get(&found, key)
 		if (err != nil && err != sql.ErrNoRows) || err == nil {
@@ -71,7 +90,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := db.MustBegin()
-	user := database.User{data.Username, data.Email, data.Name, data.Gender, data.Registration, data.Birthdate, data.Seller}
+	user := model.User{data.Username, data.Email, data.Name, data.Gender, data.Registration, data.Birthdate, data.Seller, data.ProfilePicture, data.City}
 	tx.NamedExec("INSERT INTO users VALUES (:username,:email,:name,:gender,:registration,:birthdate,:seller)", &user)
 	if err := tx.Commit(); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)

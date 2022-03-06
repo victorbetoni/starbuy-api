@@ -9,7 +9,7 @@ var loginRoutes = []Route{
 	{
 		URI:    "/login",
 		Method: http.MethodPost,
-		Action: controllers.Login,
+		Action: controllers.Auth,
 	},
 	{
 		URI:    "/register",
