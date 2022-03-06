@@ -79,8 +79,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	crypt, err := security.Hash(data.Password)
-	tx.MustExec("INSERT INTO login VALUES ($1,$2)", data.Username, string(crypt))
-	if err := tx.Commit(); err != nil {
+	tx2 := db.MustBegin()
+	tx2.MustExec("INSERT INTO login VALUES ($1,$2)", data.Username, string(crypt))
+	if err := tx2.Commit(); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
