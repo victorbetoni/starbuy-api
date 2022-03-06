@@ -48,7 +48,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data database.User
+	var data database.IncomingUser
 	if err = json.Unmarshal(body, &data); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -57,12 +57,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	db := database.GrabDB()
 
 	testQueries := map[string]string{
-		fmt.Sprintf("SELECT * FROM users WHERE username=%s", data.Username): "Username já está em uso",
-		fmt.Sprintf("SELECT * FROM users WHERE email=%s", data.Email):       "Email já está em uso",
+		fmt.Sprintf("SELECT * FROM users WHERE username='%s'", data.Username): "Username já está em uso",
+		fmt.Sprintf("SELECT * FROM users WHERE email='%s'", data.Email):       "Email já está em uso",
 	}
 
+	var found database.User
 	for key, value := range testQueries {
-		err := db.Get(nil, key)
+		err := db.Get(&found, key)
 		if (err != nil && err != sql.ErrNoRows) || err == nil {
 			responses.Error(w, http.StatusBadRequest, errors.New(value))
 			return
@@ -70,7 +71,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := db.MustBegin()
-	tx.MustExec("INSERT INTO users VALUES (:username, :email, :name, :gender, :registration, :gender, :birthdate, :seller)", &data)
+	user := database.User{data.Username, data.Email, data.Name, data.Gender, data.Registration, data.Birthdate, data.Seller}
+	tx.NamedExec("INSERT INTO users VALUES (:username,:email,:name,:gender,:registration,:birthdate,:seller)", &user)
 	if err := tx.Commit(); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return

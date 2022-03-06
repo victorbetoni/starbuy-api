@@ -14,14 +14,24 @@ type Login struct {
 }
 
 type User struct {
-	Username     string `db:"username" json:"username"`
-	Email        string `db:"email" json:"email"`
-	Name         string `db:"name" json:"name"`
-	Gender       int    `db:"gender" json:"gender"`
-	Registration string `db:"registration" json:"registration"`
-	Birthdate    string `db:"birthdate" json:"birthdate"`
-	Seller       bool   `db:"seller" json:"seller"`
-	Password     string
+	Username     string `db:"username"`
+	Email        string `db:"email"`
+	Name         string `db:"name"`
+	Gender       int    `db:"gender"`
+	Registration string `db:"registration"`
+	Birthdate    string `db:"birthdate"`
+	Seller       bool   `db:"seller"`
+}
+
+type IncomingUser struct {
+	Username     string `json:"username"`
+	Email        string `json:"email"`
+	Name         string `json:"name"`
+	Gender       int    `json:"gender"`
+	Registration string `json:"registration"`
+	Birthdate    string `json:"birthdate"`
+	Seller       bool   `json:"seller"`
+	Password     string `json:"password"`
 }
 
 var db sqlx.DB
