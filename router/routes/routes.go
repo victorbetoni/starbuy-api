@@ -30,6 +30,11 @@ var routes = []Route{
 		Method: http.MethodGet,
 		Action: controllers.QueryUser,
 	},
+	{
+		URI:    "/item/{id}",
+		Method: http.MethodGet,
+		Action: controllers.QueryItem,
+	},
 }
 
 func Configure(router *mux.Router) *mux.Router {

@@ -81,7 +81,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 func QueryUser(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["username"]
-	fmt.Println(queried)
 	var user model.User
 
 	if err := repository.DownloadUser(queried, &user); err != nil {
@@ -93,6 +92,5 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(user)
 	responses.JSON(w, http.StatusOK, user)
 }
