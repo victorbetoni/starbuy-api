@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"authentication-service/controllers"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -13,8 +14,26 @@ type Route struct {
 	Action func(http.ResponseWriter, *http.Request)
 }
 
+var routes = []Route{
+	{
+		URI:    "/login",
+		Method: http.MethodPost,
+		Action: controllers.Auth,
+	},
+	{
+		URI:    "/register",
+		Method: http.MethodPost,
+		Action: controllers.Register,
+	},
+	{
+		URI:    "/user/{username}",
+		Method: http.MethodGet,
+		Action: controllers.QueryUser,
+	},
+}
+
 func Configure(router *mux.Router) *mux.Router {
-	for _, route := range loginRoutes {
+	for _, route := range routes {
 		router.HandleFunc(route.URI, route.Action).Methods(route.Method)
 	}
 

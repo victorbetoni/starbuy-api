@@ -14,6 +14,7 @@ var db sqlx.DB
 func Connect() (err error) {
 
 	config := util.GrabConfig()
+	fmt.Println(config)
 
 	//Mantenha o SSLMode ativado, caso contrario ele ficara direcionando para a localhost
 	dataSource := fmt.Sprintf("host=%s port=%s user=%s "+

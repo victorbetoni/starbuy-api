@@ -26,7 +26,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := model.User{data.Username, data.Email, data.Name, data.Gender, data.Birthdate, data.Seller, data.ProfilePicture, data.City, data.Registration}
+	user := model.User{
+		Username:       data.Username,
+		Email:          data.Email,
+		Name:           data.Name,
+		Gender:         data.Gender,
+		Birthdate:      data.Birthdate,
+		Seller:         data.Seller,
+		ProfilePicture: data.ProfilePicture,
+		City:           data.City,
+		Registration:   data.Registration}
+
 	if err := user.Prepare(); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -49,13 +59,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tx := db.MustBegin()
-	tx.NamedExec("INSERT INTO users VALUES (:username,:email,:name,:gender,:registration,:birthdate,:seller)", &user)
+	tx.NamedExec("INSERT INTO users VALUES (:username,:email,:name,:gender,:registration,:birthdate,:seller,:profile_picture,:city)", &user)
 	if err := tx.Commit(); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	crypt, err := security.Hash(data.Password)
+	crypt, _ := security.Hash(data.Password)
 	tx2 := db.MustBegin()
 	tx2.MustExec("INSERT INTO login VALUES ($1,$2)", data.Username, string(crypt))
 	if err := tx2.Commit(); err != nil {
@@ -64,4 +74,8 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusCreated, nil)
+}
+
+func QueryUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Path)
 }

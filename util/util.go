@@ -14,15 +14,15 @@ type GlobalConfig struct {
 	Password    string `mapstructure:"PASSWORD"`
 	Schema      string `mapstructure:"SCHEMA"`
 	Driver      string `mapstructure:"DRIVER"`
-	Secret      []byte `mapstruct:"JWT_SIGN"`
-	PortAPI     int    `mapstruct:"API_PORT"`
+	Secret      string `mapstructure:"JWT_SIGN"`
+	PortAPI     int    `mapstructure:"API_PORT"`
 }
 
 var config GlobalConfig
 
-func LoadConfig(path string, config *GlobalConfig) (exception error) {
+func LoadConfig(path string) (exception error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("db")
+	viper.SetConfigName("app")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()

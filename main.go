@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
 
-	var config util.GlobalConfig
-	util.LoadConfig(".", &config)
+	util.LoadConfig(".")
 
-	port := config.PortAPI
-
+	port := util.GrabConfig().PortAPI
 	var err = database.Connect()
 	var db = database.GrabDB()
 	if err != nil {
