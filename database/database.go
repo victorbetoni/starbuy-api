@@ -20,7 +20,7 @@ func Connect() (err error) {
 		"password=%s dbname=%s sslmode=require", config.HostAddress, config.Port, config.Username, config.Password, config.Schema)
 
 	var database *sqlx.DB
-	if database, err = sqlx.Open(config.Driver, dataSource); err != nil {
+	if database, err = sqlx.Open(config.Driver, "postgres://ntmqwvedocrexr:36074513dd76c22fc09a0eea3dc2cd12dd6a1434fc346e45a005709c0a60ffe8@ec2-34-236-87-247.compute-1.amazonaws.com:5432/d324nv8ovevvpk"); err != nil {
 		return err
 	}
 	db = *database
