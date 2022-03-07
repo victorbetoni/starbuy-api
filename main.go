@@ -18,7 +18,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = string(util.GrabConfig().PortAPI)
+		port = fmt.Sprint(util.GrabConfig().PortAPI)
 	}
 
 	err := database.Connect()
