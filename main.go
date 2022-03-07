@@ -21,6 +21,7 @@ func main() {
 	if port == "" {
 		port = fmt.Sprint(util.GrabConfig().PortAPI)
 	}
+	fmt.Println(os.Getenv("DATABASE_URL"))
 
 	err := database.Connect()
 	var db = database.GrabDB()
