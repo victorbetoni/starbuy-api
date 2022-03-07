@@ -23,13 +23,16 @@ func main() {
 	}
 	fmt.Println(os.Getenv("DATABASE_URL"))
 
-	err := database.Connect()
+	var err = database.Connect()
 	var db = database.GrabDB()
-	db.Ping()
 	if err != nil {
 		panic(err.Error())
 	} else {
 		fmt.Println("Database connection stablished")
+	}
+	err = nil
+	if err = db.Ping(); err != nil {
+		fmt.Println(err.Error())
 	}
 
 	defer db.Close()
