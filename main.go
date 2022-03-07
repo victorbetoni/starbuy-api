@@ -17,6 +17,7 @@ func main() {
 	util.LoadConfig(".")
 
 	port := os.Getenv("PORT")
+	fmt.Println(port)
 	if port == "" {
 		port = fmt.Sprint(util.GrabConfig().PortAPI)
 	}
