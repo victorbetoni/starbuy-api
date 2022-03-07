@@ -31,12 +31,8 @@ func main() {
 
 	defer db.Close()
 
-	port, err := os.Getenv("PORT")
-	if err != nil {
-	}
-
 	router := router.Build()
 	fmt.Println("Listening and serving port ", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), router))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 
 }
