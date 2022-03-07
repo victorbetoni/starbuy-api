@@ -25,6 +25,7 @@ func main() {
 
 	err := database.Connect()
 	var db = database.GrabDB()
+	db.Ping()
 	if err != nil {
 		panic(err.Error())
 	} else {
