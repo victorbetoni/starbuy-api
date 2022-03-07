@@ -5,6 +5,7 @@ import (
 	"authentication-service/repository"
 	"authentication-service/responses"
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -19,6 +20,7 @@ func QueryItem(w http.ResponseWriter, r *http.Request) {
 			responses.Error(w, http.StatusNotFound, err)
 			return
 		}
+		fmt.Println("EXPLODIU AQUI HEIN")
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
