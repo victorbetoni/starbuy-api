@@ -3,7 +3,7 @@ package model
 type Item struct {
 	Identifier  string  `db:"identifier" json:"identifier,omitempty"`
 	Title       string  `db:"title" json:"title,omitempty"`
-	Seller      string  `db:"seller" json:"seller,omitempty"`
+	Seller      User    `db:"seller" json:"seller,omitempty"`
 	Price       float64 `db:"price" json:"price,omitempty"`
 	Stock       int     `db:"stock" json:"stock,omitempty"`
 	Category    int     `db:"category" json:"category,omitempty"`
@@ -11,6 +11,6 @@ type Item struct {
 }
 
 type ItemWithAssets struct {
-	Item   Item
+	Item   Item     `json:"seller"`
 	Assets []string `json:"assets"`
 }
