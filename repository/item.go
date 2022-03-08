@@ -55,7 +55,7 @@ func DownloadAllItems(items *[]model.ItemWithAssets) error {
 			Stock:       raw.Stock,
 			Category:    raw.Category,
 		}
-		*items = append(*items, model.ItemWithAssets{item, assets})
+		*items = append(*items, model.ItemWithAssets{Item: item, Assets: assets})
 	}
 
 	return nil
