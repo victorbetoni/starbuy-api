@@ -5,7 +5,6 @@ import (
 	"authentication-service/repository"
 	"authentication-service/responses"
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,10 +19,22 @@ func QueryItem(w http.ResponseWriter, r *http.Request) {
 			responses.Error(w, http.StatusNotFound, err)
 			return
 		}
-		fmt.Println("EXPLODIU AQUI HEIN")
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	responses.JSON(w, http.StatusOK, item)
+}
+
+func QueryAllItems(w http.ResponseWriter, r *http.Request) {
+	var items []model.ItemWithAssets
+	if err := repository.DownloadAllItems(&items); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNotFound, err)
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, items)
 }

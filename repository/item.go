@@ -19,7 +19,7 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 	return nil
 }
 
-func DownloadAllItems(id string, items *[]model.ItemWithAssets) error {
+func DownloadAllItems(items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
 	var ids []string
