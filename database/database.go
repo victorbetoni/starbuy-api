@@ -1,7 +1,7 @@
 package database
 
 import (
-	"authentication-service/util"
+	"starbuy/util"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"

@@ -1,8 +1,8 @@
 package jwt
 
 import (
-	"authentication-service/util"
 	"log"
+	"starbuy/util"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"

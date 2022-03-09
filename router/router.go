@@ -1,7 +1,7 @@
 package router
 
 import (
-	"authentication-service/router/routes"
+	"starbuy/router/routes"
 
 	"github.com/gorilla/mux"
 )

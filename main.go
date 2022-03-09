@@ -1,13 +1,13 @@
 package main
 
 import (
-	"authentication-service/database"
-	"authentication-service/router"
-	"authentication-service/util"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"starbuy/database"
+	"starbuy/router"
+	"starbuy/util"
 
 	_ "github.com/lib/pq"
 )
@@ -17,11 +17,9 @@ func main() {
 	util.LoadConfig(".")
 
 	port := os.Getenv("PORT")
-	fmt.Println(port)
 	if port == "" {
 		port = fmt.Sprint(util.GrabConfig().PortAPI)
 	}
-	fmt.Println(os.Getenv("DATABASE_URL"))
 
 	var err = database.Connect()
 	var db = database.GrabDB()

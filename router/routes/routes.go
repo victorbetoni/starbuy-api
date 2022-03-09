@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"authentication-service/controllers"
 	"net/http"
+	"starbuy/controllers"
 
 	"github.com/gorilla/mux"
 )

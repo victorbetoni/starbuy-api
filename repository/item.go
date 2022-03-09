@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"authentication-service/database"
-	"authentication-service/model"
+	"starbuy/database"
+	"starbuy/model"
 )
 
 func DownloadItem(id string, item *model.ItemWithAssets) error {
@@ -22,8 +22,42 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 func DownloadAllItems(items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
+	var raws []model.DatabaseItem
+	if err := db.Select(&raws, "SELECT * FROM products"); err != nil {
+		return err
+	}
+
+	for _, item := range raws {
+		var assets []string
+
+		if err := db.Select(&assets, "SELECT url FROM product_images WHERE product=$1", item.Identifier); err != nil {
+			return err
+		}
+
+		var user model.User
+		if err := db.Get(&user, "SELECT * FROM users WHERE username=$1", item.Seller); err != nil {
+			return err
+		}
+
+		item := model.Item{
+			Description: item.Description,
+			Title:       item.Title,
+			Identifier:  item.Identifier,
+			Seller:      user,
+			Price:       item.Price,
+			Stock:       item.Stock,
+			Category:    item.Category,
+		}
+		*items = append(*items, model.ItemWithAssets{Item: item, Assets: assets})
+	}
+	return nil
+}
+
+func DownloadItemByCategory(category int, items *[]model.ItemWithAssets) error {
+	db := database.GrabDB()
+
 	var ids []string
-	if err := db.Select(&ids, "SELECT identifier FROM products"); err != nil {
+	if err := db.Select(&ids, "SELECT identifier FROM products WHERE category=$1", category); err != nil {
 		return err
 	}
 
@@ -31,7 +65,7 @@ func DownloadAllItems(items *[]model.ItemWithAssets) error {
 
 		//Retrieving raw database item
 		var raw model.DatabaseItem
-		if err := db.Get(&raw, "SELECT * FROM products WHERE identifier=$1 LIMIT 1", id); err != nil {
+		if err := db.Select(&raw, "SELECT * FROM products WHERE ", id); err != nil {
 			return err
 		}
 

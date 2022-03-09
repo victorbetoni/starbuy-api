@@ -1,4 +1,4 @@
-module authentication-service
+module starbuy
 
 go 1.17
 

@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"authentication-service/database"
-	"authentication-service/model"
+	"starbuy/database"
+	"starbuy/model"
 )
 
 func DownloadUser(username string, user *model.User) error {

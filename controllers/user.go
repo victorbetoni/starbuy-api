@@ -1,17 +1,17 @@
 package controllers
 
 import (
-	"authentication-service/database"
-	"authentication-service/model"
-	"authentication-service/repository"
-	"authentication-service/responses"
-	"authentication-service/security"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"starbuy/database"
+	"starbuy/model"
+	"starbuy/repository"
+	"starbuy/responses"
+	"starbuy/security"
 
 	"github.com/gorilla/mux"
 )

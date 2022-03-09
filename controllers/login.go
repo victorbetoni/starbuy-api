@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"authentication-service/database"
-	"authentication-service/responses"
-	"authentication-service/security"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"starbuy/database"
+	"starbuy/responses"
+	"starbuy/security"
 )
 
 type Login struct {

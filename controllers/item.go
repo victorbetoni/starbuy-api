@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"authentication-service/model"
-	"authentication-service/repository"
-	"authentication-service/responses"
 	"database/sql"
 	"net/http"
+	"starbuy/model"
+	"starbuy/repository"
+	"starbuy/responses"
 
 	"github.com/gorilla/mux"
 )
