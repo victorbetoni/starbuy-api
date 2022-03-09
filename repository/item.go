@@ -57,7 +57,7 @@ func DownloadItemByCategory(category int, items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
 	var raws []model.DatabaseItem
-	if err := db.Select(&raws, "SELECT identifier FROM products WHERE category=$1"); err != nil {
+	if err := db.Select(&raws, "SELECT identifier FROM products WHERE category=$1", category); err != nil {
 		return err
 	}
 
