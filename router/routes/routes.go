@@ -36,6 +36,11 @@ var routes = []Route{
 		Action: controllers.QueryItem,
 	},
 	{
+		URI:    "/item/category/{id}",
+		Method: http.MethodGet,
+		Action: controllers.QueryCategory,
+	},
+	{
 		URI:    "/items",
 		Method: http.MethodGet,
 		Action: controllers.QueryAllItems,

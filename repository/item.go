@@ -56,38 +56,31 @@ func DownloadAllItems(items *[]model.ItemWithAssets) error {
 func DownloadItemByCategory(category int, items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
-	var ids []string
-	if err := db.Select(&ids, "SELECT identifier FROM products WHERE category=$1", category); err != nil {
+	var raws []model.DatabaseItem
+	if err := db.Select(&raws, "SELECT identifier FROM products WHERE category=$1"); err != nil {
 		return err
 	}
 
-	for _, id := range ids {
-
-		//Retrieving raw database item
-		var raw model.DatabaseItem
-		if err := db.Select(&raw, "SELECT * FROM products WHERE ", id); err != nil {
-			return err
-		}
-
-		//Retrieving assets
+	for _, item := range raws {
 		var assets []string
-		if err := db.Select(&assets, "SELECT url FROM product_images WHERE product=$1", id); err != nil {
+
+		if err := db.Select(&assets, "SELECT url FROM product_images WHERE product=$1", item.Identifier); err != nil {
 			return err
 		}
 
 		var user model.User
-		if err := db.Get(&user, "SELECT * FROM users WHERE username=$1", raw.Seller); err != nil {
+		if err := db.Get(&user, "SELECT * FROM users WHERE username=$1", item.Seller); err != nil {
 			return err
 		}
 
 		item := model.Item{
-			Description: raw.Description,
-			Title:       raw.Title,
-			Identifier:  raw.Identifier,
+			Description: item.Description,
+			Title:       item.Title,
+			Identifier:  item.Identifier,
 			Seller:      user,
-			Price:       raw.Price,
-			Stock:       raw.Stock,
-			Category:    raw.Category,
+			Price:       item.Price,
+			Stock:       item.Stock,
+			Category:    item.Category,
 		}
 		*items = append(*items, model.ItemWithAssets{Item: item, Assets: assets})
 	}

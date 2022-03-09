@@ -6,6 +6,7 @@ import (
 	"starbuy/model"
 	"starbuy/repository"
 	"starbuy/responses"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -36,5 +37,21 @@ func QueryAllItems(w http.ResponseWriter, r *http.Request) {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
+	responses.JSON(w, http.StatusOK, items)
+}
+
+func QueryCategory(w http.ResponseWriter, r *http.Request) {
+	queried, _ := strconv.Atoi(mux.Vars(r)["id"])
+	var items []model.ItemWithAssets
+
+	if err := repository.DownloadItemByCategory(queried, &items); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNotFound, err)
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
 	responses.JSON(w, http.StatusOK, items)
 }
