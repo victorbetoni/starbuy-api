@@ -2,6 +2,7 @@ package authorization
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"starbuy/util"
@@ -12,18 +13,21 @@ import (
 )
 
 func GenerateToken(username string) string {
-
+	fmt.Println("1")
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	claims["username"] = username
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	fmt.Println("2")
 
 	var config = util.GrabConfig()
 
 	str, err := token.SignedString([]byte(config.Secret))
+	fmt.Println("3")
 
 	if err != nil {
+		fmt.Println("4")
 		log.Fatal(err)
 	}
 
