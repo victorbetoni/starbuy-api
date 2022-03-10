@@ -3,53 +3,66 @@ package routes
 import (
 	"net/http"
 	"starbuy/controllers"
+	"starbuy/middleware"
 
 	"github.com/gorilla/mux"
 )
 
 // Route - Representação de todas as rotas da API
 type Route struct {
-	URI    string
-	Method string
-	Action func(http.ResponseWriter, *http.Request)
+	URI         string
+	Method      string
+	RequireAuth bool
+	Action      func(http.ResponseWriter, *http.Request)
 }
 
 var routes = []Route{
 	{
-		URI:    "/login",
-		Method: http.MethodPost,
-		Action: controllers.Auth,
+		URI:         "/login",
+		Method:      http.MethodPost,
+		RequireAuth: false,
+		Action:      controllers.Auth,
 	},
 	{
-		URI:    "/register",
-		Method: http.MethodPost,
-		Action: controllers.Register,
+		URI:         "/register",
+		Method:      http.MethodPost,
+		RequireAuth: false,
+		Action:      controllers.Register,
 	},
 	{
-		URI:    "/user/{username}",
-		Method: http.MethodGet,
-		Action: controllers.QueryUser,
+		URI:         "/user/{username}",
+		Method:      http.MethodGet,
+		RequireAuth: false,
+		Action:      controllers.QueryUser,
 	},
 	{
-		URI:    "/item/{id}",
-		Method: http.MethodGet,
-		Action: controllers.QueryItem,
+		URI:         "/item/{id}",
+		Method:      http.MethodGet,
+		RequireAuth: false,
+		Action:      controllers.QueryItem,
 	},
 	{
-		URI:    "/item/category/{id}",
-		Method: http.MethodGet,
-		Action: controllers.QueryCategory,
+		URI:         "/item/category/{id}",
+		Method:      http.MethodGet,
+		RequireAuth: false,
+		Action:      controllers.QueryCategory,
 	},
 	{
-		URI:    "/items",
-		Method: http.MethodGet,
-		Action: controllers.QueryAllItems,
+		URI:         "/items",
+		Method:      http.MethodGet,
+		RequireAuth: false,
+		Action:      controllers.QueryAllItems,
 	},
 }
 
 func Configure(router *mux.Router) *mux.Router {
 	for _, route := range routes {
-		router.HandleFunc(route.URI, route.Action).Methods(route.Method)
+
+		if route.RequireAuth {
+			router.HandleFunc(route.URI, middleware.Authorize(route.Action)).Methods(route.Method)
+		} else {
+			router.HandleFunc(route.URI, route.Action).Methods(route.Method)
+		}
 	}
 
 	return router
