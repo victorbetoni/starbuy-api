@@ -37,11 +37,6 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if item.Item.Seller != user {
-		responses.Error(w, http.StatusUnauthorized, err)
-		return
-	}
-
 	item.Item.Seller = user
 	repository.InsertItem(item)
 	responses.JSON(w, http.StatusOK, item)
