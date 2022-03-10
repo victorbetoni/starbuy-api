@@ -2,7 +2,6 @@ package authorization
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"starbuy/util"
@@ -56,9 +55,9 @@ func extractToken(r *http.Request) string {
 }
 
 func checkSecurityKey(token *jwt.Token) (interface{}, error) {
-	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+	/*if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 		return nil, fmt.Errorf("Unexpected signing method: %s", token.Header["alg"])
-	}
+	}*/
 
 	return []byte(util.GrabConfig().Secret), nil
 }
