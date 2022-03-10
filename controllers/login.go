@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"starbuy/authorization"
 	"starbuy/database"
 	"starbuy/responses"
 	"starbuy/security"
@@ -52,6 +53,8 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, err)
+	token := authorization.GenerateToken(login.Username)
+
+	responses.JSON(w, http.StatusOK, token)
 
 }
