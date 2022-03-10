@@ -10,7 +10,9 @@ import (
 	"starbuy/repository"
 	"starbuy/responses"
 	"strconv"
+	"strings"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -27,6 +29,8 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	item.Item.Identifier = strings.Replace(uuid.New().String(), "-", "", 4)
+
 	user, err := authorization.ExtractUser(r)
 	if err != nil {
 		responses.Error(w, http.StatusUnauthorized, err)
@@ -38,6 +42,7 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	item.Item.Seller = user
 	repository.InsertItem(item)
 	responses.JSON(w, http.StatusOK, item)
 
