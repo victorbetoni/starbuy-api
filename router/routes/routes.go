@@ -53,6 +53,12 @@ var routes = []Route{
 		RequireAuth: false,
 		Action:      controllers.QueryAllItems,
 	},
+	{
+		URI:         "/item",
+		Method:      http.MethodPost,
+		RequireAuth: true,
+		Action:      controllers.PostItem,
+	},
 }
 
 func Configure(router *mux.Router) *mux.Router {

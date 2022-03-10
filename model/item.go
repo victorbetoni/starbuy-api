@@ -15,7 +15,7 @@ type ItemWithAssets struct {
 	Assets []string `json:"assets"`
 }
 
-type DatabaseItem struct {
+type RawItem struct {
 	Identifier  string  `db:"identifier" json:"identifier,omitempty"`
 	Title       string  `db:"title" json:"title,omitempty"`
 	Seller      string  `db:"seller" json:"seller,omitempty"`
@@ -23,4 +23,9 @@ type DatabaseItem struct {
 	Stock       int     `db:"stock" json:"stock,omitempty"`
 	Category    int     `db:"category" json:"category,omitempty"`
 	Description string  `db:"description" json:"description,omitempty"`
+}
+
+type PostedItem struct {
+	Item   RawItem  `json:"item,omitempty"`
+	Assets []string `json:"assets,omitempty"`
 }

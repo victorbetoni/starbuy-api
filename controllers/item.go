@@ -21,7 +21,7 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var item model.ItemWithAssets
+	var item model.PostedItem
 	if err = json.Unmarshal(body, &item); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -33,7 +33,7 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if item.Item.Seller.Username != user {
+	if item.Item.Seller != user {
 		responses.Error(w, http.StatusUnauthorized, err)
 		return
 	}

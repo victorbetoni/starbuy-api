@@ -5,7 +5,7 @@ import (
 	"starbuy/model"
 )
 
-func InsertItem(item model.ItemWithAssets) {
+func InsertItem(item model.PostedItem) {
 	db := database.GrabDB()
 
 	var transaction = db.MustBegin()
@@ -35,7 +35,7 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 func DownloadAllItems(items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
-	var raws []model.DatabaseItem
+	var raws []model.RawItem
 	if err := db.Select(&raws, "SELECT * FROM products"); err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func DownloadAllItems(items *[]model.ItemWithAssets) error {
 func DownloadItemByCategory(category int, items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
-	var raws []model.DatabaseItem
+	var raws []model.RawItem
 	if err := db.Select(&raws, "SELECT * FROM products WHERE category=$1", category); err != nil {
 		return err
 	}
