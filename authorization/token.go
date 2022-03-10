@@ -13,21 +13,17 @@ import (
 )
 
 func GenerateToken(username string) string {
-	fmt.Println("1")
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	claims["username"] = username
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	fmt.Println("2")
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	var config = util.GrabConfig()
 	fmt.Println(config.Secret)
 	str, err := token.SignedString([]byte(config.Secret))
-	fmt.Println("3")
 
 	if err != nil {
-		fmt.Println("4")
 		log.Fatal(err)
 	}
 
