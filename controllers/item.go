@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
 	"starbuy/responses"
@@ -26,7 +27,19 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user, err := authorization.ExtractUser(r)
+	if err != nil {
+		responses.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if item.Item.Seller.Username != user {
+		responses.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
 	repository.InsertItem(item)
+	responses.JSON(w, http.StatusOK, item)
 
 }
 
