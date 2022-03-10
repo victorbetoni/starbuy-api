@@ -22,7 +22,7 @@ func GenerateToken(username string) string {
 
 	var config = util.GrabConfig()
 
-	str, err := token.SignedString(config.Secret)
+	str, err := token.SignedString([]byte(config.Secret))
 
 	if err != nil {
 		log.Fatal(err)
@@ -52,7 +52,6 @@ func extractToken(r *http.Request) string {
 	if len(strings.Split(raw, " ")) != 2 {
 		return ""
 	}
-
 	return strings.Split(raw, " ")[1]
 }
 
