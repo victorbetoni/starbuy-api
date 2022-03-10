@@ -9,7 +9,7 @@ func InsertItem(item model.PostedItem) {
 	db := database.GrabDB()
 
 	var transaction = db.MustBegin()
-	transaction.NamedExec("INSERT INTO products VALUES (:identifier, :title, :seller, :price, :stock, :category, :description)", &item)
+	transaction.NamedExec("INSERT INTO products VALUES (:identifier, :title, :seller, :price, :stock, :category, :description)", &item.Item)
 	transaction.Commit()
 
 	for _, url := range item.Assets {
