@@ -61,3 +61,18 @@ func checkSecurityKey(token *jwt.Token) (interface{}, error) {
 
 	return []byte(util.GrabConfig().Secret), nil
 }
+
+func ExtractUser(r *http.Request) (string, error) {
+	raw := extractToken(r)
+	token, err := jwt.Parse(raw, checkSecurityKey)
+	if err != nil {
+		return "", err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		username := fmt.Sprintf("%v", claims["username"])
+		return username, nil
+	}
+
+	return "", errors.New("Invalid token")
+}

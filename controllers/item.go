@@ -26,6 +26,8 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	repository.InsertItem(item)
+
 }
 
 func QueryItem(w http.ResponseWriter, r *http.Request) {
