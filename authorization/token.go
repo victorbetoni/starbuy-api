@@ -61,5 +61,5 @@ func checkSecurityKey(token *jwt.Token) (interface{}, error) {
 		return nil, fmt.Errorf("Unexpected signing method: %s", token.Header["alg"])
 	}
 
-	return util.GrabConfig().Secret, nil
+	return []byte(util.GrabConfig().Secret), nil
 }
