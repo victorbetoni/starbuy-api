@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"starbuy/model"
 	"starbuy/repository"
@@ -10,6 +12,21 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
+func PostItem(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		responses.Error(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	var item model.ItemWithAssets
+	if err = json.Unmarshal(body, &item); err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+}
 
 func QueryItem(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["id"]

@@ -5,6 +5,19 @@ import (
 	"starbuy/model"
 )
 
+func InsertItem(item model.ItemWithAssets) {
+	db := database.GrabDB()
+
+	var transaction = db.MustBegin()
+	transaction.NamedExec("INSERT INTO products VALUES (:identifier, :title, :seller, :price, :stock, :category, :description)", &item)
+	transaction.Commit()
+
+	for _, url := range item.Assets {
+		transaction.MustExec("INSERT INTO product_images VALUES ($1, $2)", item.Item.Identifier, url)
+		transaction.Commit()
+	}
+}
+
 func DownloadItem(id string, item *model.ItemWithAssets) error {
 	db := database.GrabDB()
 
