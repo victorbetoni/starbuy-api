@@ -22,7 +22,7 @@ func GenerateToken(username string) string {
 	fmt.Println("2")
 
 	var config = util.GrabConfig()
-
+	fmt.Println(config.Secret)
 	str, err := token.SignedString([]byte(config.Secret))
 	fmt.Println("3")
 
