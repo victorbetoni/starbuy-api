@@ -26,6 +26,10 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 		return err
 	}
 
+	if err := db.Get(&item.Item.Seller, "SELECT * FROM users WHERE username = $1", item.Item.Seller.Username); err != nil {
+		return err
+	}
+
 	if err := db.Select(&item.Assets, "SELECT url FROM product_images WHERE product=$1", id); err != nil {
 		return err
 	}
