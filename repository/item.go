@@ -22,18 +22,32 @@ func InsertItem(item model.PostedItem) {
 func DownloadItem(id string, item *model.ItemWithAssets) error {
 	db := database.GrabDB()
 
-	if err := db.Get(&item.Item, "SELECT * FROM products WHERE identifier=$1 LIMIT 1", id); err != nil {
+	var raw model.RawItem
+	if err := db.Get(&raw, "SELECT * FROM products WHERE identifier=$1 LIMIT 1", id); err != nil {
 		return err
 	}
 
-	if err := db.Get(&item.Item.Seller, "SELECT * FROM users WHERE username = $1", item.Item.Seller.Username); err != nil {
+	var user model.User
+	if err := DownloadUser(raw.Seller, &user); err != nil {
 		return err
 	}
 
-	if err := db.Select(&item.Assets, "SELECT url FROM product_images WHERE product=$1", id); err != nil {
+	var assets []string
+	if err := db.Select(&assets, "SELECT url FROM product_images WHERE product=$1", id); err != nil {
 		return err
 	}
 
+	literalItem := model.Item{
+		Description: raw.Description,
+		Title:       raw.Title,
+		Identifier:  raw.Identifier,
+		Seller:      user,
+		Price:       raw.Price,
+		Stock:       raw.Stock,
+		Category:    raw.Category,
+	}
+
+	*item = model.ItemWithAssets{Item: literalItem, Assets: assets}
 	return nil
 }
 
