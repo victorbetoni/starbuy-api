@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
@@ -57,7 +58,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = security.ComparePassword(recorded.Password, login.Password); err != nil {
-		responses.Error(w, http.StatusUnauthorized, err)
+		responses.Error(w, http.StatusUnauthorized, errors.New("Verifique suas credenciais"))
 		return
 	}
 
