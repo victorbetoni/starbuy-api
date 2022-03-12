@@ -47,7 +47,7 @@ func QueryItem(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["id"]
 	var item model.ItemWithAssets
 
-	if err := repository.DownloadItem(queried, &item); err != nil {
+	if err := repository.DownloadItem(queried, true, &item); err != nil {
 		if err == sql.ErrNoRows {
 			responses.Error(w, http.StatusNotFound, err)
 			return
@@ -61,7 +61,7 @@ func QueryItem(w http.ResponseWriter, r *http.Request) {
 
 func QueryAllItems(w http.ResponseWriter, r *http.Request) {
 	var items []model.ItemWithAssets
-	if err := repository.DownloadAllItems(&items); err != nil {
+	if err := repository.DownloadAllItems(&items, true); err != nil {
 		if err == sql.ErrNoRows {
 			responses.Error(w, http.StatusNotFound, err)
 			return

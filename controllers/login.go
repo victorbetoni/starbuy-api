@@ -55,6 +55,10 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 	token := authorization.GenerateToken(login.Username)
 
-	responses.JSON(w, http.StatusOK, token)
+	type JWT struct {
+		Token string `json:"jwt"`
+	}
+
+	responses.JSON(w, http.StatusOK, JWT{Token: token})
 
 }

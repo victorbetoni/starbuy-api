@@ -19,7 +19,7 @@ func InsertItem(item model.PostedItem) {
 	}
 }
 
-func DownloadItem(id string, item *model.ItemWithAssets) error {
+func DownloadItem(id string, includeUser bool, item *model.ItemWithAssets) error {
 	db := database.GrabDB()
 
 	var raw model.RawItem
@@ -28,8 +28,10 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 	}
 
 	var user model.User
-	if err := DownloadUser(raw.Seller, &user); err != nil {
-		return err
+	if includeUser {
+		if err := DownloadUser(raw.Seller, &user); err != nil {
+			return err
+		}
 	}
 
 	var assets []string
@@ -41,7 +43,6 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 		Description: raw.Description,
 		Title:       raw.Title,
 		Identifier:  raw.Identifier,
-		Seller:      user,
 		Price:       raw.Price,
 		Stock:       raw.Stock,
 		Category:    raw.Category,
@@ -51,7 +52,7 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 	return nil
 }
 
-func DownloadAllItems(items *[]model.ItemWithAssets) error {
+func DownloadAllItems(items *[]model.ItemWithAssets, includeUser bool) error {
 	db := database.GrabDB()
 
 	var raws []model.RawItem
@@ -67,17 +68,19 @@ func DownloadAllItems(items *[]model.ItemWithAssets) error {
 		}
 
 		var user model.User
-		if err := db.Get(&user, "SELECT * FROM users WHERE username=$1", item.Seller); err != nil {
-			return err
+		if includeUser {
+			if err := db.Get(&user, "SELECT * FROM users WHERE username=$1", item.Seller); err != nil {
+				return err
+			}
 		}
 
 		item := model.Item{
 			Description: item.Description,
 			Title:       item.Title,
 			Identifier:  item.Identifier,
-			Seller:      user,
 			Price:       item.Price,
 			Stock:       item.Stock,
+			Seller:      user,
 			Category:    item.Category,
 		}
 		*items = append(*items, model.ItemWithAssets{Item: item, Assets: assets})
