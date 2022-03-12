@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
+	"starbuy/model"
+	"starbuy/repository"
 	"starbuy/responses"
 	"starbuy/security"
 )
@@ -48,6 +50,12 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var user model.User
+	if err = repository.DownloadUser(login.Username, &user); err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
 	if err = security.ComparePassword(recorded.Password, login.Password); err != nil {
 		responses.Error(w, http.StatusUnauthorized, err)
 		return
@@ -55,10 +63,11 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 	token := authorization.GenerateToken(login.Username)
 
-	type JWT struct {
-		Token string `json:"jwt"`
+	type Response struct {
+		User  model.User `json:"user"`
+		Token string     `json:"jwt"`
 	}
 
-	responses.JSON(w, http.StatusOK, JWT{Token: token})
+	responses.JSON(w, http.StatusOK, Response{User: user, Token: token})
 
 }
