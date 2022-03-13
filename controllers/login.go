@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -47,6 +48,10 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	db := database.GrabDB()
 	var recorded Login
 	if err = db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusInternalServerError, errors.New("Usuário não encontrado."))
+			return
+		}
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
