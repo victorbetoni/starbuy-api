@@ -48,6 +48,10 @@ func DownloadItem(id string, includeUser bool, item *model.ItemWithAssets) error
 		Category:    raw.Category,
 	}
 
+	if includeUser {
+		literalItem.Seller = user
+	}
+
 	*item = model.ItemWithAssets{Item: literalItem, Assets: assets}
 	return nil
 }
@@ -83,6 +87,11 @@ func DownloadAllItems(items *[]model.ItemWithAssets, includeUser bool) error {
 			Seller:      user,
 			Category:    item.Category,
 		}
+
+		if includeUser {
+			item.Seller = user
+		}
+
 		*items = append(*items, model.ItemWithAssets{Item: item, Assets: assets})
 	}
 	return nil
