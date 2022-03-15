@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -8,6 +9,8 @@ import (
 	"starbuy/model"
 	"starbuy/repository"
 	"starbuy/responses"
+
+	"github.com/gorilla/mux"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -41,6 +44,22 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	if err := repository.InsertUser(user, data.Password); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, user)
+}
+
+func QueryUser(w http.ResponseWriter, r *http.Request) {
+	queried := mux.Vars(r)["username"]
+	var user model.User
+
+	if err := repository.DownloadUser(queried, &user); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNotFound, err)
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
 
