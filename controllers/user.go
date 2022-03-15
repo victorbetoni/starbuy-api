@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"starbuy/authorization"
 	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
@@ -93,4 +94,16 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusOK, user)
+}
+
+func QueryCart(w http.ResponseWriter, r *http.Request) {
+	user, err := authorization.ExtractUser(r)
+	if err != nil {
+		responses.Error(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	var items []model.CartItem
+	repository.DownloadCart(user, &items)
+	responses.JSON(w, http.StatusOK, items)
 }
