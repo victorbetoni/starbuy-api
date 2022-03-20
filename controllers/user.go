@@ -69,7 +69,7 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 		req.IncludeItems = false
 	}
 
-	if err := repository.DownloadUser(queried, false, &user); err != nil {
+	if err := repository.DownloadUser(queried, req.IncludeItems, &user); err != nil {
 		if err == sql.ErrNoRows {
 			responses.Error(w, http.StatusNotFound, err)
 			return
