@@ -72,7 +72,8 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 	var items []model.ItemWithAssets
 
 	if req.IncludeItems {
-		if err := repository.DownloadUserProducts(queried, &items); err != nil {
+		var local []model.ItemWithAssets
+		if err := repository.DownloadUserProducts(queried, &local); err != nil {
 			if err == sql.ErrNoRows {
 				responses.Error(w, http.StatusNotFound, err)
 				return
@@ -80,15 +81,28 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 			responses.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-	} else {
-		if err := repository.DownloadUser(queried, &user); err != nil {
-			if err == sql.ErrNoRows {
-				responses.Error(w, http.StatusNotFound, err)
-				return
+
+		//Removing seller (duplicated data)
+		for _, item := range local {
+			final := model.Item{
+				Identifier:  item.Item.Identifier,
+				Title:       item.Item.Title,
+				Category:    item.Item.Category,
+				Stock:       item.Item.Stock,
+				Description: item.Item.Description,
+				Price:       item.Item.Price,
 			}
-			responses.Error(w, http.StatusInternalServerError, err)
+			items = append(items, model.ItemWithAssets{Item: final, Assets: item.Assets})
+		}
+	}
+
+	if err := repository.DownloadUser(queried, &user); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNotFound, err)
 			return
 		}
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	if req.IncludeItems {
