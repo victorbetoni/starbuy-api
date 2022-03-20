@@ -29,7 +29,7 @@ func DownloadItem(id string, includeUser bool, item *model.ItemWithAssets) error
 
 	var user model.User
 	if includeUser {
-		if err := DownloadUser(raw.Seller, &user); err != nil {
+		if err := DownloadUser(raw.Seller, false, &user); err != nil {
 			return err
 		}
 	}

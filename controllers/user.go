@@ -54,7 +54,22 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["username"]
 	var user model.User
 
-	if err := repository.DownloadUser(queried, &user); err != nil {
+	type Req struct {
+		IncludeItems bool `json:"include_items"`
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		responses.Error(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	var req Req
+	if err = json.Unmarshal(body, &req); err != nil {
+		req.IncludeItems = false
+	}
+
+	if err := repository.DownloadUser(queried, false, &user); err != nil {
 		if err == sql.ErrNoRows {
 			responses.Error(w, http.StatusNotFound, err)
 			return

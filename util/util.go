@@ -1,12 +1,7 @@
 package util
 
 import (
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"net/http"
-	"starbuy/model"
-	"starbuy/responses"
 
 	"github.com/badoux/checkmail"
 	"github.com/spf13/viper"
@@ -55,18 +50,4 @@ func ValidateEmail(email string) error {
 
 func GrabConfig() GlobalConfig {
 	return config
-}
-
-func ParseBody(target *interface{}, w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-
-	var item model.PostedItem
-	if err = json.Unmarshal(body, &item); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
-		return
-	}
 }

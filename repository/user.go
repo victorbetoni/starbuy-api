@@ -42,7 +42,7 @@ func InsertUser(user model.User, password string) error {
 	return nil
 }
 
-func DownloadUser(username string, user *model.User) error {
+func DownloadUser(username string, addProducts bool, user *model.User) error {
 	db := database.GrabDB()
 
 	if err := db.Get(user, "SELECT * FROM users WHERE username=$1 LIMIT 1", username); err != nil {
