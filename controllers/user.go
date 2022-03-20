@@ -69,12 +69,35 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 		req.IncludeItems = false
 	}
 
-	if err := repository.DownloadUser(queried, req.IncludeItems, &user); err != nil {
-		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNotFound, err)
+	var items []model.ItemWithAssets
+
+	if req.IncludeItems {
+		if err := repository.DownloadUserProducts(queried, &items); err != nil {
+			if err == sql.ErrNoRows {
+				responses.Error(w, http.StatusNotFound, err)
+				return
+			}
+			responses.Error(w, http.StatusInternalServerError, err)
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+	} else {
+		if err := repository.DownloadUser(queried, &user); err != nil {
+			if err == sql.ErrNoRows {
+				responses.Error(w, http.StatusNotFound, err)
+				return
+			}
+			responses.Error(w, http.StatusInternalServerError, err)
+			return
+		}
+	}
+
+	if req.IncludeItems {
+
+		type UserWithItem struct {
+			User  model.User             `json:"user"`
+			Items []model.ItemWithAssets `json:"items"`
+		}
+		responses.JSON(w, http.StatusOK, UserWithItem{user, items})
 		return
 	}
 

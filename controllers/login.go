@@ -57,7 +57,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user model.User
-	if err = repository.DownloadUser(login.Username, false, &user); err != nil {
+	if err = repository.DownloadUser(login.Username, &user); err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}

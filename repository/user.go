@@ -42,7 +42,7 @@ func InsertUser(user model.User, password string) error {
 	return nil
 }
 
-func DownloadUser(username string, addProducts bool, user *model.User) error {
+func DownloadUser(username string, user *model.User) error {
 	db := database.GrabDB()
 
 	if err := db.Get(user, "SELECT * FROM users WHERE username=$1 LIMIT 1", username); err != nil {
@@ -63,7 +63,7 @@ func DownloadCart(username string, items *[]model.CartItem) error {
 	for _, item := range stored {
 		var casted model.CartItem
 		var downloadedItem model.ItemWithAssets
-		if err := DownloadItem(item.Item, false, &downloadedItem); err != nil {
+		if err := DownloadItem(item.Item, &downloadedItem); err != nil {
 			return err
 		}
 		*items = append(*items, casted)
