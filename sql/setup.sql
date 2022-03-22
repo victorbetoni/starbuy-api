@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS users (
-    username     VARCHAR(20) PRIMARY KEY NOT NULL,
-    email        VARCHAR(32)             NOT NULL,
-    name         VARCHAR(64)             NOT NULL,
-    gender       INT                     NOT NULL,
-    registration DATE                    NOT NULL,
-    birthdate    DATE                    NOT NULL,
-    seller       BOOLEAN                 NOT NULL,
-    profile_picture VARCHAR(512) NOT NULL,
-    city VARCHAR(60) NOT NULL
+    username        VARCHAR(20) PRIMARY KEY NOT NULL,
+    email           VARCHAR(32)             NOT NULL,
+    name            VARCHAR(64)             NOT NULL,
+    gender          INT                     NOT NULL,
+    registration    DATE                    NOT NULL,
+    birthdate       DATE                    NOT NULL,
+    seller          BOOLEAN                 NOT NULL,
+    profile_picture VARCHAR(512)            NOT NULL,
+    city            VARCHAR(60)             NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS phone_number (
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS phone_number (
 DROP TABLE IF EXISTS product_categories;
 
 CREATE TABLE IF NOT EXISTS product_categories (
-    identifier INTEGER PRIMARY KEY NOT NULL,
-    name       VARCHAR(64)         NOT NULL
+    identifier INTEGER      PRIMARY KEY NOT NULL,
+    name       VARCHAR(64)              NOT NULL
 );
 
 INSERT INTO product_categories VALUES (1, 'Tecnologia e Informática');
@@ -34,22 +34,34 @@ INSERT INTO product_categories VALUES (6, 'Brinquedos e Jogos');
 INSERT INTO product_categories VALUES (7, 'Música e Instrumentos');
 
 CREATE TABLE IF NOT EXISTS products (
-    identifier  VARCHAR(64)  UNIQUE  NOT NULL,
-    title       VARCHAR(256)   NOT NULL,
-    seller      VARCHAR(20)    NOT NULL,
-    price       DECIMAL(10, 2) NOT NULL,
-    stock       INTEGER        NOT NULL,
-    category    INTEGER        NOT NULL,
+    identifier  VARCHAR(64)    UNIQUE  NOT NULL,
+    title       VARCHAR(256)           NOT NULL,
+    seller      VARCHAR(20)            NOT NULL,
+    price       DECIMAL(10, 2)         NOT NULL,
+    stock       INTEGER                NOT NULL,
+    category    INTEGER                NOT NULL,
     description VARCHAR(512),
 
     FOREIGN KEY (seller) REFERENCES users (username),
-    PRIMARY KEY (identifier, seller)
+    PRIMARY KEY (identifier)
 );
+
+CREATE TABLE IF NOT EXISTS avaliations (
+    product VARCHAR(64)  NOT NULL,
+    user    VARCHAR(20)  NOT NULL,
+    msg     VARCHAR(512) NOT NULL,
+    rate    INT          NOT NULL,
+
+    PRIMARY KEY (product, user),
+
+    FOREIGN KEY (user)    REFERENCES users    (username),
+    FOREIGN KEY (product) REFERENCES products (identifier)
+)
 
 CREATE TABLE IF NOT EXISTS juridic_id (
     holder     VARCHAR(20) NOT NULL PRIMARY KEY,
     identifier VARCHAR(20) NOT NULL,
-    type       INT NOT NULL,
+    type       INT         NOT NULL,
 
     FOREIGN KEY (holder) REFERENCES users (username)
 );
