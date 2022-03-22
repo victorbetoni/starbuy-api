@@ -24,3 +24,15 @@ func DownloadCart(username string, items *[]model.CartItem) error {
 
 	return nil
 }
+
+func InsertCartItem(item model.RawCartItem) error {
+	db := database.GrabDB()
+
+	tx2 := db.MustBegin()
+	tx2.MustExec("INSERT INTO shopping_cart VALUES ($1,$2,$3)", item.Holder, item.Item, item.Quantity)
+	if err := tx2.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}

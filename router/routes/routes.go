@@ -65,6 +65,18 @@ var routes = []Route{
 		RequireAuth: true,
 		Action:      controllers.QueryCart,
 	},
+	{
+		URI:         "/cart",
+		Method:      http.MethodPost,
+		RequireAuth: true,
+		Action:      controllers.PostCart,
+	},
+	{
+		URI:         "/{item}/review",
+		Method:      http.MethodPost,
+		RequireAuth: true,
+		Action:      controllers.PostReview,
+	},
 }
 
 func Configure(router *mux.Router) *mux.Router {

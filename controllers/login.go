@@ -73,7 +73,5 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		User  model.User `json:"user"`
 		Token string     `json:"jwt"`
 	}
-
 	responses.JSON(w, http.StatusOK, Response{User: user, Token: token})
-
 }

@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
@@ -33,7 +34,7 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 
 	user, err := authorization.ExtractUser(r)
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, err)
+		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
 		return
 	}
 

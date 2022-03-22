@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
 	"starbuy/responses"
@@ -116,16 +115,4 @@ func QueryUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusOK, user)
-}
-
-func QueryCart(w http.ResponseWriter, r *http.Request) {
-	user, err := authorization.ExtractUser(r)
-	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, err)
-		return
-	}
-
-	var items []model.CartItem
-	repository.DownloadCart(user, &items)
-	responses.JSON(w, http.StatusOK, items)
 }

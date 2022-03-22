@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS products (
     PRIMARY KEY (identifier)
 );
 
-CREATE TABLE IF NOT EXISTS avaliations (
+CREATE TABLE IF NOT EXISTS reviews (
     product VARCHAR(64)  NOT NULL,
     user    VARCHAR(20)  NOT NULL,
     msg     VARCHAR(512) NOT NULL,
