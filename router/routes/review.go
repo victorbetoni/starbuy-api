@@ -24,4 +24,10 @@ var Review = []Route{
 		RequireAuth: true,
 		Action:      controllers.PostReview,
 	},
+	{
+		URI:         "/review",
+		Method:      http.MethodPut,
+		RequireAuth: true,
+		Action:      controllers.PutReview,
+	},
 }

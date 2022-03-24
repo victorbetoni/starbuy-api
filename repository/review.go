@@ -86,6 +86,19 @@ func DeleteReview(identifier string) error {
 	return nil
 }
 
+func UpdateReview(raw model.RawReview) error {
+	db := database.GrabDB()
+
+	tx := db.MustBegin()
+	tx.MustExec("UPDATE reviews SET msg=$1, rate=$2 WHERE identifier=$3", raw.Message, raw.Rate, raw.Identifier)
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func convertRawReview(raw model.RawReview) (error, model.Review) {
 	var user model.User
 	if err := DownloadUser(raw.User, &user); err != nil {
