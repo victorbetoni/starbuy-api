@@ -11,14 +11,40 @@ import (
 	"starbuy/model"
 	"starbuy/repository"
 	"starbuy/responses"
+
+	"github.com/gorilla/mux"
 )
 
 func GetReviews(w http.ResponseWriter, r *http.Request) {
+	queried := mux.Vars(r)["user"]
 
+	var reviews []model.Review
+	if err := repository.QueryUserReviews(queried, &reviews); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNoContent, err)
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, reviews)
 }
 
 func GetReview(w http.ResponseWriter, r *http.Request) {
+	queried := mux.Vars(r)["id"]
 
+	var review model.Review
+	if err := repository.DownloadReview(queried, &review); err != nil {
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNoContent, err)
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, review)
 }
 
 func PostReview(w http.ResponseWriter, r *http.Request) {

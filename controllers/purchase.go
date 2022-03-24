@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -38,7 +39,11 @@ func GetPurchase(w http.ResponseWriter, r *http.Request) {
 
 	var purchase model.Purchase
 	if err := repository.DownloadPurchase(queried, &purchase); err != nil {
-		responses.Error(w, http.StatusNotFound, errors.New("Compra não encontrada"))
+		if err == sql.ErrNoRows {
+			responses.Error(w, http.StatusNoContent, errors.New("Compra não encontrada"))
+			return
+		}
+		responses.Error(w, http.StatusInternalServerError, err)
 		return
 	}
 

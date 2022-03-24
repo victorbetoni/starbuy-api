@@ -44,13 +44,13 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func QueryItem(w http.ResponseWriter, r *http.Request) {
+func GetItem(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["id"]
 	var item model.ItemWithAssets
 
 	if err := repository.DownloadItem(queried, &item); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNotFound, err)
+			responses.Error(w, http.StatusNoContent, err)
 			return
 		}
 		responses.Error(w, http.StatusInternalServerError, err)
@@ -60,11 +60,11 @@ func QueryItem(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusOK, item)
 }
 
-func QueryAllItems(w http.ResponseWriter, r *http.Request) {
+func GetAllItems(w http.ResponseWriter, r *http.Request) {
 	var items []model.ItemWithAssets
 	if err := repository.DownloadAllItems(&items); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNotFound, err)
+			responses.Error(w, http.StatusNoContent, err)
 			return
 		}
 		responses.Error(w, http.StatusInternalServerError, err)
@@ -73,7 +73,7 @@ func QueryAllItems(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusOK, items)
 }
 
-func QueryCategory(w http.ResponseWriter, r *http.Request) {
+func GetCategory(w http.ResponseWriter, r *http.Request) {
 	queried, _ := strconv.Atoi(mux.Vars(r)["id"])
 	var items []model.ItemWithAssets
 

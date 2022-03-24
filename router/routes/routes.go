@@ -39,19 +39,19 @@ var routes = []Route{
 		URI:         "/item/{id}",
 		Method:      http.MethodGet,
 		RequireAuth: false,
-		Action:      controllers.QueryItem,
+		Action:      controllers.GetItem,
 	},
 	{
 		URI:         "/item/category/{id}",
 		Method:      http.MethodGet,
 		RequireAuth: false,
-		Action:      controllers.QueryCategory,
+		Action:      controllers.GetCategory,
 	},
 	{
 		URI:         "/items",
 		Method:      http.MethodGet,
 		RequireAuth: false,
-		Action:      controllers.QueryAllItems,
+		Action:      controllers.GetAllItems,
 	},
 	{
 		URI:         "/item",
@@ -100,6 +100,18 @@ var routes = []Route{
 		Method:      http.MethodGet,
 		RequireAuth: true,
 		Action:      controllers.GetPurchase,
+	},
+	{
+		URI:         "/{user}/reviews",
+		Method:      http.MethodGet,
+		RequireAuth: false,
+		Action:      controllers.GetReviews,
+	},
+	{
+		URI:         "/review/{id}",
+		Method:      http.MethodGet,
+		RequireAuth: false,
+		Action:      controllers.GetReview,
 	},
 }
 
