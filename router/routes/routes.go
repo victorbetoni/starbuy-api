@@ -96,7 +96,7 @@ var routes = []Route{
 		Action:      controllers.GetPurchases,
 	},
 	{
-		URI:         "/{user}/purchase/{id}",
+		URI:         "/purchase/{id}",
 		Method:      http.MethodGet,
 		RequireAuth: true,
 		Action:      controllers.GetPurchase,

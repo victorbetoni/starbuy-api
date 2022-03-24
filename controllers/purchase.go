@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 func GetPurchases(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +29,7 @@ func GetPurchases(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPurchase(w http.ResponseWriter, r *http.Request) {
+	queried := mux.Vars(r)["id"]
 	user, err := authorization.ExtractUser(r)
 	if err != nil {
 		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
@@ -35,7 +37,10 @@ func GetPurchase(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var purchase model.Purchase
-	repository.DownloadPurchase(user, &purchase)
+	if err := repository.DownloadPurchase(queried, &purchase); err != nil {
+		responses.Error(w, http.StatusNotFound, errors.New("Compra não encontrada"))
+		return
+	}
 
 	if purchase.Customer.Username != user {
 		responses.Error(w, http.StatusUnauthorized, errors.New("Não autorizado"))
