@@ -49,7 +49,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusOK, user)
 }
 
-func QueryUser(w http.ResponseWriter, r *http.Request) {
+func GetUser(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["username"]
 	var user model.User
 
