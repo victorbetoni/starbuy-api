@@ -13,6 +13,14 @@ import (
 	"starbuy/responses"
 )
 
+func GetReviews(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func GetReview(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func PostReview(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -42,4 +50,12 @@ func PostReview(w http.ResponseWriter, r *http.Request) {
 	repository.InsertReview(review)
 
 	responses.JSON(w, http.StatusOK, review)
+}
+
+func PutReview(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func DeleteReview(w http.ResponseWriter, r *http.Request) {
+
 }

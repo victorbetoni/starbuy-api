@@ -15,6 +15,16 @@ func DownloadPurchases(username string, purchases *[]model.Purchase) error {
 	return nil
 }
 
+func DownloadPurchase(identifier string, purchases *model.Purchase) error {
+	db := database.GrabDB()
+
+	if err := db.Get(purchases, "SELECT * FROM purchases WHERE identifier = $1", identifier); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func InsertPurchase(purchase model.Purchase) error {
 	db := database.GrabDB()
 

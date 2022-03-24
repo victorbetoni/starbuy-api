@@ -14,7 +14,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func QueryPurchases(w http.ResponseWriter, r *http.Request) {
+func GetPurchases(w http.ResponseWriter, r *http.Request) {
 	user, err := authorization.ExtractUser(r)
 	if err != nil {
 		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
@@ -25,6 +25,24 @@ func QueryPurchases(w http.ResponseWriter, r *http.Request) {
 	repository.DownloadPurchases(user, &purchases)
 
 	responses.JSON(w, http.StatusOK, purchases)
+}
+
+func GetPurchase(w http.ResponseWriter, r *http.Request) {
+	user, err := authorization.ExtractUser(r)
+	if err != nil {
+		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
+		return
+	}
+
+	var purchase model.Purchase
+	repository.DownloadPurchase(user, &purchase)
+
+	if purchase.Customer.Username != user {
+		responses.Error(w, http.StatusUnauthorized, errors.New("Não autorizado"))
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, purchase)
 }
 
 func PostPurchase(w http.ResponseWriter, r *http.Request) {
