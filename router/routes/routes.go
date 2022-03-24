@@ -77,6 +77,12 @@ var routes = []Route{
 		RequireAuth: true,
 		Action:      controllers.PostReview,
 	},
+	{
+		URI:         "/purchase",
+		Method:      http.MethodPost,
+		RequireAuth: true,
+		Action:      controllers.PostPurchase,
+	},
 }
 
 func Configure(router *mux.Router) *mux.Router {

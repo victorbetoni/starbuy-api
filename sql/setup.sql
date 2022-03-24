@@ -102,12 +102,20 @@ CREATE TABLE IF NOT EXISTS shopping_cart (
 );
 
 CREATE TABLE IF NOT EXISTS purchase_log (
-    holder   VARCHAR(20)    NOT NULL,
-    product  VARCHAR(64)    NOT NULL,
-    quantity INTEGER        NOT NULL,
-    price    DECIMAL(10, 2) NOT NULL,
+    identifier    VARCHAR(64)    NOT NULL,
+    holder        VARCHAR(20)    NOT NULL,
+    seller        VARCHAR(20)    NOT NULL,
+    product       VARCHAR(64)    NOT NULL,
+    quantity      INTEGER        NOT NULL,
+    price         DECIMAL(10, 2) NOT NULL,
 
     FOREIGN KEY (holder) REFERENCES users (username)
+);
+
+CREATE TABLE IF NOT EXISTS purchase_update (
+    purchase    VARCHAR(64) NOT NULL,
+    status      INTEGER     NOT NULL,
+    update_date DATE        NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS product_images (

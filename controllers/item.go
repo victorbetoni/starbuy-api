@@ -20,7 +20,7 @@ import (
 func PostItem(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
+		responses.JSON(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 
