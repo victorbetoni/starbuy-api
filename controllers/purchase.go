@@ -56,6 +56,12 @@ func GetPurchase(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostPurchase(w http.ResponseWriter, r *http.Request) {
+
+	type Request struct {
+		Item     string `json:"item"`
+		Quantity int    `json:"quantity"`
+	}
+
 	var err error
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -63,13 +69,11 @@ func PostPurchase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var purchase model.RawPurchase
-	if err = json.Unmarshal(body, &purchase); err != nil {
+	var req Request
+	if err = json.Unmarshal(body, &req); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
 	}
-
-	purchase.Identifier = strings.Replace(uuid.New().String(), "-", "", 4)
 
 	user, err := authorization.ExtractUser(r)
 	if err != nil {
@@ -85,7 +89,7 @@ func PostPurchase(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var item model.ItemWithAssets
-	err = repository.DownloadItem(purchase.Item, &item)
+	err = repository.DownloadItem(req.Item, &item)
 	if err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
 		return
@@ -99,12 +103,12 @@ func PostPurchase(w http.ResponseWriter, r *http.Request) {
 	}
 
 	final := model.Purchase{
-		Identifier: purchase.Identifier,
+		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
 		Seller:     seller,
 		Customer:   customer,
 		Item:       item,
-		Price:      item.Item.Price * float64(purchase.Quantity),
-		Quantity:   purchase.Quantity,
+		Price:      item.Item.Price * float64(req.Quantity),
+		Quantity:   req.Quantity,
 	}
 
 	repository.InsertPurchase(final)
