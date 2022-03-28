@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"starbuy/model"
@@ -53,24 +54,18 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["username"]
 	var user model.User
 
-	type Req struct {
-		IncludeItems bool `json:"include_items"`
-	}
+	keys, ok := r.URL.Query()["includeItems"]
 
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
+	if !ok || len(keys[0]) < 1 {
+		responses.Error(w, http.StatusNotFound, errors.New("Missing key"))
 		return
 	}
 
-	var req Req
-	if err = json.Unmarshal(body, &req); err != nil {
-		req.IncludeItems = false
-	}
+	key := keys[0]
 
 	var items []model.ItemWithAssets
 
-	if req.IncludeItems {
+	if key == "true" {
 		var local []model.ItemWithAssets
 		if err := repository.DownloadUserProducts(queried, &local); err != nil {
 			if err == sql.ErrNoRows {
@@ -104,7 +99,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.IncludeItems {
+	if key == "true" {
 
 		type UserWithItem struct {
 			User  model.User             `json:"user"`
