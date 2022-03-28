@@ -84,7 +84,7 @@ func PostReview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := database.GrabDB()
-	if err := db.Get(nil, "SELECT * FROM purchase_log WHERE holder=$1 AND product=$2", username, review.Item); err != nil && err == sql.ErrNoRows {
+	if err := db.Get(nil, "SELECT * FROM purchase_log WHERE holder=$1 AND product=$2", username, req.Item); err != nil && err == sql.ErrNoRows {
 		responses.Error(w, http.StatusUnauthorized, errors.New("Você não comprou esse produto"))
 		return
 	}
