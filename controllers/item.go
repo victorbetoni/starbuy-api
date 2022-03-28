@@ -46,8 +46,28 @@ func PostItem(w http.ResponseWriter, r *http.Request) {
 
 func GetItem(w http.ResponseWriter, r *http.Request) {
 	queried := mux.Vars(r)["id"]
-	var item model.ItemWithAssets
 
+	keys, ok := r.URL.Query()["reviews"]
+
+	if !ok || len(keys[0]) < 1 {
+		responses.Error(w, http.StatusNotFound, errors.New("Missing key"))
+		return
+	}
+
+	key := keys[0]
+
+	var reviews []model.Review
+	if key == "true" {
+		if err := repository.QueryProductReviews(queried, &reviews); err != nil && err != sql.ErrNoRows {
+			responses.Error(w, http.StatusInternalServerError, err)
+			return
+		}
+		for _, review := range reviews {
+			review.Item = model.ItemWithAssets{}
+		}
+	}
+
+	var item model.ItemWithAssets
 	if err := repository.DownloadItem(queried, &item); err != nil {
 		if err == sql.ErrNoRows {
 			responses.Error(w, http.StatusNoContent, err)
@@ -57,7 +77,18 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, item)
+	type Response struct {
+		Item    *model.ItemWithAssets `json:"item,omitempty"`
+		Reviews *[]model.Review       `json:"reviews,omitempty"`
+	}
+
+	var response Response
+	if key == "true" {
+		response.Reviews = &reviews
+	}
+	response.Item = &item
+
+	responses.JSON(w, http.StatusOK, response)
 }
 
 func GetAllItems(w http.ResponseWriter, r *http.Request) {
