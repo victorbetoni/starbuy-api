@@ -36,3 +36,15 @@ func DownloadAddresses(username string, address *[]model.RawAddress) error {
 
 	return nil
 }
+
+func InsertAddress(address model.RawAddress) error {
+	db := database.GrabDB()
+
+	tx2 := db.MustBegin()
+	tx2.MustExec("INSERT INTO addresses VALUES ($1,$2,$3,$4,$5)", address.Identifier, address.Holder, address.CEP, address.Number, address.Complement)
+	if err := tx2.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
