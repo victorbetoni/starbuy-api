@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS juridic_id (
     FOREIGN KEY (holder) REFERENCES users (username)
 );
 
-CREATE TABLE IF NOT EXISTS address (
+CREATE TABLE IF NOT EXISTS addresses (
+    identifier VARCHAR(64) NOT NULL PRIMARY KEY,
     holder     VARCHAR(20) NOT NULL,
     cep        CHAR(8)     NOT NULL,
     number     INTEGER     NOT NULL,
