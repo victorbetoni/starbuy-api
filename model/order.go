@@ -1,6 +1,6 @@
 package model
 
-type Purchase struct {
+type Order struct {
 	Identifier string         `json:"identifier"`
 	Customer   User           `json:"customer"`
 	Seller     User           `json:"seller"`
@@ -9,7 +9,7 @@ type Purchase struct {
 	Quantity   int            `json:"quantity"`
 }
 
-type RawPurchase struct {
+type RawOrder struct {
 	Identifier string  `json:"identifier" db:"identifier"`
 	Customer   string  `json:"customer" db:"holder"`
 	Seller     string  `json:"seller" db:"seller"`

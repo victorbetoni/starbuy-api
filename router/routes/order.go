@@ -8,25 +8,25 @@ import (
 var Purchase = []Route{
 
 	{
-		URI:         "/purchase",
+		URI:         "/order",
 		Method:      http.MethodPost,
 		RequireAuth: true,
 		Action:      controllers.PostPurchase,
 	},
 	{
-		URI:         "/purchase/{id}",
+		URI:         "/order/{id}",
 		Method:      http.MethodPost,
 		RequireAuth: true,
 		Action:      controllers.PostPurchase,
 	},
 	{
-		URI:         "/purchases",
+		URI:         "/orders",
 		Method:      http.MethodGet,
 		RequireAuth: true,
 		Action:      controllers.GetPurchases,
 	},
 	{
-		URI:         "/purchase/{id}",
+		URI:         "/order/{id}",
 		Method:      http.MethodGet,
 		RequireAuth: true,
 		Action:      controllers.GetPurchase,

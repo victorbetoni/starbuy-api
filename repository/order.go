@@ -25,7 +25,7 @@ func DownloadPurchase(identifier string, purchases *model.Purchase) error {
 	return nil
 }
 
-func InsertPurchase(purchase model.Purchase) error {
+func InsertPurchase(purchase model.Order) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()

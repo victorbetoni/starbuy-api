@@ -23,7 +23,7 @@ func GetPurchases(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var purchases []model.Purchase
+	var purchases []model.Order
 	repository.DownloadPurchases(user, &purchases)
 
 	responses.JSON(w, http.StatusOK, purchases)
@@ -37,7 +37,7 @@ func GetPurchase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var purchase model.Purchase
+	var purchase model.Order
 	if err := repository.DownloadPurchase(queried, &purchase); err != nil {
 		if err == sql.ErrNoRows {
 			responses.Error(w, http.StatusNoContent, errors.New("Compra não encontrada"))
@@ -102,7 +102,7 @@ func PostPurchase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	final := model.Purchase{
+	final := model.Order{
 		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
 		Seller:     seller,
 		Customer:   customer,
