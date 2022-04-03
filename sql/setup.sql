@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 
     FOREIGN KEY (user)    REFERENCES users    (username),
     FOREIGN KEY (product) REFERENCES products (identifier)
-)
+);
 
 CREATE TABLE IF NOT EXISTS juridic_id (
     holder     VARCHAR(20) NOT NULL PRIMARY KEY,

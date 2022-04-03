@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net/http"
 	"starbuy/util"
 	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 func GenerateToken(username string) string {
@@ -30,8 +30,8 @@ func GenerateToken(username string) string {
 	return str
 }
 
-func ValidateToken(request *http.Request) error {
-	raw := extractToken(request)
+func ValidateToken(c *gin.Context) error {
+	raw := extractToken(c)
 
 	token, err := jwt.Parse(raw, checkSecurityKey)
 	if err != nil {
@@ -45,8 +45,8 @@ func ValidateToken(request *http.Request) error {
 	return errors.New("Invalid token")
 }
 
-func extractToken(r *http.Request) string {
-	raw := r.Header.Get("Authorization")
+func extractToken(c *gin.Context) string {
+	raw := c.GetHeader("Authorization")
 
 	if len(strings.Split(raw, " ")) != 2 {
 		return ""
@@ -62,8 +62,8 @@ func checkSecurityKey(token *jwt.Token) (interface{}, error) {
 	return []byte(util.GrabConfig().Secret), nil
 }
 
-func ExtractUser(r *http.Request) (string, error) {
-	raw := extractToken(r)
+func ExtractUser(c *gin.Context) (string, error) {
+	raw := extractToken(c)
 	token, err := jwt.Parse(raw, checkSecurityKey)
 	if err != nil {
 		return "", err

@@ -2,109 +2,92 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
-	"errors"
-	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"starbuy/responses"
+	"strconv"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 )
 
-func GetAddresses(w http.ResponseWriter, r *http.Request) {
-	queried := mux.Vars(r)["user"]
-	user, err := authorization.ExtractUser(r)
+func GetAddresses(c *gin.Context) {
+	queried := c.Param("user")
+	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
 		return
 	}
 
 	if user != queried {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Não autorizado"))
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
 
 	var addresses []model.RawAddress
 	if err := repository.DownloadAddresses(user, &addresses); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNoContent, errors.New("Nenhum endereço encontrado"))
+			c.JSON(http.StatusNoContent, gin.H{})
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, addresses)
+	c.JSON(http.StatusOK, addresses)
 }
 
-func GetAddress(w http.ResponseWriter, r *http.Request) {
-	queried := mux.Vars(r)["user"]
-	id := mux.Vars(r)["id"]
+func GetAddress(c *gin.Context) {
+	queried, id := c.Param("user"), c.Param("id")
 
-	user, err := authorization.ExtractUser(r)
+	user, err := authorization.ExtractUser(c)
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
 		return
 	}
 
 	if user != queried {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Não autorizado"))
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
 
 	var address model.Address
 	if err := repository.DownloadAddress(id, &address); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNoContent, errors.New("Nenhum endereço encontrado"))
+			c.JSON(http.StatusNoContent, gin.H{"error": "no content"})
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, address)
+	c.JSON(http.StatusOK, address)
 }
 
-func PostAddress(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+func PostAddress(c *gin.Context) {
+	user, err := authorization.ExtractUser(c)
+
 	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
 
-	user, err := authorization.ExtractUser(r)
-	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
-		return
-	}
+	cep, number, complement := c.PostForm("cep"), c.PostForm("number"), c.PostForm("complement")
 
-	type Request struct {
-		CEP        string `json:"cep,omitempty"`
-		Number     int    `json:"number,omitempty"`
-		Complement string `json:"complement,omitempty"`
-	}
-
-	var req Request
-	if err = json.Unmarshal(body, &req); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
-		return
-	}
+	num, _ := strconv.Atoi(number)
 
 	//TODO: Usar alguma API para verificar se o CEP bate com algum existente
 
 	address := model.RawAddress{
 		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
 		Holder:     user,
-		CEP:        req.CEP,
-		Number:     req.Number,
-		Complement: req.Complement,
+		CEP:        cep,
+		Number:     num,
+		Complement: complement,
 	}
 
-	responses.JSON(w, http.StatusOK, address)
+	c.JSON(http.StatusOK, address)
 }

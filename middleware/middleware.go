@@ -4,14 +4,16 @@ import (
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/responses"
+
+	"github.com/gin-gonic/gin"
 )
 
-func Authorize(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if err := authorization.ValidateToken(r); err != nil {
+func Authorize(next gin.HandlerFunc) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if err := authorization.ValidateToken(c); err != nil {
 			responses.Error(w, http.StatusUnauthorized, err)
 			return
 		}
-		next(w, r)
+		next(c)
 	}
 }

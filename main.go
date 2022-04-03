@@ -6,15 +6,16 @@ import (
 	"net/http"
 	"os"
 	"starbuy/database"
-	"starbuy/router"
 	"starbuy/util"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
 func main() {
 
 	util.LoadConfig(".")
+	router := gin.Default()
 
 	port := os.Getenv("PORT")
 	if port == "" {
