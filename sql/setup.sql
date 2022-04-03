@@ -18,20 +18,18 @@ CREATE TABLE IF NOT EXISTS phone_number (
     PRIMARY KEY (holder, phone_number)
 );
 
-DROP TABLE IF EXISTS product_categories;
-
 CREATE TABLE IF NOT EXISTS product_categories (
     identifier INTEGER      PRIMARY KEY NOT NULL,
     name       VARCHAR(64)              NOT NULL
 );
 
-INSERT INTO product_categories VALUES (1, 'Tecnologia e Informática');
-INSERT INTO product_categories VALUES (2, 'Moda e Acessórios');
-INSERT INTO product_categories VALUES (3, 'Casa e Decoração');
-INSERT INTO product_categories VALUES (4, 'Livros e Revistas');
-INSERT INTO product_categories VALUES (5, 'Papelaria');
-INSERT INTO product_categories VALUES (6, 'Brinquedos e Jogos');
-INSERT INTO product_categories VALUES (7, 'Música e Instrumentos');
+INSERT INTO product_categories VALUES (1, 'Tecnologia e Informática')  ON CONFLICT (identifier) DO NOTHING;
+INSERT INTO product_categories VALUES (2, 'Moda e Acessórios') ON CONFLICT (identifier) DO NOTHING;
+INSERT INTO product_categories VALUES (3, 'Casa e Decoração') ON CONFLICT (identifier) DO NOTHING;
+INSERT INTO product_categories VALUES (4, 'Livros e Revistas') ON CONFLICT (identifier) DO NOTHING;
+INSERT INTO product_categories VALUES (5, 'Papelaria') ON CONFLICT (identifier) DO NOTHING;
+INSERT INTO product_categories VALUES (6, 'Brinquedos e Jogos') ON CONFLICT (identifier) DO NOTHING;
+INSERT INTO product_categories VALUES (7, 'Música e Instrumentos') ON CONFLICT (identifier) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS products (
     identifier  VARCHAR(64)    UNIQUE  NOT NULL,
@@ -47,7 +45,7 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
-    identifier VARCHAR(64)  NOT NULL PRIMARY KEY
+    identifier VARCHAR(64)  NOT NULL PRIMARY KEY,
     product    VARCHAR(64)  NOT NULL,
     user       VARCHAR(20)  NOT NULL,
     msg        VARCHAR(512) NOT NULL,

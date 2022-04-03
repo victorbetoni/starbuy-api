@@ -5,7 +5,7 @@ import (
 	"starbuy/model"
 )
 
-func DownloadPurchases(username string, purchases *[]model.Purchase) error {
+func DownloadPurchases(username string, purchases *[]model.Order) error {
 	db := database.GrabDB()
 
 	if err := db.Select(purchases, "SELECT * FROM purchases WHERE seller = $1", username); err != nil {
@@ -15,7 +15,7 @@ func DownloadPurchases(username string, purchases *[]model.Purchase) error {
 	return nil
 }
 
-func DownloadPurchase(identifier string, purchases *model.Purchase) error {
+func DownloadPurchase(identifier string, purchases *model.Order) error {
 	db := database.GrabDB()
 
 	if err := db.Get(purchases, "SELECT * FROM purchases WHERE identifier = $1", identifier); err != nil {
