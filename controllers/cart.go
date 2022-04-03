@@ -1,12 +1,10 @@
 package controllers
 
 import (
-	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"starbuy/responses"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +33,7 @@ func PostCart(c *gin.Context) {
 	cart := model.RawCartItem{Holder: user, Quantity: quantity, Item: item}
 
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token invalido"))
+		c.JSON(http.StatusUnauthorized, gin.H{"error:": "Token invalido"})
 		return
 	}
 
