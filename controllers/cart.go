@@ -1,42 +1,38 @@
 package controllers
 
 import (
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
 	"starbuy/responses"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
-func QueryCart(w http.ResponseWriter, r *http.Request) {
-	user, err := authorization.ExtractUser(r)
+func QueryCart(c *gin.Context) {
+	user, err := authorization.ExtractUser(c)
+
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, err)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
 		return
 	}
 
 	var items []model.CartItem
 	repository.DownloadCart(user, &items)
-	responses.JSON(w, http.StatusOK, items)
+	c.JSON(http.StatusOK, items)
 }
 
-func PostCart(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
-		return
-	}
+func PostCart(c *gin.Context) {
 
-	var cart model.RawCartItem
-	if err = json.Unmarshal(body, &cart); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
-		return
-	}
+	item := c.PostForm("item")
+	quantity, _ := strconv.Atoi(c.PostForm("quantity"))
 
-	user, err := authorization.ExtractUser(r)
+	user, err := authorization.ExtractUser(c)
+
+	cart := model.RawCartItem{Holder: user, Quantity: quantity, Item: item}
 
 	if err != nil {
 		responses.Error(w, http.StatusUnauthorized, errors.New("Token invalido"))
@@ -45,5 +41,5 @@ func PostCart(w http.ResponseWriter, r *http.Request) {
 
 	cart.Holder = user
 	repository.InsertCartItem(cart)
-	responses.JSON(w, http.StatusOK, cart)
+	c.JSON(http.StatusOK, cart)
 }
