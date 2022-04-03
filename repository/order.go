@@ -18,7 +18,7 @@ func DownloadPurchases(username string, purchases *[]model.Order) error {
 func DownloadPurchase(identifier string, purchases *model.Order) error {
 	db := database.GrabDB()
 
-	if err := db.Get(purchases, "SELECT * FROM purchases WHERE identifier = $1", identifier); err != nil {
+	if err := db.Get(purchases, "SELECT * FROM orders WHERE identifier = $1", identifier); err != nil {
 		return err
 	}
 
@@ -29,7 +29,7 @@ func InsertPurchase(purchase model.Order) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()
-	tx.MustExec("INSERT INTO purchase_log VALUES ($1,$2,$3,$4,$5)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price)
+	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price)
 	if err := tx.Commit(); err != nil {
 		return err
 	}

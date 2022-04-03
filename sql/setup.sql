@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS shopping_cart (
     PRIMARY KEY (holder, product)
 );
 
-CREATE TABLE IF NOT EXISTS purchase_log (
+CREATE TABLE IF NOT EXISTS orders (
     identifier    VARCHAR(64)    NOT NULL,
     holder        VARCHAR(20)    NOT NULL,
     seller        VARCHAR(20)    NOT NULL,
@@ -110,10 +110,12 @@ CREATE TABLE IF NOT EXISTS purchase_log (
     FOREIGN KEY (holder) REFERENCES users (username)
 );
 
-CREATE TABLE IF NOT EXISTS purchase_update (
-    purchase    VARCHAR(64) NOT NULL,
+CREATE TABLE IF NOT EXISTS orders_update (
+    order    VARCHAR(64)    NOT NULL,
     status      INTEGER     NOT NULL,
-    update_date DATE        NOT NULL
+    update_date DATE        NOT NULL,
+
+    FOREIGN KEY (order) REFERENCES orders (identifier)
 );
 
 CREATE TABLE IF NOT EXISTS product_images (
@@ -121,4 +123,13 @@ CREATE TABLE IF NOT EXISTS product_images (
     url     VARCHAR(512) NOT NULL,
 
     FOREIGN KEY (product) REFERENCES products (identifier)
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+    identifier VARCHAR(64)  PRIMARY KEY NOT NULL,
+    holder     VARCHAR(20)              NOT NULL,
+    text       VARCHAR(128)             NOT NULL,
+    sent_in    DATE                     NOT NULL,
+
+    FOREIGN KEY (holder) REFERENCES users(username)
 );

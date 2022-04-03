@@ -21,7 +21,7 @@ func Configure(router *mux.Router) *mux.Router {
 	routes = append(routes, User)
 	routes = append(routes, Cart)
 	routes = append(routes, Review)
-	routes = append(routes, Purchase)
+	routes = append(routes, Order)
 	routes = append(routes, Address)
 
 	for _, x := range routes {

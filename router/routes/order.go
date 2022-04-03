@@ -5,7 +5,7 @@ import (
 	"starbuy/controllers"
 )
 
-var Purchase = []Route{
+var Order = []Route{
 
 	{
 		URI:         "/order",
