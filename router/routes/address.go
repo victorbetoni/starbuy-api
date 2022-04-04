@@ -16,7 +16,7 @@ var Address = []Route{
 		},
 	},
 	{
-		URI:         "/:user/address",
+		URI:         "/user/:user/address",
 		RequireAuth: true,
 		Action:      controllers.PostAddress,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
