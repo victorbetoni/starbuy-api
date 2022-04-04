@@ -2,103 +2,94 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"starbuy/responses"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 )
 
-func GetPurchases(w http.ResponseWriter, r *http.Request) {
-	user, err := authorization.ExtractUser(r)
+func GetPurchases(c *gin.Context) {
+	user, err := authorization.ExtractUser(c)
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
 	var purchases []model.Order
 	repository.DownloadPurchases(user, &purchases)
 
-	responses.JSON(w, http.StatusOK, purchases)
+	c.JSON(http.StatusOK, purchases)
 }
 
-func GetPurchase(w http.ResponseWriter, r *http.Request) {
-	queried := mux.Vars(r)["id"]
-	user, err := authorization.ExtractUser(r)
+func GetPurchase(c *gin.Context) {
+	queried := c.Param("id")
+	user, err := authorization.ExtractUser(c)
+
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
 	var purchase model.Order
 	if err := repository.DownloadPurchase(queried, &purchase); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNoContent, errors.New("Compra não encontrada"))
+			c.AbortWithError(http.StatusNotFound, errors.New("not found"))
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	if purchase.Customer.Username != user {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Não autorizado"))
+		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, purchase)
+	c.JSON(http.StatusOK, purchase)
 }
 
-func PostPurchase(w http.ResponseWriter, r *http.Request) {
+func PostPurchase(c *gin.Context) {
+
+	user, err := authorization.ExtractUser(c)
+	if err != nil {
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
+		return
+	}
 
 	type Request struct {
 		Item     string `json:"item"`
 		Quantity int    `json:"quantity"`
 	}
 
-	var err error
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.JSON(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-
-	var req Request
-	if err = json.Unmarshal(body, &req); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
-		return
-	}
-
-	user, err := authorization.ExtractUser(r)
-	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
-		return
-	}
-
+	req := Request{}
 	var customer model.User
 	err = repository.DownloadUser(user, &customer)
 	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	var item model.ItemWithAssets
 	err = repository.DownloadItem(req.Item, &item)
 	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	var seller model.User
 	err = repository.DownloadUser(item.Item.Seller.Username, &seller)
 	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := c.BindJSON(&req); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -107,10 +98,10 @@ func PostPurchase(w http.ResponseWriter, r *http.Request) {
 		Seller:     seller,
 		Customer:   customer,
 		Item:       item,
-		Price:      item.Item.Price * float64(req.Quantity),
+		Price:      float64(item.Item.Price * (float64)(req.Quantity)),
 		Quantity:   req.Quantity,
 	}
 
 	repository.InsertPurchase(final)
-	responses.JSON(w, http.StatusOK, final)
+	c.JSON(http.StatusOK, final)
 }

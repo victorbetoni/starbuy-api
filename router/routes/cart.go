@@ -1,21 +1,26 @@
 package routes
 
 import (
-	"net/http"
 	"starbuy/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Cart = []Route{
 	{
 		URI:         "/cart",
-		Method:      http.MethodGet,
 		RequireAuth: true,
 		Action:      controllers.QueryCart,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
 	},
 	{
 		URI:         "/cart",
-		Method:      http.MethodPost,
 		RequireAuth: true,
 		Action:      controllers.PostCart,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.POST(uri, hf)
+		},
 	},
 }

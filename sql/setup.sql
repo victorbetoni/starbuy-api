@@ -2,7 +2,6 @@ CREATE TABLE IF NOT EXISTS users (
     username        VARCHAR(20) PRIMARY KEY NOT NULL,
     email           VARCHAR(32)             NOT NULL,
     name            VARCHAR(64)             NOT NULL,
-    gender          INT                     NOT NULL,
     registration    DATE                    NOT NULL,
     birthdate       DATE                    NOT NULL,
     seller          BOOLEAN                 NOT NULL,

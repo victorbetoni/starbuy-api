@@ -1,27 +1,34 @@
 package routes
 
 import (
-	"net/http"
 	"starbuy/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Address = []Route{
 	{
-		URI:         "/{user}/address",
-		Method:      http.MethodGet,
+		URI:         "/:user/address",
 		RequireAuth: true,
 		Action:      controllers.GetAddresses,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
 	},
 	{
-		URI:         "/{user}/address",
-		Method:      http.MethodPost,
+		URI:         "/:user/address",
 		RequireAuth: true,
-		Action:      controllers.PostCart,
+		Action:      controllers.PostAddress,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.POST(uri, hf)
+		},
 	},
 	{
-		URI:         "/{user}/address/{id}",
-		Method:      http.MethodGet,
+		URI:         "/:user/address/:id",
 		RequireAuth: true,
-		Action:      controllers.PostCart,
+		Action:      controllers.GetAddress,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.POST(uri, hf)
+		},
 	},
 }

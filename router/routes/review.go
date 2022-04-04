@@ -1,33 +1,42 @@
 package routes
 
 import (
-	"net/http"
 	"starbuy/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
 var Review = []Route{
 	{
-		URI:         "/{user}/reviews",
-		Method:      http.MethodGet,
+		URI:         "/:user/reviews",
 		RequireAuth: false,
 		Action:      controllers.GetReviews,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
 	},
 	{
-		URI:         "/review/{id}",
-		Method:      http.MethodGet,
+		URI:         "/review/:id",
 		RequireAuth: false,
 		Action:      controllers.GetReview,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
 	},
 	{
-		URI:         "/{item}/review",
-		Method:      http.MethodPost,
+		URI:         "/:item/review",
 		RequireAuth: true,
 		Action:      controllers.PostReview,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.POST(uri, hf)
+		},
 	},
 	{
 		URI:         "/review",
-		Method:      http.MethodPut,
 		RequireAuth: true,
 		Action:      controllers.PutReview,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.PUT(uri, hf)
+		},
 	},
 }

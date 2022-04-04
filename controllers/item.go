@@ -2,64 +2,49 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"starbuy/responses"
 	"strconv"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 )
 
-func PostItem(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.JSON(w, http.StatusUnprocessableEntity, err)
-		return
-	}
+func PostItem(c *gin.Context) {
 
 	var item model.PostedItem
-	if err = json.Unmarshal(body, &item); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
+	if err := c.BindJSON(&item); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	item.Item.Identifier = strings.Replace(uuid.New().String(), "-", "", 4)
+	user, err := authorization.ExtractUser(c)
 
-	user, err := authorization.ExtractUser(r)
 	if err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Token inválido"))
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
 	item.Item.Seller = user
 	repository.InsertItem(item)
-	responses.JSON(w, http.StatusOK, item)
+	c.JSON(http.StatusOK, item)
 
 }
 
-func GetItem(w http.ResponseWriter, r *http.Request) {
-	queried := mux.Vars(r)["id"]
-
-	keys, ok := r.URL.Query()["reviews"]
-
-	if !ok || len(keys[0]) < 1 {
-		responses.Error(w, http.StatusNotFound, errors.New("Missing key"))
-		return
-	}
-
-	key := keys[0]
+func GetItem(c *gin.Context) {
+	queried := c.Param("id")
+	key, ok := c.GetQuery("reviews")
+	includeReviews := ok && key == "true"
 
 	var reviews []model.Review
-	if key == "true" {
+	if includeReviews {
 		if err := repository.QueryProductReviews(queried, &reviews); err != nil && err != sql.ErrNoRows {
-			responses.Error(w, http.StatusInternalServerError, err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		for _, review := range reviews {
@@ -70,10 +55,10 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	var item model.ItemWithAssets
 	if err := repository.DownloadItem(queried, &item); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNoContent, err)
+			c.JSON(http.StatusNoContent, err)
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -83,39 +68,39 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var response Response
-	if key == "true" {
+	if includeReviews {
 		response.Reviews = &reviews
 	}
 	response.Item = &item
 
-	responses.JSON(w, http.StatusOK, response)
+	c.JSON(http.StatusOK, response)
 }
 
-func GetAllItems(w http.ResponseWriter, r *http.Request) {
+func GetAllItems(c *gin.Context) {
 	var items []model.ItemWithAssets
 	if err := repository.DownloadAllItems(&items); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNoContent, err)
+			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, items)
+	c.JSON(http.StatusOK, items)
 }
 
-func GetCategory(w http.ResponseWriter, r *http.Request) {
-	queried, _ := strconv.Atoi(mux.Vars(r)["id"])
+func GetCategory(c *gin.Context) {
+	queried, _ := strconv.Atoi(c.Param("id"))
 	var items []model.ItemWithAssets
 
 	if err := repository.DownloadItemByCategory(queried, &items); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNotFound, err)
+			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, items)
+	c.JSON(http.StatusOK, items)
 }

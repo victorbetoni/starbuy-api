@@ -2,20 +2,17 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
 	"os"
 	"starbuy/database"
+	"starbuy/router"
 	"starbuy/util"
 
-	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
 func main() {
 
 	util.LoadConfig(".")
-	router := gin.Default()
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -36,8 +33,8 @@ func main() {
 
 	defer db.Close()
 
-	router := router.Build()
 	fmt.Println("Listening and serving port ", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 
+	router := router.Build()
+	router.Run(fmt.Sprintf(":%s", port))
 }

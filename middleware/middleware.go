@@ -3,7 +3,6 @@ package middleware
 import (
 	"net/http"
 	"starbuy/authorization"
-	"starbuy/responses"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +10,7 @@ import (
 func Authorize(next gin.HandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if err := authorization.ValidateToken(c); err != nil {
-			responses.Error(w, http.StatusUnauthorized, err)
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 			return
 		}
 		next(c)

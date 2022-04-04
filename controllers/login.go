@@ -2,16 +2,15 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
-	"starbuy/responses"
 	"starbuy/security"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Login struct {
@@ -19,51 +18,33 @@ type Login struct {
 	Password string `db:"password"`
 }
 
-type IncomingUser struct {
-	Username       string `json:"username"`
-	Email          string `json:"email"`
-	Name           string `json:"name"`
-	Gender         int    `json:"gender"`
-	Registration   string `json:"registration"`
-	Birthdate      string `json:"birthdate"`
-	Seller         bool   `json:"seller"`
-	Password       string `json:"password"`
-	ProfilePicture string `json:"profile_picture"`
-	City           string `json:"city"`
-}
-
-func Auth(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-
-	var login Login
-	if err = json.Unmarshal(body, &login); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
-		return
-	}
-
+func Auth(c *gin.Context) {
 	db := database.GrabDB()
-	var recorded Login
-	if err = db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
+	login := Login{}
+
+	if err := c.BindJSON(&login); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	recorded := Login{}
+	if err := db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusInternalServerError, errors.New("Usuário não encontrado."))
+			c.AbortWithError(http.StatusNotFound, errors.New("not found"))
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
 	var user model.User
-	if err = repository.DownloadUser(login.Username, &user); err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+	if err := repository.DownloadUser(login.Username, &user); err != nil {
+		c.AbortWithError(http.StatusNotFound, errors.New("user not found"))
 		return
 	}
 
-	if err = security.ComparePassword(recorded.Password, login.Password); err != nil {
-		responses.Error(w, http.StatusUnauthorized, errors.New("Verifique suas credenciais"))
+	if err := security.ComparePassword(recorded.Password, login.Password); err != nil {
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
@@ -73,5 +54,5 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		User  model.User `json:"user"`
 		Token string     `json:"jwt"`
 	}
-	responses.JSON(w, http.StatusOK, Response{User: user, Token: token})
+	c.JSON(http.StatusOK, Response{User: user, Token: token})
 }

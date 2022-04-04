@@ -2,11 +2,11 @@ package controllers
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -18,19 +18,19 @@ func GetAddresses(c *gin.Context) {
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
 	if user != queried {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
 		return
 	}
 
 	var addresses []model.RawAddress
 	if err := repository.DownloadAddresses(user, &addresses); err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(http.StatusNoContent, gin.H{})
+			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
 			return
 		}
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -45,19 +45,19 @@ func GetAddress(c *gin.Context) {
 
 	user, err := authorization.ExtractUser(c)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
 	if user != queried {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
 	var address model.Address
 	if err := repository.DownloadAddress(id, &address); err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(http.StatusNoContent, gin.H{"error": "no content"})
+			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
 			return
 		}
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -71,22 +71,31 @@ func PostAddress(c *gin.Context) {
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
 		return
 	}
 
-	cep, number, complement := c.PostForm("cep"), c.PostForm("number"), c.PostForm("complement")
+	type Request struct {
+		CEP        string `json:"cep"`
+		Number     int    `json:"number"`
+		Complement string `json:"complement"`
+	}
 
-	num, _ := strconv.Atoi(number)
+	req := Request{}
+
+	if err := c.BindJSON(&req); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
 	//TODO: Usar alguma API para verificar se o CEP bate com algum existente
 
 	address := model.RawAddress{
 		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
 		Holder:     user,
-		CEP:        cep,
-		Number:     num,
-		Complement: complement,
+		CEP:        req.CEP,
+		Number:     req.Number,
+		Complement: req.Complement,
 	}
 
 	c.JSON(http.StatusOK, address)

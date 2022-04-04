@@ -2,77 +2,76 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"starbuy/model"
 	"starbuy/repository"
-	"starbuy/responses"
+	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-func Register(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		responses.Error(w, http.StatusUnprocessableEntity, err)
-		return
-	}
+type IncomingUser struct {
+	Username       string `json:"username"`
+	Email          string `json:"email"`
+	Name           string `json:"name"`
+	Birthdate      string `json:"birthdate"`
+	Seller         bool   `json:"seller"`
+	ProfilePicture string `json:"profile_picture"`
+	City           string `json:"city"`
+	Password       string `json:"password"`
+}
 
-	var data IncomingUser
-	if err = json.Unmarshal(body, &data); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
+func Register(c *gin.Context) {
+
+	incoming := IncomingUser{}
+	if err := c.BindJSON(&incoming); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	user := model.User{
-		Username:       data.Username,
-		Email:          data.Email,
-		Name:           data.Name,
-		Gender:         data.Gender,
-		Birthdate:      data.Birthdate,
-		Seller:         data.Seller,
-		ProfilePicture: data.ProfilePicture,
-		City:           data.City,
-		Registration:   data.Registration}
+		Username:       incoming.Username,
+		Email:          incoming.Email,
+		Name:           incoming.Name,
+		Birthdate:      incoming.Birthdate,
+		ProfilePicture: incoming.ProfilePicture,
+		Seller:         incoming.Seller,
+		City:           incoming.City,
+		Registration:   time.Now().Format("02-01-2006"),
+	}
 
 	if err := user.Prepare(); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := repository.InsertUser(user, data.Password); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
+	if err := repository.InsertUser(user, incoming.Password); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, user)
+	c.JSON(http.StatusOK, user)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	queried := mux.Vars(r)["username"]
+func GetUser(c *gin.Context) {
+	queried := c.Param("username")
+
+	key, ok := c.GetQuery("includeItems")
+	includeItems := ok && key == "true"
+
 	var user model.User
-
-	keys, ok := r.URL.Query()["includeItems"]
-
-	if !ok || len(keys[0]) < 1 {
-		responses.Error(w, http.StatusNotFound, errors.New("Missing key"))
-		return
-	}
-
-	key := keys[0]
 
 	var items []model.ItemWithAssets
 
-	if key == "true" {
+	if includeItems {
 		var local []model.ItemWithAssets
 		if err := repository.DownloadUserProducts(queried, &local); err != nil {
 			if err == sql.ErrNoRows {
-				responses.Error(w, http.StatusNotFound, err)
+				c.AbortWithError(http.StatusNotFound, errors.New("not found"))
 				return
 			}
-			responses.Error(w, http.StatusInternalServerError, err)
+			c.AbortWithError(http.StatusInternalServerError, err)
 			return
 		}
 
@@ -92,22 +91,22 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	if err := repository.DownloadUser(queried, &user); err != nil {
 		if err == sql.ErrNoRows {
-			responses.Error(w, http.StatusNotFound, err)
+			c.AbortWithError(http.StatusNotFound, errors.New("user not found"))
 			return
 		}
-		responses.Error(w, http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	if key == "true" {
+	if includeItems {
 
 		type UserWithItem struct {
 			User  model.User             `json:"user"`
 			Items []model.ItemWithAssets `json:"items"`
 		}
-		responses.JSON(w, http.StatusOK, UserWithItem{user, items})
+		c.JSON(http.StatusOK, UserWithItem{user, items})
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, user)
+	c.JSON(http.StatusOK, user)
 }

@@ -1,11 +1,11 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +14,7 @@ func QueryCart(c *gin.Context) {
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid token"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 
@@ -25,15 +25,24 @@ func QueryCart(c *gin.Context) {
 
 func PostCart(c *gin.Context) {
 
-	item := c.PostForm("item")
-	quantity, _ := strconv.Atoi(c.PostForm("quantity"))
+	type Request struct {
+		Item     string `json:"item"`
+		Quantity int    `json"quantity"`
+	}
+
+	req := Request{}
+
+	if err := c.BindJSON(&req); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
 	user, err := authorization.ExtractUser(c)
 
-	cart := model.RawCartItem{Holder: user, Quantity: quantity, Item: item}
+	cart := model.RawCartItem{Holder: user, Quantity: req.Quantity, Item: req.Item}
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error:": "Token invalido"})
+		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return
 	}
 

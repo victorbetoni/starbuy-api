@@ -1,21 +1,20 @@
 package routes
 
 import (
-	"net/http"
 	"starbuy/middleware"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
 // Route - Representação de todas as rotas da API
 type Route struct {
-	URI         string
-	Method      string
 	RequireAuth bool
-	Action      func(http.ResponseWriter, *http.Request)
+	URI         string
+	Action      gin.HandlerFunc
+	Assign      func(*gin.Engine, gin.HandlerFunc, string)
 }
 
-func Configure(router *mux.Router) *mux.Router {
+func Configure(router *gin.Engine) *gin.Engine {
 	var routes [][]Route
 	routes = append(routes, Item)
 	routes = append(routes, User)
@@ -27,12 +26,11 @@ func Configure(router *mux.Router) *mux.Router {
 	for _, x := range routes {
 		for _, route := range x {
 			if route.RequireAuth {
-				router.HandleFunc(route.URI, middleware.Authorize(route.Action)).Methods(route.Method)
+				route.Assign(router, middleware.Authorize(route.Action), route.URI)
 			} else {
-				router.HandleFunc(route.URI, route.Action).Methods(route.Method)
+				route.Assign(router, route.Action, route.URI)
 			}
 		}
 	}
-
 	return router
 }
