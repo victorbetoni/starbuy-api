@@ -24,7 +24,7 @@ var Address = []Route{
 		},
 	},
 	{
-		URI:         "/:user/address/:id",
+		URI:         "/user/:user/address/:id",
 		RequireAuth: true,
 		Action:      controllers.GetAddress,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
