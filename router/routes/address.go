@@ -28,7 +28,7 @@ var Address = []Route{
 		RequireAuth: true,
 		Action:      controllers.GetAddress,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
-			e.POST(uri, hf)
+			e.GET(uri, hf)
 		},
 	},
 }
