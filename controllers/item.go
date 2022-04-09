@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -37,6 +38,7 @@ func PostItem(c *gin.Context) {
 }
 
 func GetItem(c *gin.Context) {
+	fmt.Println("YEEEY")
 	queried := c.Param("id")
 	key, ok := c.GetQuery("reviews")
 	includeReviews := ok && key == "true"
