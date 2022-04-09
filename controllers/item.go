@@ -3,7 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	"log"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -38,7 +38,6 @@ func PostItem(c *gin.Context) {
 }
 
 func GetItem(c *gin.Context) {
-	fmt.Println("YEEEY")
 	queried := c.Param("id")
 	key, ok := c.GetQuery("reviews")
 	includeReviews := ok && key == "true"
@@ -46,6 +45,7 @@ func GetItem(c *gin.Context) {
 	var reviews []model.Review
 	if includeReviews {
 		if err := repository.QueryProductReviews(queried, &reviews); err != nil && err != sql.ErrNoRows {
+			log.Fatal(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -60,7 +60,8 @@ func GetItem(c *gin.Context) {
 			c.JSON(http.StatusNoContent, err)
 			return
 		}
-		c.JSON(http.StatusInternalServerError, err)
+		log.Fatal(err)
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
@@ -100,6 +101,7 @@ func GetCategory(c *gin.Context) {
 			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
 			return
 		}
+		log.Fatal(err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}

@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -41,6 +42,7 @@ func GetPurchase(c *gin.Context) {
 			c.AbortWithError(http.StatusNotFound, errors.New("not found"))
 			return
 		}
+		log.Fatal(err)
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
