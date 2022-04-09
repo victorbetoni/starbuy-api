@@ -25,7 +25,7 @@ var User = []Route{
 	},
 	{
 		RequireAuth: false,
-		URI:         "/user/:username",
+		URI:         "/user/:user",
 		Action:      controllers.GetUser,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)
