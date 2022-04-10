@@ -44,12 +44,12 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 CREATE TABLE IF NOT EXISTS reviews (
-    identifier VARCHAR(64)  NOT NULL PRIMARY KEY,
     product    VARCHAR(64)  NOT NULL,
     user       VARCHAR(20)  NOT NULL,
     msg        VARCHAR(512) NOT NULL,
     rate       INT          NOT NULL,
 
+    PRIMARY KEY(product, user),
     FOREIGN KEY (user)    REFERENCES users    (username),
     FOREIGN KEY (product) REFERENCES products (identifier)
 );
