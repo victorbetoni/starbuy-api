@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetPurchases(c *gin.Context) error {
+func GetOrders(c *gin.Context) error {
 	user, _ := authorization.ExtractUser(c)
 
 	var purchases []model.Order
@@ -23,7 +23,7 @@ func GetPurchases(c *gin.Context) error {
 	return nil
 }
 
-func GetPurchase(c *gin.Context) error {
+func GetOrder(c *gin.Context) error {
 	queried := c.Param("id")
 	user, _ := authorization.ExtractUser(c)
 
@@ -46,7 +46,7 @@ func GetPurchase(c *gin.Context) error {
 	return nil
 }
 
-func PostPurchase(c *gin.Context) error {
+func PostOrder(c *gin.Context) error {
 
 	user, _ := authorization.ExtractUser(c)
 

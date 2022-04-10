@@ -11,7 +11,7 @@ var Order = []Route{
 	{
 		URI:         "/order",
 		RequireAuth: true,
-		Action:      controllers.PostPurchase,
+		Action:      controllers.PostOrder,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.POST(uri, hf)
 		},
@@ -19,23 +19,15 @@ var Order = []Route{
 	{
 		URI:         "/order/:id",
 		RequireAuth: true,
-		Action:      controllers.PostPurchase,
-		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
-			e.POST(uri, hf)
-		},
-	},
-	{
-		URI:         "/orders",
-		RequireAuth: true,
-		Action:      controllers.GetPurchases,
+		Action:      controllers.GetOrder,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)
 		},
 	},
 	{
-		URI:         "/order/:id",
+		URI:         "/orders",
 		RequireAuth: true,
-		Action:      controllers.GetPurchase,
+		Action:      controllers.GetOrders,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)
 		},
