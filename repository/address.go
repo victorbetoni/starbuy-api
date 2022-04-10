@@ -9,7 +9,7 @@ func DownloadAddress(identifier string, address *model.Address) error {
 	db := database.GrabDB()
 
 	var stored model.RawAddress
-	if err := db.Select(&stored, "SELECT * FROM addresses WHERE identifier=$1", identifier); err != nil {
+	if err := db.Get(&stored, "SELECT * FROM addresses WHERE identifier=$1", identifier); err != nil {
 		return err
 	}
 
