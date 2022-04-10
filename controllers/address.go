@@ -75,6 +75,13 @@ func PostAddress(c *gin.Context) error {
 		return nil
 	}
 
+	req.CEP = strings.Replace(req.CEP, "-", "", 1)
+
+	if len(req.CEP) > 8 {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
+	}
+
 	//TODO: Usar alguma API para verificar se o CEP bate com algum existente
 
 	address := model.RawAddress{
