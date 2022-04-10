@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
 	"starbuy/authorization"
@@ -39,18 +40,37 @@ func PostCart(c *gin.Context) error {
 		return nil
 	}
 
-	user, err := authorization.ExtractUser(c)
+	username, _ := authorization.ExtractUser(c)
+	cart := model.RawCartItem{Holder: username, Quantity: req.Quantity, Item: req.Item}
 
-	cart := model.RawCartItem{Holder: user, Quantity: req.Quantity, Item: req.Item}
+	var item model.ItemWithAssets
+	if err := repository.DownloadItem(req.Item, &item); err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "item not found"})
+			return nil
+		}
+		return err
+	}
 
-	if err != nil {
-		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+	if item.Item.Stock < cart.Quantity {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "quantity greater than item stock"})
 		return nil
 	}
 
-	cart.Holder = user
+	var user model.User
+	if err := repository.DownloadUser(username, &user); err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "user not found"})
+			return nil
+		}
+		return err
+	}
+
+	cart.Holder = username
 	repository.InsertCartItem(cart)
-	c.JSON(http.StatusOK, cart)
+
+	c.JSON(http.StatusOK, model.CartItem{Holder: user, Quantity: cart.Quantity, Item: item.Item})
 	return nil
 }

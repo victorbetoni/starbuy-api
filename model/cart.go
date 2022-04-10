@@ -7,7 +7,7 @@ type RawCartItem struct {
 }
 
 type CartItem struct {
-	Holder   string `json:"holder"`
-	Quantity int    `json:"quantity"`
-	Item     Item   `json:"item"`
+	Holder   User `json:"holder"`
+	Quantity int  `json:"quantity"`
+	Item     Item `json:"item"`
 }
