@@ -52,7 +52,7 @@ func PostReview(c *gin.Context) error {
 
 	rate, err := strconv.Atoi(c.PostForm("rate"))
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid rating"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "invalid rating"})
 		return nil
 	}
 

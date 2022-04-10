@@ -99,7 +99,7 @@ func GetCategory(c *gin.Context) error {
 	if err := repository.DownloadItemByCategory(queried, &items); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no content"})
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
 			return nil
 		}
 		return err

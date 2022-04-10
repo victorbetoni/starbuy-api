@@ -17,7 +17,7 @@ func GetAddresses(c *gin.Context) error {
 	user, _ := authorization.ExtractUser(c)
 
 	if user != queried {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "authorized"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
 		return nil
 	}
 
@@ -49,7 +49,7 @@ func GetAddress(c *gin.Context) error {
 	if err := repository.DownloadAddress(id, &address); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no content"})
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
 			return nil
 		}
 		return err
