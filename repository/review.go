@@ -9,7 +9,7 @@ func QueryUserReviews(username string, reviews *[]model.Review) error {
 	db := database.GrabDB()
 
 	var raw []model.RawReview
-	if err := db.Select(&raw, "SELECT * FROM reviews WHERE user=$1", username); err != nil {
+	if err := db.Select(&raw, "SELECT * FROM reviews WHERE username=$1", username); err != nil {
 		return err
 	}
 
