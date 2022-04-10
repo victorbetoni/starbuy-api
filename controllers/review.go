@@ -84,9 +84,9 @@ func PostReview(c *gin.Context) error {
 	final := model.RawReview{
 		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
 		User:       username,
-		Item:       item,
-		Message:    message,
-		Rate:       rate,
+		Item:       req.Item,
+		Message:    req.Message,
+		Rate:       req.Rating,
 	}
 
 	repository.InsertReview(final)
