@@ -55,7 +55,7 @@ func Register(c *gin.Context) error {
 }
 
 func GetUser(c *gin.Context) error {
-	queried := c.Param("username")
+	queried := c.Param("user")
 
 	key, ok := c.GetQuery("includeItems")
 	includeItems := ok && key == "true"
@@ -66,12 +66,7 @@ func GetUser(c *gin.Context) error {
 
 	if includeItems {
 		var local []model.ItemWithAssets
-		if err := repository.DownloadUserProducts(queried, &local); err != nil {
-			if err == sql.ErrNoRows {
-				c.Error(err)
-				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-				return nil
-			}
+		if err := repository.DownloadUserProducts(queried, &local); err != nil && err != sql.ErrNoRows {
 			return err
 		}
 
