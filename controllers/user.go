@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 	"starbuy/model"
 	"starbuy/repository"
@@ -22,12 +21,12 @@ type IncomingUser struct {
 	Password       string `json:"password"`
 }
 
-func Register(c *gin.Context) {
+func Register(c *gin.Context) error {
 
 	incoming := IncomingUser{}
 	if err := c.BindJSON(&incoming); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	user := model.User{
@@ -42,19 +41,20 @@ func Register(c *gin.Context) {
 	}
 
 	if err := user.Prepare(); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	if err := repository.InsertUser(user, incoming.Password); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		return err
 	}
 
 	c.JSON(http.StatusOK, user)
+
+	return nil
 }
 
-func GetUser(c *gin.Context) {
+func GetUser(c *gin.Context) error {
 	queried := c.Param("username")
 
 	key, ok := c.GetQuery("includeItems")
@@ -68,11 +68,11 @@ func GetUser(c *gin.Context) {
 		var local []model.ItemWithAssets
 		if err := repository.DownloadUserProducts(queried, &local); err != nil {
 			if err == sql.ErrNoRows {
-				c.AbortWithError(http.StatusNotFound, errors.New("not found"))
-				return
+				c.Error(err)
+				c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+				return nil
 			}
-			c.AbortWithError(http.StatusInternalServerError, err)
-			return
+			return err
 		}
 
 		//Removing seller (duplicated data)
@@ -91,11 +91,11 @@ func GetUser(c *gin.Context) {
 
 	if err := repository.DownloadUser(queried, &user); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNotFound, errors.New("user not found"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "bad request"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	if includeItems {
@@ -105,8 +105,9 @@ func GetUser(c *gin.Context) {
 			Items []model.ItemWithAssets `json:"items"`
 		}
 		c.JSON(http.StatusOK, UserWithItem{user, items})
-		return
+		return nil
 	}
 
 	c.JSON(http.StatusOK, user)
+	return nil
 }

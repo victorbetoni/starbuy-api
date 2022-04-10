@@ -2,20 +2,24 @@ package routes
 
 import (
 	"starbuy/middleware"
+	"starbuy/util"
 
 	"github.com/gin-gonic/gin"
 )
+
+type AssignFunction func(*gin.Engine, gin.HandlerFunc, string)
 
 // Route - Representação de todas as rotas da API
 type Route struct {
 	RequireAuth bool
 	URI         string
-	Action      gin.HandlerFunc
-	Assign      func(*gin.Engine, gin.HandlerFunc, string)
+	Action      util.HandlerFuncError
+	Assign      AssignFunction
 }
 
 func Configure(router *gin.Engine) *gin.Engine {
 	var routes [][]Route
+
 	routes = append(routes, Item)
 	routes = append(routes, User)
 	routes = append(routes, Cart)
@@ -26,11 +30,17 @@ func Configure(router *gin.Engine) *gin.Engine {
 	for _, x := range routes {
 		for _, route := range x {
 			if route.RequireAuth {
-				route.Assign(router, middleware.Authorize(route.Action), route.URI)
+				Assign(route.Assign, middleware.Authorize(middleware.AbortOnError(route.Action)), route.URI, router)
 			} else {
-				route.Assign(router, route.Action, route.URI)
+				Assign(route.Assign, middleware.AbortOnError(route.Action), route.URI, router)
 			}
 		}
 	}
 	return router
+}
+
+func Assign(assign AssignFunction, handler util.HandlerFuncError, uri string, router *gin.Engine) {
+	assign(router, func(context *gin.Context) {
+		handler(context)
+	}, uri)
 }

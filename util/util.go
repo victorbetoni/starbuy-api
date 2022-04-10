@@ -4,8 +4,11 @@ import (
 	"errors"
 
 	"github.com/badoux/checkmail"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
+
+type HandlerFuncError func(*gin.Context) error
 
 type GlobalConfig struct {
 	HostAddress string `mapstructure:"HOST_ADDRESS"`

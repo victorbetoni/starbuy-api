@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -15,29 +14,30 @@ import (
 	"github.com/google/uuid"
 )
 
-func PostItem(c *gin.Context) {
+func PostItem(c *gin.Context) error {
 
 	var item model.PostedItem
 	if err := c.BindJSON(&item); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	item.Item.Identifier = strings.Replace(uuid.New().String(), "-", "", 4)
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
+		c.Error(err)
 		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
+		return nil
 	}
 
 	item.Item.Seller = user
 	repository.InsertItem(item)
 	c.JSON(http.StatusOK, item)
-
+	return nil
 }
 
-func GetItem(c *gin.Context) {
+func GetItem(c *gin.Context) error {
 	queried := c.Param("id")
 	key, ok := c.GetQuery("reviews")
 	includeReviews := ok && key == "true"
@@ -45,9 +45,7 @@ func GetItem(c *gin.Context) {
 	var reviews []model.Review
 	if includeReviews {
 		if err := repository.QueryProductReviews(queried, &reviews); err != nil && err != sql.ErrNoRows {
-			log.Fatal(err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
+			return err
 		}
 		for _, review := range reviews {
 			review.Item = model.ItemWithAssets{}
@@ -57,12 +55,11 @@ func GetItem(c *gin.Context) {
 	var item model.ItemWithAssets
 	if err := repository.DownloadItem(queried, &item); err != nil {
 		if err == sql.ErrNoRows {
-			c.JSON(http.StatusNoContent, err)
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			return nil
 		}
-		log.Fatal(err)
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	type Response struct {
@@ -77,34 +74,37 @@ func GetItem(c *gin.Context) {
 	response.Item = &item
 
 	c.JSON(http.StatusOK, response)
+	return nil
 }
 
-func GetAllItems(c *gin.Context) {
+func GetAllItems(c *gin.Context) error {
 	var items []model.ItemWithAssets
 	if err := repository.DownloadAllItems(&items); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 	c.JSON(http.StatusOK, items)
+
+	return nil
 }
 
-func GetCategory(c *gin.Context) {
+func GetCategory(c *gin.Context) error {
 	queried, _ := strconv.Atoi(c.Param("id"))
 	var items []model.ItemWithAssets
 
 	if err := repository.DownloadItemByCategory(queried, &items); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no content"})
+			return nil
 		}
-		log.Fatal(err)
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	c.JSON(http.StatusOK, items)
+	return nil
 }

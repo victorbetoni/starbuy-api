@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
@@ -15,44 +14,46 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetReviews(c *gin.Context) {
+func GetReviews(c *gin.Context) error {
 	queried := c.Param("user")
 
 	var reviews []model.Review
 	if err := repository.QueryUserReviews(queried, &reviews); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	c.JSON(http.StatusOK, reviews)
+	return nil
 }
 
-func GetReview(c *gin.Context) {
+func GetReview(c *gin.Context) error {
 	queried := c.Param("id")
 
 	var review model.Review
 	if err := repository.DownloadReview(queried, &review); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	c.JSON(http.StatusOK, review)
+	return nil
 }
 
-func PostReview(c *gin.Context) {
+func PostReview(c *gin.Context) error {
 
 	rate, err := strconv.Atoi(c.PostForm("rate"))
 	if err != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid rating"))
-		return
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid rating"})
+		return nil
 	}
 
 	item, message := c.PostForm("item"), c.PostForm("message")
@@ -65,16 +66,16 @@ func PostReview(c *gin.Context) {
 		rate = 0
 	}
 
-	username, erro := authorization.ExtractUser(c)
-	if erro != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
-	}
+	username, _ := authorization.ExtractUser(c)
 
 	db := database.GrabDB()
-	if err := db.Get(nil, "SELECT * FROM purchase_log WHERE holder=$1 AND product=$2", username, item); err != nil && err == sql.ErrNoRows {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
-		return
+	if err := db.Get(nil, "SELECT * FROM purchase_log WHERE holder=$1 AND product=$2", username, item); (err != nil && err == sql.ErrNoRows) || (err == nil) {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no order found"})
+			return nil
+		}
+		return err
 	}
 
 	final := model.RawReview{
@@ -88,9 +89,10 @@ func PostReview(c *gin.Context) {
 	repository.InsertReview(final)
 
 	c.JSON(http.StatusOK, final)
+	return nil
 }
 
-func PutReview(c *gin.Context) {
+func PutReview(c *gin.Context) error {
 	type Request struct {
 		Review  string `json:"id"`
 		Rate    int    `json:"rate"`
@@ -98,32 +100,33 @@ func PutReview(c *gin.Context) {
 	}
 
 	req := Request{}
-	username, erro := authorization.ExtractUser(c)
-	if erro != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
-	}
+	username, _ := authorization.ExtractUser(c)
 
 	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	var review model.Review
 	if err := repository.DownloadReview(req.Review, &review); err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			return nil
+		}
+		return err
 	}
 
 	if review.User.Username != username {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
-		return
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
+		return nil
 	}
 
 	final := model.RawReview{Identifier: review.Identifier, User: username, Message: req.Message, Rate: req.Rate, Item: review.Item.Item.Identifier}
 
 	repository.UpdateReview(final)
 	c.JSON(http.StatusOK, final)
+	return nil
 }
 
 func DeleteReview(w http.ResponseWriter, r *http.Request) {

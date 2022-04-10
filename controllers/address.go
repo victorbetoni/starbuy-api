@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -13,67 +12,55 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetAddresses(c *gin.Context) {
+func GetAddresses(c *gin.Context) error {
 	queried := c.Param("user")
-	user, err := authorization.ExtractUser(c)
-
-	if err != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
-	}
+	user, _ := authorization.ExtractUser(c)
 
 	if user != queried {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
-		return
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "authorized"})
+		return nil
 	}
 
 	var addresses []model.RawAddress
 	if err := repository.DownloadAddresses(user, &addresses); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no content"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	c.JSON(http.StatusOK, addresses)
+	return nil
 }
 
-func GetAddress(c *gin.Context) {
+func GetAddress(c *gin.Context) error {
 	queried, id := c.Param("user"), c.Param("id")
 
-	user, err := authorization.ExtractUser(c)
-	if err != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
-	}
+	user, _ := authorization.ExtractUser(c)
 
 	if user != queried {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+		return nil
 	}
 
 	var address model.Address
 	if err := repository.DownloadAddress(id, &address); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNoContent, errors.New("no content"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no content"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	c.JSON(http.StatusOK, address)
+	return nil
 }
 
-func PostAddress(c *gin.Context) {
-	user, err := authorization.ExtractUser(c)
-
-	if err != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("unauthorized"))
-		return
-	}
+func PostAddress(c *gin.Context) error {
+	user, _ := authorization.ExtractUser(c)
 
 	type Request struct {
 		CEP        string `json:"cep"`
@@ -84,8 +71,8 @@ func PostAddress(c *gin.Context) {
 	req := Request{}
 
 	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	//TODO: Usar alguma API para verificar se o CEP bate com algum existente
@@ -99,4 +86,5 @@ func PostAddress(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, address)
+	return nil
 }

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
@@ -18,34 +17,36 @@ type Login struct {
 	Password string `db:"password"`
 }
 
-func Auth(c *gin.Context) {
+func Auth(c *gin.Context) error {
 	db := database.GrabDB()
 	login := Login{}
 
 	if err := c.BindJSON(&login); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	recorded := Login{}
 	if err := db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithError(http.StatusNotFound, errors.New("not found"))
-			return
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "not found"})
+			return nil
 		}
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		return err
 	}
 
 	var user model.User
 	if err := repository.DownloadUser(login.Username, &user); err != nil {
-		c.AbortWithError(http.StatusNotFound, errors.New("user not found"))
-		return
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+		return nil
 	}
 
 	if err := security.ComparePassword(recorded.Password, login.Password); err != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "wrong password"})
+		return nil
 	}
 
 	token := authorization.GenerateToken(login.Username)
@@ -55,4 +56,6 @@ func Auth(c *gin.Context) {
 		Token string     `json:"jwt"`
 	}
 	c.JSON(http.StatusOK, Response{User: user, Token: token})
+
+	return nil
 }

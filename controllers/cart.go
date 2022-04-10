@@ -10,20 +10,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func QueryCart(c *gin.Context) {
+func QueryCart(c *gin.Context) error {
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
+		c.Error(err)
 		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
+		return nil
 	}
 
 	var items []model.CartItem
 	repository.DownloadCart(user, &items)
 	c.JSON(http.StatusOK, items)
+	return nil
 }
 
-func PostCart(c *gin.Context) {
+func PostCart(c *gin.Context) error {
 
 	type Request struct {
 		Item     string `json:"item"`
@@ -33,8 +35,8 @@ func PostCart(c *gin.Context) {
 	req := Request{}
 
 	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
 	}
 
 	user, err := authorization.ExtractUser(c)
@@ -42,11 +44,13 @@ func PostCart(c *gin.Context) {
 	cart := model.RawCartItem{Holder: user, Quantity: req.Quantity, Item: req.Item}
 
 	if err != nil {
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return
+		c.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+		return nil
 	}
 
 	cart.Holder = user
 	repository.InsertCartItem(cart)
 	c.JSON(http.StatusOK, cart)
+	return nil
 }
