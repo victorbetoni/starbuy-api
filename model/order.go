@@ -15,7 +15,7 @@ type RawOrder struct {
 	Seller     string  `json:"seller" db:"seller"`
 	Item       string  `json:"item" db:"product"`
 	Price      float64 `json:"price" db:"price"`
-	Quantity   int     `json:"quantity" db:"quantity"`
+	Quantity   int     `json:"quantity" db:"amount"`
 }
 
 type PurchaseUpdate struct {
