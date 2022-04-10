@@ -15,12 +15,13 @@ func DownloadCart(username string, items *[]model.CartItem) error {
 	}
 
 	for _, item := range stored {
-		var casted model.CartItem
 		var downloadedItem model.ItemWithAssets
+
 		if err := DownloadItem(item.Item, &downloadedItem); err != nil {
 			return err
 		}
-		*items = append(*items, casted)
+
+		*items = append(*items, model.CartItem{Quantity: item.Quantity, Item: &downloadedItem})
 	}
 
 	return nil

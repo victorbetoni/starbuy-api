@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -12,13 +11,7 @@ import (
 )
 
 func QueryCart(c *gin.Context) error {
-	user, err := authorization.ExtractUser(c)
-
-	if err != nil {
-		c.Error(err)
-		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
-		return nil
-	}
+	user, _ := authorization.ExtractUser(c)
 
 	var items []model.CartItem
 	repository.DownloadCart(user, &items)
@@ -71,6 +64,6 @@ func PostCart(c *gin.Context) error {
 	cart.Holder = username
 	repository.InsertCartItem(cart)
 
-	c.JSON(http.StatusOK, model.CartItem{Holder: user, Quantity: cart.Quantity, Item: item.Item})
+	c.JSON(http.StatusOK, model.CartItem{Holder: &user, Quantity: cart.Quantity, Item: item.Item})
 	return nil
 }
