@@ -66,7 +66,7 @@ func InsertReview(review model.RawReview) error {
 	db := database.GrabDB()
 
 	tx2 := db.MustBegin()
-	tx2.MustExec("INSERT INTO reviews VALUES ($1,$2,$3,$4)", review.Item, review.User, review.Message, review.Rate)
+	tx2.MustExec("INSERT INTO reviews VALUES ($1,$2,$3,$4,$5)", review.Identifier, review.Item, review.User, review.Message, review.Rate)
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
