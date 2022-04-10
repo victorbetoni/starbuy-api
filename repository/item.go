@@ -38,6 +38,7 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 	}
 
 	literalItem := model.Item{
+		Seller:      user,
 		Description: raw.Description,
 		Title:       raw.Title,
 		Identifier:  raw.Identifier,

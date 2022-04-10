@@ -30,7 +30,7 @@ func Auth(c *gin.Context) error {
 	if err := db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "not found"})
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
 			return nil
 		}
 		return err
