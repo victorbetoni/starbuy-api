@@ -29,7 +29,7 @@ func PostCart(c *gin.Context) error {
 
 	type Request struct {
 		Item     string `json:"item"`
-		Quantity int    `json"quantity"`
+		Quantity int    `json:"quantity"`
 	}
 
 	req := Request{}
