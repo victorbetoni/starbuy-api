@@ -33,6 +33,9 @@ func InsertCartItem(item model.RawCartItem) error {
 
 	tx := db.MustBegin()
 
+	itemM, _ := json.Marshal(item)
+	fmt.Println(string(itemM))
+
 	var recorded model.RawCartItem
 	if err := db.Get(&recorded, "SELECT * FROM shopping_cart WHERE holder=$1 AND product=$2", item.Holder, item.Item); err != nil && err == sql.ErrNoRows {
 		tx.MustExec("INSERT INTO shopping_cart VALUES ($1,$2,$3)", item.Holder, item.Item, item.Quantity)
