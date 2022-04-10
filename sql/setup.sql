@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS orders (
     holder        VARCHAR(20)    NOT NULL,
     seller        VARCHAR(20)    NOT NULL,
     product       VARCHAR(64)    NOT NULL,
-    quantity      INTEGER        NOT NULL,
+    amount        INTEGER        NOT NULL,
     price         DECIMAL(10, 2) NOT NULL,
 
     FOREIGN KEY (holder) REFERENCES users (username)
