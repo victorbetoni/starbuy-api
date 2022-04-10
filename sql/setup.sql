@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS shopping_cart (
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-    identifier    VARCHAR(64)    NOT NULL,
+    identifier    VARCHAR(64)    NOT NULL PRIMARY KEY,
     holder        VARCHAR(20)    NOT NULL,
     seller        VARCHAR(20)    NOT NULL,
     product       VARCHAR(64)    NOT NULL,
@@ -110,10 +110,11 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS orders_update (
-    order    VARCHAR(64)    NOT NULL,
+    order       VARCHAR(64) NOT NULL,
     status      INTEGER     NOT NULL,
     update_date DATE        NOT NULL,
 
+    PRIMARY KEY(order, status),
     FOREIGN KEY (order) REFERENCES orders (identifier)
 );
 
