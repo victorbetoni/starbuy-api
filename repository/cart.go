@@ -29,7 +29,7 @@ func InsertCartItem(item model.RawCartItem) error {
 	db := database.GrabDB()
 
 	tx2 := db.MustBegin()
-	tx2.MustExec("INSERT INTO shopping_cart VALUES ($1,$2,$3)", item.Holder, item.Item, item.Quantity)
+	tx2.MustExec("INSERT INTO shopping_cart VALUES ($1,$2,$3) ON CONFLICT (product) DO UPDATE SET quantity=quantity+$3 WHERE holder=$1 AND product=$2", item.Holder, item.Item, item.Quantity)
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
