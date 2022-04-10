@@ -72,7 +72,7 @@ func PostReview(c *gin.Context) error {
 	username, _ := authorization.ExtractUser(c)
 
 	db := database.GrabDB()
-	if err := db.Get(nil, "SELECT * FROM purchase_log WHERE holder=$1 AND product=$2", username, req.Item); (err != nil && err == sql.ErrNoRows) || (err == nil) {
+	if err := db.Get(nil, "SELECT * FROM purchase_log WHERE holder=$1 AND product=$2", username, req.Item); err != nil && err == sql.ErrNoRows {
 		if err == sql.ErrNoRows {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no order found"})
