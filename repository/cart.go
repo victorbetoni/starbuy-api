@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"starbuy/database"
 	"starbuy/model"
 )
@@ -40,8 +41,13 @@ func InsertCartItem(item model.RawCartItem) error {
 		return nil
 	}
 
+	fmt.Printf("Recorded: %d", recorded.Quantity)
+	fmt.Printf("Incoming: %d", item.Quantity)
+	new := recorded.Quantity + item.Quantity
+	fmt.Printf("New: %d", new)
+
 	tx2 := db.MustBegin()
-	tx2.Exec("UPDATE shopping_cart SET quantity=$1 WHERE holder=$2 AND product=$3", item.Quantity+recorded.Quantity, item.Holder, item.Item)
+	tx2.MustExec("UPDATE shopping_cart SET quantity=$1 WHERE holder=$2 AND product=$3", new, item.Holder, item.Item)
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
