@@ -64,6 +64,6 @@ func PostCart(c *gin.Context) error {
 	cart.Holder = username
 	repository.InsertCartItem(cart)
 
-	c.JSON(http.StatusOK, model.CartItem{Holder: &user, Quantity: cart.Quantity, Item: item.Item})
+	c.JSON(http.StatusOK, model.CartItem{Holder: &user, Quantity: cart.Quantity, Item: &item})
 	return nil
 }
