@@ -7,10 +7,8 @@ import (
 	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
-	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func GetReviews(c *gin.Context) error {
@@ -82,11 +80,10 @@ func PostReview(c *gin.Context) error {
 	}
 
 	final := model.RawReview{
-		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
-		User:       username,
-		Item:       req.Item,
-		Message:    req.Message,
-		Rate:       req.Rating,
+		User:    username,
+		Item:    req.Item,
+		Message: req.Message,
+		Rate:    req.Rating,
 	}
 
 	repository.InsertReview(final)
@@ -125,7 +122,7 @@ func PutReview(c *gin.Context) error {
 		return nil
 	}
 
-	final := model.RawReview{Identifier: review.Identifier, User: username, Message: req.Message, Rate: req.Rate, Item: review.Item.Item.Identifier}
+	final := model.RawReview{User: username, Message: req.Message, Rate: req.Rate, Item: review.Item.Item.Identifier}
 
 	repository.UpdateReview(final)
 	c.JSON(http.StatusOK, final)

@@ -66,7 +66,7 @@ func InsertReview(review model.RawReview) error {
 	db := database.GrabDB()
 
 	tx2 := db.MustBegin()
-	tx2.MustExec("INSERT INTO reviews VALUES ($1,$2,$3,$4,$5)", review.Identifier, review.Item, review.User, review.Message, review.Rate)
+	tx2.MustExec("INSERT INTO reviews VALUES ($1,$2,$3,$4)", review.Item, review.User, review.Message, review.Rate)
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
@@ -90,7 +90,7 @@ func UpdateReview(raw model.RawReview) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()
-	tx.MustExec("UPDATE reviews SET msg=$1, rate=$2 WHERE identifier=$3", raw.Message, raw.Rate, raw.Identifier)
+	tx.MustExec("UPDATE reviews SET msg=$1, rate=$2 WHERE username=$3 AND product=$4", raw.Message, raw.Rate, raw.User, raw.Item)
 
 	if err := tx.Commit(); err != nil {
 		return err
