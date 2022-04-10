@@ -85,6 +85,10 @@ func PostAddress(c *gin.Context) error {
 		Complement: req.Complement,
 	}
 
+	if err := repository.InsertAddress(address); err != nil {
+		return err
+	}
+
 	c.JSON(http.StatusOK, address)
 	return nil
 }
