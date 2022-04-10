@@ -110,12 +110,12 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS orders_update (
-    order       VARCHAR(64) NOT NULL,
+    order_id    VARCHAR(64) NOT NULL,
     status      INTEGER     NOT NULL,
     update_date DATE        NOT NULL,
 
-    PRIMARY KEY(order, status),
-    FOREIGN KEY (order) REFERENCES orders (identifier)
+    PRIMARY KEY(order_id, status),
+    FOREIGN KEY (order_id) REFERENCES orders (identifier)
 );
 
 CREATE TABLE IF NOT EXISTS product_images (
