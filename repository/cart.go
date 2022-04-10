@@ -33,8 +33,8 @@ func InsertCartItem(item model.RawCartItem) error {
 	if err := tx.Commit(); err != nil {
 		tx2 := db.MustBegin()
 		tx2.MustExec("UPDATE shopping_cart SET quantity=quantity+$1 WHERE product=$2 AND holder=$3", item.Quantity, item.Item, item.Holder)
-		if err := tx2.Commit(); err != nil {
-			return err
+		if erro := tx2.Commit(); erro != nil {
+			return erro
 		}
 	}
 

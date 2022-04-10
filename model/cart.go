@@ -1,9 +1,9 @@
 package model
 
 type RawCartItem struct {
-	Holder   string `db:"holder", json:"holder"`
-	Quantity int    `db:"quantity", json:"quantity"`
-	Item     string `db:"item", json:"item"`
+	Holder   string `db:"holder" json:"holder"`
+	Quantity int    `db:"quantity" json:"quantity"`
+	Item     string `db:"item" json:"item"`
 }
 
 type CartItem struct {
