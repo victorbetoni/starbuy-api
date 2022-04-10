@@ -5,22 +5,50 @@ import (
 	"starbuy/model"
 )
 
-func DownloadPurchases(username string, purchases *[]model.Order) error {
+func DownloadPurchases(username string, orders *[]model.Order) error {
 	db := database.GrabDB()
 
-	if err := db.Select(purchases, "SELECT * FROM purchases WHERE seller = $1", username); err != nil {
+	var raw []model.RawOrder
+	if err := db.Select(&raw, "SELECT * FROM orders WHERE holder = $1", username); err != nil {
 		return err
+	}
+
+	for _, item := range raw {
+		var order model.Order
+		if err := DownloadPurchase(item.Identifier, &order); err != nil {
+			return err
+		}
+		*orders = append(*orders, order)
 	}
 
 	return nil
 }
 
-func DownloadPurchase(identifier string, purchases *model.Order) error {
+func DownloadPurchase(identifier string, order *model.Order) error {
 	db := database.GrabDB()
 
-	if err := db.Get(purchases, "SELECT * FROM orders WHERE identifier = $1", identifier); err != nil {
+	var raw model.RawOrder
+	if err := db.Get(&raw, "SELECT * FROM orders WHERE identifier = $1", identifier); err != nil {
 		return err
 	}
+
+	var customer model.User
+	var item model.ItemWithAssets
+
+	if err := DownloadUser(raw.Customer, &customer); err != nil {
+		return err
+	}
+
+	if err := DownloadItem(raw.Item, &item); err != nil {
+		return err
+	}
+
+	order.Customer = customer
+	order.Identifier = identifier
+	order.Quantity = raw.Quantity
+	order.Seller = item.Item.Seller
+	order.Price = raw.Price
+	order.Item = item
 
 	return nil
 }
