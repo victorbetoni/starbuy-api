@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"starbuy/database"
 	"starbuy/model"
 )
@@ -29,8 +30,19 @@ func InsertCartItem(item model.RawCartItem) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()
-	tx.MustExec("INSERT INTO shopping_cart VALUES ($1,$2,$3) ON CONFLICT (holder,product) DO UPDATE SET quantity=EXCLUDED.quantity+$3", item.Holder, item.Item, item.Quantity)
-	if err := tx.Commit(); err != nil {
+
+	var recorded model.RawCartItem
+	if err := db.Get(&recorded, "SELECT * FROM shopping_cart WHERE holder=$1 AND product=$2", item.Holder, item.Item); err != nil && err == sql.ErrNoRows {
+		tx.MustExec("INSERT INTO shopping_cart VALUES ($1,$2,$3)", item.Holder, item.Item, item.Quantity)
+		if err := tx.Commit(); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	tx2 := db.MustBegin()
+	tx2.Exec("UPDATE shopping_cart SET quantity=$1 WHERE holder=$2 AND product=$3", item.Quantity+recorded.Quantity, item.Holder, item.Item)
+	if err := tx2.Commit(); err != nil {
 		return err
 	}
 
