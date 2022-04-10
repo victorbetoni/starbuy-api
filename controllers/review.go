@@ -7,7 +7,6 @@ import (
 	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -50,20 +49,24 @@ func GetReview(c *gin.Context) error {
 
 func PostReview(c *gin.Context) error {
 
-	rate, err := strconv.Atoi(c.PostForm("rate"))
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "invalid rating"})
+	type Request struct {
+		Rating  int    `json:"rate"`
+		Item    string `json:"item"`
+		Message string `json:"message"`
+	}
+
+	req := Request{}
+	if err := c.BindJSON(&req); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
 		return nil
 	}
 
-	item, message := c.PostForm("item"), c.PostForm("message")
-
-	if rate > 10 {
-		rate = 10
+	if req.Rating > 10 {
+		req.Rating = 10
 	}
 
-	if rate < 0 {
-		rate = 0
+	if req.Rating < 0 {
+		req.Rating = 0
 	}
 
 	username, _ := authorization.ExtractUser(c)
