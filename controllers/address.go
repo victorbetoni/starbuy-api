@@ -13,13 +13,7 @@ import (
 )
 
 func GetAddresses(c *gin.Context) error {
-	queried := c.Param("user")
 	user, _ := authorization.ExtractUser(c)
-
-	if user != queried {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
-		return nil
-	}
 
 	var addresses []model.RawAddress
 	if err := repository.DownloadAddresses(user, &addresses); err != nil {
@@ -31,19 +25,21 @@ func GetAddresses(c *gin.Context) error {
 		return err
 	}
 
+	for _, add := range addresses {
+		if add.Holder != user {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
+			return nil
+		}
+	}
+
 	c.JSON(http.StatusOK, addresses)
 	return nil
 }
 
 func GetAddress(c *gin.Context) error {
-	queried, id := c.Param("user"), c.Param("id")
+	id := c.Param("id")
 
 	user, _ := authorization.ExtractUser(c)
-
-	if user != queried {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
-		return nil
-	}
 
 	var address model.Address
 	if err := repository.DownloadAddress(id, &address); err != nil {
@@ -53,6 +49,11 @@ func GetAddress(c *gin.Context) error {
 			return nil
 		}
 		return err
+	}
+
+	if address.Holder.Username != user {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
+		return nil
 	}
 
 	c.JSON(http.StatusOK, address)

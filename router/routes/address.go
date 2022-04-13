@@ -8,7 +8,7 @@ import (
 
 var Address = []Route{
 	{
-		URI:         "/user/:user/address",
+		URI:         "/user/address",
 		RequireAuth: true,
 		Action:      controllers.GetAddresses,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
@@ -16,7 +16,7 @@ var Address = []Route{
 		},
 	},
 	{
-		URI:         "/user/:user/address",
+		URI:         "/user/address",
 		RequireAuth: true,
 		Action:      controllers.PostAddress,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
