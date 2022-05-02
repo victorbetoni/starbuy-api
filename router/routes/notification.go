@@ -6,27 +6,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var Address = []Route{
+var Notification = []Route{
 	{
-		URI:         "/user/address",
+		URI:         "/notification",
 		RequireAuth: true,
-		Action:      controllers.GetAddresses,
-		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
-			e.GET(uri, hf)
-		},
-	},
-	{
-		URI:         "/user/address",
-		RequireAuth: true,
-		Action:      controllers.PostAddress,
+		Action:      controllers.PostNotification,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.POST(uri, hf)
 		},
 	},
 	{
-		URI:         "/user/address/:id",
+		URI:         "/notification/:id",
 		RequireAuth: true,
-		Action:      controllers.GetAddress,
+		Action:      controllers.GetNotification,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
+	},
+	{
+		URI:         "/notification/",
+		RequireAuth: true,
+		Action:      controllers.GetNotifications,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)
 		},
