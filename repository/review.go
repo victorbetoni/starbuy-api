@@ -5,23 +5,27 @@ import (
 	"starbuy/model"
 )
 
-func QueryUserReviews(username string, reviews *[]model.Review) error {
+func QueryUserReviews(username string, reviews *[]model.Review) (int, error) {
 	db := database.GrabDB()
 
+	var count int
+	var sum int
 	var raw []model.RawReview
 	if err := db.Select(&raw, "SELECT * FROM reviews WHERE username=$1", username); err != nil {
-		return err
+		return 0, err
 	}
 
 	for _, review := range raw {
+		count++
 		err, review := convertRawReview(review)
 		if err != nil {
-			return err
+			return 0, err
 		}
+		sum += review.Rate
 		*reviews = append(*reviews, review)
 	}
 
-	return nil
+	return (sum / count), nil
 
 }
 
