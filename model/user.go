@@ -10,7 +10,7 @@ type User struct {
 	Email          string `db:"email" json:"email,omitempty"`
 	Name           string `db:"name" json:"name,omitempty"`
 	Birthdate      string `db:"birthdate" json:"birthdate,omitempty"`
-	Seller         bool   `db:"seller" json:"seller,omitempty"`
+	Seller         bool   `db:"seller" json:"seller"`
 	ProfilePicture string `db:"profile_picture" json:"profile_picture,omitempty"`
 	City           string `db:"city" json:"city,omitempty"`
 	Registration   string `db:"registration" json:"registration,omitempty"`

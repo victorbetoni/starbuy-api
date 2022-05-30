@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"starbuy/model"
 	"starbuy/repository"
@@ -103,6 +104,7 @@ func GetUser(c *gin.Context) error {
 		return nil
 	}
 
+	fmt.Println(user)
 	c.JSON(http.StatusOK, user)
 	return nil
 }
