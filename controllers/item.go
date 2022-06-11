@@ -37,6 +37,23 @@ func PostItem(c *gin.Context) error {
 	return nil
 }
 
+func QueryItems(c *gin.Context) error {
+	query := c.Param("query")
+
+	var items []model.ItemWithAssets
+	if err := repository.QueryItemsByName(query, &items); err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
+			return nil
+		}
+		return err
+	}
+	c.JSON(http.StatusOK, items)
+
+	return nil
+}
+
 func GetItem(c *gin.Context) error {
 	queried := c.Param("id")
 	key, ok := c.GetQuery("reviews")

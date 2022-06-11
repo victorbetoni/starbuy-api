@@ -51,6 +51,22 @@ func DownloadItem(id string, item *model.ItemWithAssets) error {
 	return nil
 }
 
+func QueryItemsByName(query string, items *[]model.ItemWithAssets) error {
+	db := database.GrabDB()
+
+	var raws []model.RawItem
+	if err := db.Select(&raws, "SELECT * FROM products WHERE title LIKE '% "+query+"%'"); err != nil {
+		return err
+	}
+
+	for _, item := range raws {
+		var itemWithAssets model.ItemWithAssets
+		convertRawItem(item, &itemWithAssets)
+		*items = append(*items, itemWithAssets)
+	}
+	return nil
+}
+
 func DownloadAllItems(items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 

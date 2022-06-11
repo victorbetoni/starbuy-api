@@ -16,6 +16,14 @@ var Item = []Route{
 		},
 	},
 	{
+		URI:         "item/search/:query",
+		RequireAuth: false,
+		Action:      controllers.QueryItems,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
+	},
+	{
 		URI:         "/item/category/:id",
 		RequireAuth: false,
 		Action:      controllers.GetCategory,
