@@ -55,7 +55,7 @@ func QueryItemsByName(query string, items *[]model.ItemWithAssets) error {
 	db := database.GrabDB()
 
 	var raws []model.RawItem
-	if err := db.Select(&raws, "SELECT * FROM products WHERE title LIKE '% "+query+"%'"); err != nil {
+	if err := db.Select(&raws, "SELECT * FROM products WHERE title LIKE '%"+query+"%'"); err != nil {
 		return err
 	}
 
