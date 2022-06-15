@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"starbuy/database"
 	"starbuy/model"
 )
@@ -58,10 +59,15 @@ func DownloadReview(identifier string, review *model.Review) error {
 		return err
 	}
 
-	err := convertRawReview(raw, review)
+	var rev model.Review
+	err := convertRawReview(raw, &rev)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(rev)
+
+	*review = rev
 
 	return nil
 }
