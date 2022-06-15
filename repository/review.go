@@ -40,11 +40,13 @@ func QueryProductReviews(product string, reviews *[]model.Review) error {
 
 	for _, review := range raw {
 		fmt.Println("Encontrou: " + review.User)
-		err, review := convertRawReview(review)
+		err, rev := convertRawReview(review)
 		if err != nil {
 			return err
 		}
-		*reviews = append(*reviews, review)
+		fmt.Println(rev.User.Username)
+		*reviews = append(*reviews, rev)
+		fmt.Println(len(*reviews))
 	}
 
 	return nil
