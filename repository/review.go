@@ -51,11 +51,11 @@ func QueryProductReviews(product string, reviews *[]model.Review) error {
 	return nil
 }
 
-func DownloadReview(identifier string, review *model.Review) error {
+func DownloadReview(user string, item string, review *model.Review) error {
 	db := database.GrabDB()
 
 	var raw model.RawReview
-	if err := db.Get(&raw, "SELECT * FROM reviews WHERE identifier=$1", identifier); err != nil {
+	if err := db.Get(&raw, "SELECT * FROM reviews WHERE username=$1 AND product=$2", user, item); err != nil {
 		return err
 	}
 

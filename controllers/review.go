@@ -36,10 +36,11 @@ func GetReviews(c *gin.Context) error {
 }
 
 func GetReview(c *gin.Context) error {
-	queried := c.Param("id")
+	user := c.Query("user")
+	product := c.Query("product")
 
 	var review model.Review
-	if err := repository.DownloadReview(queried, &review); err != nil {
+	if err := repository.DownloadReview(user, product, &review); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
@@ -101,7 +102,8 @@ func PostReview(c *gin.Context) error {
 
 func PutReview(c *gin.Context) error {
 	type Request struct {
-		Review  string `json:"id"`
+		User    string `json:"user"`
+		Item    string `json:"item"`
 		Rate    int    `json:"rate"`
 		Message string `json:"message"`
 	}
@@ -115,7 +117,7 @@ func PutReview(c *gin.Context) error {
 	}
 
 	var review model.Review
-	if err := repository.DownloadReview(req.Review, &review); err != nil {
+	if err := repository.DownloadReview(req.User, req.Item, &review); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
