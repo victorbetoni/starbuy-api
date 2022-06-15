@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"starbuy/database"
 	"starbuy/model"
 )
@@ -40,15 +39,12 @@ func QueryProductReviews(product string, reviews *[]model.Review) error {
 	}
 
 	for _, review := range raw {
-		fmt.Println("Encontrou: " + review.User)
 		var rev model.Review
 		err := convertRawReview(review, &rev)
 		if err != nil {
 			return err
 		}
-		fmt.Println(rev.User.Username)
 		*reviews = append(*reviews, rev)
-		fmt.Println(len(*reviews))
 	}
 
 	return nil
