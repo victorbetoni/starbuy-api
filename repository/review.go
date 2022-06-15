@@ -18,12 +18,13 @@ func QueryUserReviews(username string, reviews *[]model.Review) (int, error) {
 
 	for _, review := range raw {
 		count++
-		err, review := convertRawReview(review)
+		var rev model.Review
+		err := convertRawReview(review, &rev)
 		if err != nil {
 			return 0, err
 		}
 		sum += review.Rate
-		*reviews = append(*reviews, review)
+		*reviews = append(*reviews, rev)
 	}
 
 	return (sum / count), nil
@@ -40,7 +41,8 @@ func QueryProductReviews(product string, reviews *[]model.Review) error {
 
 	for _, review := range raw {
 		fmt.Println("Encontrou: " + review.User)
-		err, rev := convertRawReview(review)
+		var rev model.Review
+		err := convertRawReview(review, &rev)
 		if err != nil {
 			return err
 		}
@@ -60,12 +62,10 @@ func DownloadReview(identifier string, review *model.Review) error {
 		return err
 	}
 
-	err, rev := convertRawReview(raw)
+	err := convertRawReview(raw, review)
 	if err != nil {
 		return err
 	}
-
-	*review = rev
 
 	return nil
 }
@@ -107,16 +107,18 @@ func UpdateReview(raw model.RawReview) error {
 	return nil
 }
 
-func convertRawReview(raw model.RawReview) (error, model.Review) {
+func convertRawReview(raw model.RawReview, review *model.Review) error {
 	var user model.User
 	if err := DownloadUser(raw.User, &user); err != nil {
-		return err, model.Review{}
+		return err
 	}
 
 	var item model.ItemWithAssets
 	if err := DownloadItem(raw.User, &item); err != nil {
-		return err, model.Review{}
+		return err
 	}
 
-	return nil, model.Review{User: user, Item: item, Message: raw.Message, Rate: raw.Rate}
+	*review = model.Review{User: user, Item: item, Message: raw.Message, Rate: raw.Rate}
+
+	return nil
 }
