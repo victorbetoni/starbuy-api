@@ -16,7 +16,7 @@ var Review = []Route{
 		},
 	},
 	{
-		URI:         "/review/:id",
+		URI:         "/review",
 		RequireAuth: false,
 		Action:      controllers.GetReview,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
