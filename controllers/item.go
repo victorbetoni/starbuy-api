@@ -80,15 +80,15 @@ func GetItem(c *gin.Context) error {
 	}
 
 	type Response struct {
-		Item    *model.ItemWithAssets `json:"item,omitempty"`
-		Reviews *[]model.Review       `json:"reviews,omitempty"`
+		Item    model.ItemWithAssets `json:"item,omitempty"`
+		Reviews []model.Review       `json:"reviews,omitempty"`
 	}
 
 	var response Response
 	if includeReviews {
-		response.Reviews = &reviews
+		response.Reviews = reviews
 	}
-	response.Item = &item
+	response.Item = item
 
 	c.JSON(http.StatusOK, response)
 	return nil
