@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -61,6 +62,7 @@ func GetItem(c *gin.Context) error {
 
 	var reviews []model.Review
 	if includeReviews {
+		fmt.Println("Baixando reviews")
 		if err := repository.QueryProductReviews(queried, &reviews); err != nil && err != sql.ErrNoRows {
 			return err
 		}
