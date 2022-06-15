@@ -110,17 +110,15 @@ func UpdateReview(raw model.RawReview) error {
 }
 
 func convertRawReview(raw model.RawReview, review *model.Review) error {
-	var user model.User
-	if err := DownloadUser(raw.User, &user); err != nil {
+	var rev model.Review
+
+	if err := DownloadReview(raw.User, raw.Item, &rev); err != nil {
 		return err
 	}
 
-	var item model.ItemWithAssets
-	if err := DownloadItem(raw.User, &item); err != nil {
-		return err
-	}
+	fmt.Println(rev)
 
-	*review = model.Review{User: user, Item: item, Message: raw.Message, Rate: raw.Rate}
+	*review = rev
 
 	return nil
 }
