@@ -71,6 +71,8 @@ func GetItem(c *gin.Context) error {
 		}
 	}
 
+	fmt.Println(len(reviews))
+
 	var item model.ItemWithAssets
 	if err := repository.DownloadItem(queried, &item); err != nil {
 		if err == sql.ErrNoRows {
