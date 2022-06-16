@@ -69,7 +69,7 @@ func DownloadReview(user string, item string, review *model.Review) error {
 		return err
 	}
 
-	*review = model.Review{User: holder, Item: reviewItem, Message: raw.Message, Rate: raw.Rate}
+	*review = model.Review{User: holder, Item: &reviewItem, Message: raw.Message, Rate: raw.Rate}
 
 	return nil
 }

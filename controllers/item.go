@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -60,18 +59,22 @@ func GetItem(c *gin.Context) error {
 	key, ok := c.GetQuery("reviews")
 	includeReviews := ok && key == "true"
 
-	var reviews []model.Review
-	if includeReviews {
-		fmt.Println("Baixando reviews")
-		if err := repository.QueryProductReviews(queried, &reviews); err != nil && err != sql.ErrNoRows {
-			return err
-		}
-		for _, review := range reviews {
-			review.Item = model.ItemWithAssets{}
-		}
+	type ItemReview struct {
+		User    model.User `json:"reviewer,omitempty"`
+		Message string     `json:"message"`
+		Rate    int        `json:"rate"`
 	}
 
-	fmt.Println(len(reviews))
+	var incoming []model.Review
+	var reviews []ItemReview
+	if includeReviews {
+		if err := repository.QueryProductReviews(queried, &incoming); err != nil && err != sql.ErrNoRows {
+			return err
+		}
+		for _, review := range incoming {
+			reviews = append(reviews, ItemReview{User: review.User, Message: review.Message, Rate: review.Rate})
+		}
+	}
 
 	var item model.ItemWithAssets
 	if err := repository.DownloadItem(queried, &item); err != nil {
@@ -85,7 +88,7 @@ func GetItem(c *gin.Context) error {
 
 	type Response struct {
 		Item    model.ItemWithAssets `json:"item,omitempty"`
-		Reviews []model.Review       `json:"reviews,omitempty"`
+		Reviews []ItemReview         `json:"reviews,omitempty"`
 	}
 
 	var response Response

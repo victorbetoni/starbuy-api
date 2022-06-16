@@ -8,8 +8,8 @@ type RawReview struct {
 }
 
 type Review struct {
-	User    User           `json:"user"`
-	Item    ItemWithAssets `json:"item"`
-	Message string         `json:"message"`
-	Rate    int            `json:"rate"`
+	User    User            `json:"user,omitempty"`
+	Item    *ItemWithAssets `json:"item,omitempty"`
+	Message string          `json:"message,omitempty"`
+	Rate    int             `json:"rate,omitempty"`
 }
