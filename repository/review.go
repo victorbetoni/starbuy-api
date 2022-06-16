@@ -59,15 +59,17 @@ func DownloadReview(user string, item string, review *model.Review) error {
 		return err
 	}
 
-	var rev model.Review
-	err := convertRawReview(raw, &rev)
-	if err != nil {
+	var holder model.User
+	if err := DownloadUser(user, &holder); err != nil {
 		return err
 	}
 
-	fmt.Println(rev)
+	var reviewItem model.ItemWithAssets
+	if err := DownloadItem(item, &reviewItem); err != nil {
+		return err
+	}
 
-	*review = rev
+	*review = model.Review{User: holder, Item: reviewItem, Message: raw.Message, Rate: raw.Rate}
 
 	return nil
 }

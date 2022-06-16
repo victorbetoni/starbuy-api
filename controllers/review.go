@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
@@ -36,6 +37,7 @@ func GetReviews(c *gin.Context) error {
 }
 
 func GetReview(c *gin.Context) error {
+	fmt.Println("Chamou o getReview")
 	user := c.Query("user")
 	product := c.Query("product")
 
