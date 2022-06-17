@@ -23,11 +23,14 @@ func InsertUser(user model.User, password string) error {
 		if err != nil && err != sql.ErrNoRows {
 			return err
 		}
-		return errors.New(value)
+		if err == nil {
+			return errors.New(value)
+		}
 	}
 
 	tx := db.MustBegin()
-	tx.NamedExec("INSERT INTO users VALUES (:username,:email,:name,:gender,:registration,:birthdate,:seller,:profile_picture,:city)", &user)
+	tx.MustExec(`INSERT INTO users (username, email, name, registration, birthdate, seller, profile_picture, city) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
+		user.Username, user.Email, user.Name, user.Registration, user.Birthdate, user.Seller, user.ProfilePicture, user.City)
 	if err := tx.Commit(); err != nil {
 		return err
 	}

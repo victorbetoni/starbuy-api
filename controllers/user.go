@@ -38,7 +38,7 @@ func Register(c *gin.Context) error {
 		ProfilePicture: incoming.ProfilePicture,
 		Seller:         incoming.Seller,
 		City:           incoming.City,
-		Registration:   time.Now().Format("02-01-2006"),
+		Registration:   time.Now().Format("2006-01-02"),
 	}
 
 	if err := user.Prepare(); err != nil {
