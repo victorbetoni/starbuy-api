@@ -27,6 +27,17 @@ func DownloadCart(username string, items *[]model.CartItem) error {
 	return nil
 }
 
+func DeleteFromCart(username string, item string) error {
+	db := database.GrabDB()
+	tx := db.MustBegin()
+
+	tx.MustExec("DELETE FROM shopping_cart WHERE username=$1 AND item=$2", username, item)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func InsertCartItem(item model.RawCartItem) error {
 	db := database.GrabDB()
 

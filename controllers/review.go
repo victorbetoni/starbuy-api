@@ -83,7 +83,7 @@ func PostReview(c *gin.Context) error {
 	if err := db.Get(&model.RawOrder{}, "SELECT * FROM orders WHERE holder=$1 AND product=$2", username, req.Item); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "no order found"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Você não pode avaliar esse produto"})
 			return nil
 		}
 		return err
