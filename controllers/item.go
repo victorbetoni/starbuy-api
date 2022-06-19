@@ -67,8 +67,10 @@ func GetItem(c *gin.Context) error {
 
 	var incoming []model.Review
 	var reviews []ItemReview
+	var average float64
 	if includeReviews {
-		if err := repository.QueryProductReviews(queried, &incoming); err != nil && err != sql.ErrNoRows {
+		if loc, err := repository.QueryProductReviews(queried, &incoming); err != nil && err != sql.ErrNoRows {
+			average = loc
 			return err
 		}
 		for _, review := range incoming {
@@ -89,6 +91,7 @@ func GetItem(c *gin.Context) error {
 	type Response struct {
 		Item    model.ItemWithAssets `json:"item,omitempty"`
 		Reviews []ItemReview         `json:"reviews,omitempty"`
+		Average float64              `json:"average"`
 	}
 
 	var response Response
@@ -96,6 +99,7 @@ func GetItem(c *gin.Context) error {
 		response.Reviews = reviews
 	}
 	response.Item = item
+	response.Average = average
 
 	c.JSON(http.StatusOK, response)
 	return nil

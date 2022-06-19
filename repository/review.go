@@ -6,11 +6,34 @@ import (
 	"starbuy/model"
 )
 
-func QueryUserReviews(username string, reviews *[]model.Review) (int, error) {
+func QueryUserReceivedReviews(username string, reviews *[]model.Review) (float64, error) {
 	db := database.GrabDB()
 
-	var count int
-	var sum int
+	count, sum := 0, 0
+	var raw []model.RawReview
+	if err := db.Select(&raw, "SELECT R.product, R.username, R.msg, R.rate  FROM reviews R INNER JOIN products P ON R.product = P.identifier AND P.seller=$1", username); err != nil {
+		return 0, err
+	}
+
+	for _, review := range raw {
+		count++
+		var rev model.Review
+		err := convertRawReview(review, &rev)
+		if err != nil {
+			return 0, err
+		}
+		sum += review.Rate
+		*reviews = append(*reviews, rev)
+	}
+
+	return (float64(sum) / float64(count)), nil
+
+}
+
+func QueryUserReviews(username string, reviews *[]model.Review) (float64, error) {
+	db := database.GrabDB()
+
+	count, sum := 0, 0
 	var raw []model.RawReview
 	if err := db.Select(&raw, "SELECT * FROM reviews WHERE username=$1", username); err != nil {
 		return 0, err
@@ -27,28 +50,31 @@ func QueryUserReviews(username string, reviews *[]model.Review) (int, error) {
 		*reviews = append(*reviews, rev)
 	}
 
-	return (sum / count), nil
+	return (float64(sum) / float64(count)), nil
 
 }
 
-func QueryProductReviews(product string, reviews *[]model.Review) error {
+func QueryProductReviews(product string, reviews *[]model.Review) (float64, error) {
 	db := database.GrabDB()
 
+	count, sum := 0, 0
 	var raw []model.RawReview
 	if err := db.Select(&raw, "SELECT * FROM reviews WHERE product=$1", product); err != nil {
-		return err
+		return 0, err
 	}
 
 	for _, review := range raw {
+		count++
 		var rev model.Review
 		err := convertRawReview(review, &rev)
 		if err != nil {
-			return err
+			return 0, err
 		}
 		*reviews = append(*reviews, rev)
+		sum += review.Rate
 	}
 
-	return nil
+	return (float64(count) / float64(sum)), nil
 }
 
 func DownloadReview(user string, item string, review *model.Review) error {

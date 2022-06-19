@@ -58,12 +58,34 @@ func Register(c *gin.Context) error {
 func GetUser(c *gin.Context) error {
 	queried := c.Param("user")
 
-	key, ok := c.GetQuery("includeItems")
-	includeItems := ok && key == "true"
+	includeItems, includeReviews := false, false
+
+	if key, ok := c.GetQuery("includeItems"); ok && key == "true" {
+		includeItems = true
+	}
+	if key, ok := c.GetQuery("includeReviews"); ok && key == "true" {
+		includeReviews = true
+	}
 
 	var user model.User
 
-	var items []model.ItemWithAssets
+	type Response struct {
+		User    model.User             `json:"user,omitempty"`
+		Items   []model.ItemWithAssets `json:"items,omitempty"`
+		Reviews []model.Review         `json:"reviews,omitempty"`
+		Rating  float64                `json:"rating"`
+	}
+
+	response := Response{}
+	if err := repository.DownloadUser(queried, &user); err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			return nil
+		}
+		return err
+	}
+	response.User = user
 
 	if includeItems {
 		var local []model.ItemWithAssets
@@ -71,6 +93,7 @@ func GetUser(c *gin.Context) error {
 			return err
 		}
 
+		var items []model.ItemWithAssets
 		//Removing seller (duplicated data)
 		for _, item := range local {
 			final := model.Item{
@@ -83,6 +106,29 @@ func GetUser(c *gin.Context) error {
 			}
 			items = append(items, model.ItemWithAssets{Item: final, Assets: item.Assets})
 		}
+		response.Items = items
+	}
+
+	if includeReviews {
+		var reviews []model.Review
+		var local []model.Review
+		var average float64
+		if loc, err := repository.QueryUserReceivedReviews(queried, &local); err != nil && err != sql.ErrNoRows {
+			average = loc
+			return err
+		}
+
+		//Removing reviewer (duplicated data)
+		for _, review := range local {
+			final := model.Review{
+				Message: review.Message,
+				Item:    review.Item,
+				Rate:    review.Rate,
+			}
+			reviews = append(reviews, final)
+		}
+		response.Rating = average
+		response.Reviews = local
 	}
 
 	if err := repository.DownloadUser(queried, &user); err != nil {
@@ -94,17 +140,9 @@ func GetUser(c *gin.Context) error {
 		return err
 	}
 
-	if includeItems {
-
-		type UserWithItem struct {
-			User  model.User             `json:"user"`
-			Items []model.ItemWithAssets `json:"items"`
-		}
-		c.JSON(http.StatusOK, UserWithItem{user, items})
-		return nil
-	}
+	response.User = user
 
 	fmt.Println(user)
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, response)
 	return nil
 }
