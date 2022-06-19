@@ -31,7 +31,7 @@ func DeleteFromCart(username string, item string) error {
 	db := database.GrabDB()
 	tx := db.MustBegin()
 
-	tx.MustExec("DELETE FROM shopping_cart WHERE username=$1 AND product=$2", username, item)
+	tx.MustExec("DELETE FROM shopping_cart WHERE holder=$1 AND product=$2", username, item)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
