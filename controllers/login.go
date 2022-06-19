@@ -45,17 +45,13 @@ func Auth(c *gin.Context) error {
 
 	if err := security.ComparePassword(recorded.Password, login.Password); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "wrong password"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Senha incorreta"})
 		return nil
 	}
 
 	token := authorization.GenerateToken(login.Username)
 
-	type Response struct {
-		User  model.User `json:"user"`
-		Token string     `json:"jwt"`
-	}
-	c.JSON(http.StatusOK, Response{User: user, Token: token})
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Sessão iniciada com sucesso", "user": user, "jwt": token})
 
 	return nil
 }

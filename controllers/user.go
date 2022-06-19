@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
 	"time"
@@ -50,8 +51,9 @@ func Register(c *gin.Context) error {
 		return err
 	}
 
-	c.JSON(http.StatusOK, user)
+	token := authorization.GenerateToken(user.Username)
 
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Registrado com sucesso", "user": user, "jwt": token})
 	return nil
 }
 
