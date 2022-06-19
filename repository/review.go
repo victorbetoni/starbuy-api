@@ -30,27 +30,24 @@ func QueryUserReceivedReviews(username string, reviews *[]model.Review) (float64
 
 }
 
-func QueryUserReviews(username string, reviews *[]model.Review) (float64, error) {
+func QueryUserReviews(username string, reviews *[]model.Review) error {
 	db := database.GrabDB()
 
-	count, sum := 0, 0
 	var raw []model.RawReview
 	if err := db.Select(&raw, "SELECT * FROM reviews WHERE username=$1", username); err != nil {
-		return 0, err
+		return err
 	}
 
 	for _, review := range raw {
-		count++
 		var rev model.Review
 		err := convertRawReview(review, &rev)
 		if err != nil {
-			return 0, err
+			return err
 		}
-		sum += review.Rate
 		*reviews = append(*reviews, rev)
 	}
 
-	return (float64(sum) / float64(count)), nil
+	return nil
 
 }
 
@@ -74,7 +71,7 @@ func QueryProductReviews(product string, reviews *[]model.Review) (float64, erro
 		sum += review.Rate
 	}
 
-	return (float64(count) / float64(sum)), nil
+	return (float64(sum) / float64(count)), nil
 }
 
 func DownloadReview(user string, item string, review *model.Review) error {
