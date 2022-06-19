@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
@@ -12,7 +11,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetReviews(c *gin.Context) error {
+func GetItemReviews(c *gin.Context) error {
+	queried := c.Param("item")
+
+	var reviews []model.Review
+	average, err := repository.QueryProductReviews(queried, &reviews)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
+			return nil
+		}
+		return err
+	}
+
+	type ItemReviews struct {
+		Reviews []model.Review `json:"reviews"`
+		Average float64        `json:"average"`
+	}
+
+	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews, Average: average})
+	return nil
+}
+
+func GetUserReviews(c *gin.Context) error {
 	queried := c.Param("user")
 
 	var reviews []model.Review
@@ -35,7 +57,6 @@ func GetReviews(c *gin.Context) error {
 }
 
 func GetReview(c *gin.Context) error {
-	fmt.Println("Chamou o getReview")
 	user := c.Query("user")
 	product := c.Query("product")
 

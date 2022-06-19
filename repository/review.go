@@ -28,6 +28,10 @@ func QueryUserReceivedReviews(username string, reviews *[]model.Review) (float64
 		*reviews = append(*reviews, rev)
 	}
 
+	if count == 0 {
+		return -1, nil
+	}
+
 	return (float64(sum) / float64(count)), nil
 
 }

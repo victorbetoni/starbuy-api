@@ -61,7 +61,7 @@ func GetItem(c *gin.Context) error {
 	includeReviews := ok && key == "true"
 
 	type ItemReview struct {
-		User    model.User `json:"reviewer,omitempty"`
+		User    model.User `json:"user,omitempty"`
 		Message string     `json:"message"`
 		Rate    int        `json:"rate"`
 	}

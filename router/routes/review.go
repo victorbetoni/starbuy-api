@@ -8,9 +8,17 @@ import (
 
 var Review = []Route{
 	{
+		URI:         "/item/:item/reviews",
+		RequireAuth: false,
+		Action:      controllers.GetUserReviews,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
+	},
+	{
 		URI:         "/user/:user/reviews",
 		RequireAuth: false,
-		Action:      controllers.GetReviews,
+		Action:      controllers.GetUserReviews,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)
 		},
