@@ -13,8 +13,8 @@ import (
 )
 
 type Login struct {
-	Username string `db:"username"`
-	Password string `db:"password"`
+	Username string `json:"username" db:"username"`
+	Password string `json:"password" db:"password"`
 }
 
 func Auth(c *gin.Context) error {
