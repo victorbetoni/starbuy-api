@@ -65,7 +65,7 @@ func PostOrder(c *gin.Context) error {
 	if err := repository.DownloadUser(user, &customer); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Cliente não encontrado"})
 			return nil
 		}
 		return err
@@ -75,7 +75,7 @@ func PostOrder(c *gin.Context) error {
 	if err := repository.DownloadItem(req.Item, &item); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Produto não encontrado"})
 			return nil
 		}
 		return err
@@ -85,7 +85,7 @@ func PostOrder(c *gin.Context) error {
 	if err := repository.DownloadUser(item.Item.Seller.Username, &seller); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Vendedor não encontrado"})
 			return nil
 		}
 		return err
@@ -101,7 +101,7 @@ func PostOrder(c *gin.Context) error {
 	}
 
 	repository.InsertPurchase(final)
-	c.JSON(http.StatusOK, final)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Compra realizada com sucesso!"})
 
 	return nil
 }

@@ -67,7 +67,7 @@ func PostCart(c *gin.Context) error {
 	}
 
 	if item.Item.Stock < cart.Quantity {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "quantity greater than item stock"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "Estoque insuficiente."})
 		return nil
 	}
 
@@ -84,6 +84,6 @@ func PostCart(c *gin.Context) error {
 	cart.Holder = username
 	repository.InsertCartItem(cart)
 
-	c.JSON(http.StatusOK, model.CartItem{Holder: &user, Quantity: cart.Quantity, Item: &item})
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Item adicionado ao carrinho!"})
 	return nil
 }

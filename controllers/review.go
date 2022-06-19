@@ -96,7 +96,7 @@ func PostReview(c *gin.Context) error {
 
 	repository.InsertReview(final)
 
-	c.JSON(http.StatusOK, final)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Avaliação adicionada com sucesso"})
 	return nil
 }
 
