@@ -38,7 +38,8 @@ func GetUserReceivedReviews(c *gin.Context) error {
 	username, _ := authorization.ExtractUser(c)
 
 	var reviews []model.Review
-	if err := repository.QueryUserReviews(username, &reviews); err != nil {
+	average, err := repository.QueryUserReceivedReviews(username, &reviews)
+	if err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
@@ -52,7 +53,7 @@ func GetUserReceivedReviews(c *gin.Context) error {
 		Average float64        `json:"average"`
 	}
 
-	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews})
+	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews, Average: average})
 	return nil
 }
 
