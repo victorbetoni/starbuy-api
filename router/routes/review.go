@@ -10,7 +10,7 @@ var Review = []Route{
 	{
 		URI:         "/item/reviews/:item",
 		RequireAuth: false,
-		Action:      controllers.GetUserReviews,
+		Action:      controllers.GetItemReviews,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)
 		},
