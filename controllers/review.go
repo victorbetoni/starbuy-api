@@ -35,7 +35,7 @@ func GetItemReviews(c *gin.Context) error {
 }
 
 func GetUserReceivedReviews(c *gin.Context) error {
-	username, _ := authorization.ExtractUser(c)
+	username := c.Param("user")
 
 	var reviews []model.Review
 	average, err := repository.QueryUserReceivedReviews(username, &reviews)
