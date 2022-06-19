@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -84,6 +85,8 @@ func GetItem(c *gin.Context) error {
 		}
 		return err
 	}
+
+	fmt.Println(average)
 
 	type Response struct {
 		Item    model.ItemWithAssets `json:"item,omitempty"`

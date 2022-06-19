@@ -75,6 +75,10 @@ func QueryProductReviews(product string, reviews *[]model.Review) (float64, erro
 		fmt.Println("Soma: ", sum)
 	}
 
+	if count == 0 {
+		return -1, nil
+	}
+
 	return (float64(sum) / float64(count)), nil
 }
 
