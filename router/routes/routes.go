@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"net/http"
 	"starbuy/middleware"
 	"starbuy/util"
 
@@ -37,6 +38,10 @@ func Configure(router *gin.Engine) *gin.Engine {
 			}
 		}
 	}
+
+	router.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "Pong!")
+	})
 	return router
 }
 
