@@ -118,13 +118,18 @@ func PostReview(c *gin.Context) error {
 		req.Rating = 0
 	}
 
+	db := database.GrabDB()
 	username, _ := authorization.ExtractUser(c)
 
-	db := database.GrabDB()
+	if err := db.Get(nil, "SELECT * FROM reviews WHERE username=$1 AND product=$2", username, req.Item); err == nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você já avaliou este produto."})
+		return nil
+	}
+
 	if err := db.Get(&model.RawOrder{}, "SELECT * FROM orders WHERE holder=$1 AND product=$2", username, req.Item); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Você não pode avaliar esse produto"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Você não pode avaliar esse produto."})
 			return nil
 		}
 		return err
@@ -181,6 +186,20 @@ func PutReview(c *gin.Context) error {
 	return nil
 }
 
-func DeleteReview(w http.ResponseWriter, r *http.Request) {
+func DeleteReview(c *gin.Context) error {
+	item := c.Param("item")
+	username, _ := authorization.ExtractUser(c)
 
+	db := database.GrabDB()
+	if err := db.Get(nil, "SELECT * FROM reviews WHERE username=$1 AND product=$2", username, item); err != nil {
+		if err == sql.ErrNoRows {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Nenhuma avaliação encontrada"})
+			return nil
+		}
+	}
+
+	repository.DeleteReview(username, item)
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Avaliação excluída com sucesso"})
+	return nil
 }

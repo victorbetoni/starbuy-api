@@ -8,7 +8,7 @@ import (
 
 var Review = []Route{
 	{
-		URI:         "/user/reviews/received/",
+		URI:         "/user/reviews/received",
 		RequireAuth: true,
 		Action:      controllers.GetUserReceivedReviews,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
@@ -53,6 +53,14 @@ var Review = []Route{
 		Action:      controllers.PutReview,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.PUT(uri, hf)
+		},
+	},
+	{
+		URI:         "/review/:item",
+		RequireAuth: true,
+		Action:      controllers.DeleteReview,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.DELETE(uri, hf)
 		},
 	},
 }

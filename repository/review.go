@@ -86,6 +86,18 @@ func QueryProductReviews(product string, reviews *[]model.Review) (float64, erro
 	return (float64(sum) / float64(count)), nil
 }
 
+func DeleteReview(user string, item string) error {
+	db := database.GrabDB()
+
+	tx := db.MustBegin()
+	tx.MustExec("DELETE FROM reviews WHERE username=$1 AND product=$2", user, item)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func DownloadReview(user string, item string, review *model.Review) error {
 	db := database.GrabDB()
 
@@ -114,18 +126,6 @@ func InsertReview(review model.RawReview) error {
 
 	tx2 := db.MustBegin()
 	tx2.MustExec("INSERT INTO reviews VALUES ($1,$2,$3,$4)", review.Item, review.User, review.Message, review.Rate)
-	if err := tx2.Commit(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func DeleteReview(identifier string) error {
-	db := database.GrabDB()
-
-	tx2 := db.MustBegin()
-	tx2.MustExec("DELETE FROM reviews WHERE identifier=$1", identifier)
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
