@@ -34,11 +34,33 @@ func GetItemReviews(c *gin.Context) error {
 	return nil
 }
 
-func GetUserReviews(c *gin.Context) error {
-	queried := c.Param("user")
+func GetUserReceivedReviews(c *gin.Context) error {
+	username, _ := authorization.ExtractUser(c)
 
 	var reviews []model.Review
-	if err := repository.QueryUserReviews(queried, &reviews); err != nil {
+	if err := repository.QueryUserReviews(username, &reviews); err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
+			return nil
+		}
+		return err
+	}
+
+	type ItemReviews struct {
+		Reviews []model.Review `json:"reviews"`
+		Average float64        `json:"average"`
+	}
+
+	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews})
+	return nil
+}
+
+func GetUserReviews(c *gin.Context) error {
+	username, _ := authorization.ExtractUser(c)
+
+	var reviews []model.Review
+	if err := repository.QueryUserReviews(username, &reviews); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
