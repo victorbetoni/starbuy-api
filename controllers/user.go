@@ -43,12 +43,12 @@ func Register(c *gin.Context) error {
 	}
 
 	if err := user.Prepare(); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request", "user": nil, "jwt": ""})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error(), "user": nil, "jwt": ""})
 		return nil
 	}
 
 	if err := repository.InsertUser(user, incoming.Password); err != nil {
-		return err
+		return nil
 	}
 
 	token := authorization.GenerateToken(user.Username)
