@@ -43,7 +43,7 @@ func Register(c *gin.Context) error {
 	}
 
 	if err := user.Prepare(); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request", "user": nil, "jwt": ""})
 		return nil
 	}
 

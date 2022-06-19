@@ -22,7 +22,7 @@ func Auth(c *gin.Context) error {
 	login := Login{}
 
 	if err := c.BindJSON(&login); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request", "user": "", "jwt": ""})
 		return nil
 	}
 
@@ -30,7 +30,7 @@ func Auth(c *gin.Context) error {
 	if err := db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found", "user": "", "jwt": ""})
 			return nil
 		}
 		return err
@@ -39,13 +39,13 @@ func Auth(c *gin.Context) error {
 	var user model.User
 	if err := repository.DownloadUser(login.Username, &user); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found", "user": nil, "jwt": ""})
 		return nil
 	}
 
 	if err := security.ComparePassword(recorded.Password, login.Password); err != nil {
 		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Senha incorreta"})
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Senha incorreta", "user": nil, "jwt": ""})
 		return nil
 	}
 
