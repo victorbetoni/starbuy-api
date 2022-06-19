@@ -121,7 +121,8 @@ func PostReview(c *gin.Context) error {
 	db := database.GrabDB()
 	username, _ := authorization.ExtractUser(c)
 
-	if err := db.Get(nil, "SELECT * FROM reviews WHERE username=$1 AND product=$2", username, req.Item); err == nil {
+	var foo model.RawReview
+	if err := db.Get(&foo, "SELECT * FROM reviews WHERE username=$1 AND product=$2", username, req.Item); err == nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você já avaliou este produto."})
 		return nil
 	}
