@@ -24,9 +24,9 @@ var Cart = []Route{
 		},
 	},
 	{
-		URI:         "/cart",
+		URI:         "/cart/:item",
 		RequireAuth: true,
-		Action:      controllers.PostCart,
+		Action:      controllers.DeleteCart,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.DELETE(uri, hf)
 		},

@@ -20,22 +20,14 @@ func QueryCart(c *gin.Context) error {
 }
 
 func DeleteCart(c *gin.Context) error {
-	type Request struct {
-		Item string `json:"item"`
-	}
-	req := Request{}
-
-	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-		return nil
-	}
+	item := c.Param("item")
 	username, _ := authorization.ExtractUser(c)
 
-	if err := repository.DeleteFromCart(username, req.Item); err != nil {
+	if err := repository.DeleteFromCart(username, item); err != nil {
 		return nil
 	}
 
-	c.String(http.StatusOK, "Deleted")
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Item removido do carrinho"})
 	return nil
 }
 
