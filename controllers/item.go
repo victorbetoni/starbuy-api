@@ -67,15 +67,12 @@ func GetItem(c *gin.Context) error {
 
 	var incoming []model.Review
 	var reviews []ItemReview
-	var average float64
-	if includeReviews {
-		if loc, err := repository.QueryProductReviews(queried, &incoming); err != nil && err != sql.ErrNoRows {
-			average = loc
-			return err
-		}
-		for _, review := range incoming {
-			reviews = append(reviews, ItemReview{User: review.User, Message: review.Message, Rate: review.Rate})
-		}
+	average, err := repository.QueryProductReviews(queried, &incoming)
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+	for _, review := range incoming {
+		reviews = append(reviews, ItemReview{User: review.User, Message: review.Message, Rate: review.Rate})
 	}
 
 	var item model.ItemWithAssets

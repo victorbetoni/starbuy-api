@@ -16,10 +16,8 @@ func GetReviews(c *gin.Context) error {
 	queried := c.Param("user")
 
 	var reviews []model.Review
-	var average float64
-	if loc, err := repository.QueryUserReviews(queried, &reviews); err != nil {
+	if err := repository.QueryUserReviews(queried, &reviews); err != nil {
 		if err == sql.ErrNoRows {
-			average = loc
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
 			return nil
@@ -32,7 +30,7 @@ func GetReviews(c *gin.Context) error {
 		Average float64        `json:"average"`
 	}
 
-	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews, Average: average})
+	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews})
 	return nil
 }
 
