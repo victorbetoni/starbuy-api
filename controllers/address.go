@@ -97,6 +97,6 @@ func PostAddress(c *gin.Context) error {
 		return err
 	}
 
-	c.JSON(http.StatusOK, address)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Endereço criado"})
 	return nil
 }
