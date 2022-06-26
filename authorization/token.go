@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"starbuy/util"
+	"os"
 	"strings"
 	"time"
 
@@ -19,9 +19,7 @@ func GenerateToken(username string) string {
 	claims["username"] = username
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	var config = util.GrabConfig()
-	fmt.Println(config.Secret)
-	str, err := token.SignedString([]byte(config.Secret))
+	str, err := token.SignedString([]byte(os.Getenv("JWT_SIGN")))
 
 	if err != nil {
 		log.Fatal(err)
@@ -59,7 +57,7 @@ func checkSecurityKey(token *jwt.Token) (interface{}, error) {
 		return nil, fmt.Errorf("Unexpected signing method: %s", token.Header["alg"])
 	}
 
-	return []byte(util.GrabConfig().Secret), nil
+	return []byte(os.Getenv("JWT_SIGN")), nil
 }
 
 func ExtractUser(c *gin.Context) (string, error) {

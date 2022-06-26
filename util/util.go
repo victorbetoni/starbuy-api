@@ -11,14 +11,8 @@ import (
 type HandlerFuncError func(*gin.Context) error
 
 type GlobalConfig struct {
-	HostAddress string `mapstructure:"HOST_ADDRESS"`
-	Port        string `mapstructure:"PORT"`
-	Username    string `mapstructure:"USER"`
-	Password    string `mapstructure:"PASSWORD"`
-	Schema      string `mapstructure:"SCHEMA"`
-	Driver      string `mapstructure:"DRIVER"`
-	Secret      string `mapstructure:"JWT_SIGN"`
-	PortAPI     int    `mapstructure:"API_PORT"`
+	Driver  string `mapstructure:"DRIVER"`
+	PortAPI int    `mapstructure:"API_PORT"`
 }
 
 var config GlobalConfig
