@@ -31,4 +31,12 @@ var User = []Route{
 			e.GET(uri, hf)
 		},
 	},
+	{
+		URI:         "/user/received_orders",
+		RequireAuth: true,
+		Action:      controllers.GetReceivedOrders,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.GET(uri, hf)
+		},
+	},
 }

@@ -24,6 +24,28 @@ func DownloadPurchases(username string, orders *[]model.Order) error {
 	return nil
 }
 
+func DownloadOrders(seller string, orders *[]model.OrderWithItem) error {
+	db := database.GrabDB()
+
+	var raw []model.RawOrder
+	if err := db.Select(&raw, "SELECT * FROM orders WHERE seller = $1", seller); err != nil {
+		return err
+	}
+
+	for _, item := range raw {
+		var order model.Order
+		var product model.ItemWithAssets
+		if err := DownloadPurchase(item.Identifier, &order); err != nil {
+			return err
+		}
+		if err := DownloadItem(item.Item, &product); err != nil {
+			return err
+		}
+		*orders = append(*orders, model.OrderWithItem{Order: order, Item: product})
+	}
+	return nil
+}
+
 func DownloadPurchase(identifier string, order *model.Order) error {
 	db := database.GrabDB()
 

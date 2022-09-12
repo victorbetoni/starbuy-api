@@ -19,8 +19,7 @@ func Authorize(next util.HandlerFuncError) util.HandlerFuncError {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
 		}
-		next(c)
-		return nil
+		return next(c)
 	}
 }
 

@@ -16,7 +16,10 @@ func GetOrders(c *gin.Context) error {
 	user, _ := authorization.ExtractUser(c)
 
 	var purchases []model.Order
-	repository.DownloadPurchases(user, &purchases)
+	err := repository.DownloadPurchases(user, &purchases)
+	if err != nil {
+		return err
+	}
 
 	c.JSON(http.StatusOK, purchases)
 
@@ -103,5 +106,22 @@ func PostOrder(c *gin.Context) error {
 	repository.InsertPurchase(final)
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Compra realizada com sucesso!"})
 
+	return nil
+}
+
+func GetReceivedOrders(c *gin.Context) error {
+	user, _ := authorization.ExtractUser(c)
+
+	var orders []model.OrderWithItem
+	if err := repository.DownloadOrders(user, &orders); err != nil {
+		if err == sql.ErrNoRows {
+			c.Error(err)
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
+			return nil
+		}
+		return err
+	}
+
+	c.JSON(http.StatusOK, orders)
 	return nil
 }

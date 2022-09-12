@@ -9,6 +9,11 @@ type Order struct {
 	Quantity   int            `json:"quantity"`
 }
 
+type OrderWithItem struct {
+	Order Order          `json:"order"`
+	Item  ItemWithAssets `json:"item"`
+}
+
 type RawOrder struct {
 	Identifier string  `json:"identifier" db:"identifier"`
 	Customer   string  `json:"customer" db:"holder"`
