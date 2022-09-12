@@ -32,7 +32,7 @@ var User = []Route{
 		},
 	},
 	{
-		URI:         "/user/received_orders",
+		URI:         "/received_orders",
 		RequireAuth: true,
 		Action:      controllers.GetReceivedOrders,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
