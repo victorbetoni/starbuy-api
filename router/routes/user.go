@@ -39,4 +39,12 @@ var User = []Route{
 			e.GET(uri, hf)
 		},
 	},
+	{
+		URI:         "/profile_picture",
+		RequireAuth: true,
+		Action:      controllers.PostUserProfilePicture,
+		Assign: func(engine *gin.Engine, handlerFunc gin.HandlerFunc, s string) {
+			engine.POST(s, handlerFunc)
+		},
+	},
 }

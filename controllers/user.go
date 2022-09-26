@@ -3,8 +3,12 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
+	"os"
 	"starbuy/authorization"
+	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
 	"time"
@@ -54,6 +58,29 @@ func Register(c *gin.Context) error {
 	token := authorization.GenerateToken(user.Username)
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Registrado com sucesso", "user": user, "jwt": token})
+	return nil
+}
+
+func PostUserProfilePicture(c *gin.Context) error {
+	router := gin.Default()
+	router.MaxMultipartMemory = 8 << 20 // 8 MiB
+	file, _ := c.FormFile("file")
+	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{PublicID: "profile_pic/"})
+
+	username, _ := authorization.ExtractUser(c)
+
+	if err != nil {
+		return err
+	}
+
+	db := database.GrabDB()
+	tx := db.MustBegin()
+	tx.MustExec("UPDATE users SET profile_picture=$1 WHERE username=$2", resp.SecureURL, username)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
