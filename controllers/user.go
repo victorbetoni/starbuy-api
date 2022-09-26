@@ -72,14 +72,14 @@ func PostUserProfilePicture(c *gin.Context) error {
 		return err
 	}
 
-	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{PublicID: "profile_pic/"})
+	resp, as := cld.Upload.Upload(c, file, uploader.UploadParams{PublicID: "profile_pic/"})
 	fmt.Println("URL: ", resp.SecureURL)
 
-	username, _ := authorization.ExtractUser(c)
-
-	if err != nil {
-		return err
+	if as != nil {
+		return as
 	}
+
+	username, _ := authorization.ExtractUser(c)
 
 	db := database.GrabDB()
 	tx := db.MustBegin()
