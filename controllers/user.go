@@ -64,8 +64,14 @@ func Register(c *gin.Context) error {
 func PostUserProfilePicture(c *gin.Context) error {
 	router := gin.Default()
 	router.MaxMultipartMemory = 8 << 20 // 8 MiB
-	file, _ := c.FormFile("file")
+	fileHeader, _ := c.FormFile("file")
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	file, err := fileHeader.Open()
+
+	if err != nil {
+		return err
+	}
+
 	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{PublicID: "profile_pic/"})
 
 	username, _ := authorization.ExtractUser(c)

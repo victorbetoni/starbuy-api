@@ -1,0 +1,1268 @@
+[33mcommit 63a834914320820f020a3cdbf67bf376de557333[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Sep 26 14:56:40 2022 -0300
+
+    Adicionando upload de foto de perfil
+
+[33mcommit 6cbea064bd3a04e87e369631a3846c53b00413a8[m[33m ([m[1;31mheroku/master[m[33m)[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Sep 12 14:23:42 2022 -0300
+
+    Mudando rota e tirando conflito
+
+[33mcommit 5085a8af4d8a2fbdd3efbeb532ba81496db8afdf[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Sep 12 14:17:11 2022 -0300
+
+    Adicionando rota para pegar os pedidos de um vendedor
+
+[33mcommit d4e80af9d7362dff7d71239a2d2ff0f11f2802cd[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 26 17:12:10 2022 -0300
+
+    Usando variaveis de ambiente e deixando a API publica
+
+[33mcommit 95b90a9e9350cf87b63b166288d35c3dd4b233d0[m
+Merge: e331b41 a0a93e2
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 22:10:39 2022 -0300
+
+    Merge branch 'master' of https://github.com/starbuy-commerce/web-api
+
+[33mcommit e331b4178a47762c090cc5ae08885ac9361d1b46[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 22:10:31 2022 -0300
+
+    Mais ajustes
+
+[33mcommit a0a93e2b526610ef4cbf7fcf1c06a440fd2326bb[m
+Author: Victor <40972803+localthreader@users.noreply.github.com>
+Date:   Sun Jun 19 22:09:05 2022 -0300
+
+    Rename api_documentatioon.md to README.md
+
+[33mcommit af8ab1bad678752201ee897d06c965f0c8f20d43[m
+Author: Victor <40972803+localthreader@users.noreply.github.com>
+Date:   Sun Jun 19 22:08:42 2022 -0300
+
+    Adicionando documentação
+
+[33mcommit f86f80e649e4360edf11cca9b7bbabb9d76090b6[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 19:11:37 2022 -0300
+
+    Corrigindo coluna errada
+
+[33mcommit a876fd7ff3b26647c6606ce155ceda2a6156610d[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 18:55:51 2022 -0300
+
+    Retirando a autenticação daqui
+
+[33mcommit ef2450eddf59a799e8eaf9240375bfd0c13a06a0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 18:53:36 2022 -0300
+
+    Arrumando rota de avaliações recebidas
+
+[33mcommit 8435e2391df7d0af255bd8e8f035b655c573a6cd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 18:43:59 2022 -0300
+
+    Seila
+
+[33mcommit 1a090217d17f42d374f311a759902d4f310570fb[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 18:36:55 2022 -0300
+
+    Corrigindo nome de tabela errado
+
+[33mcommit 9142135e38148866b14a4e6cd4626e1aec5b4343[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 17:52:15 2022 -0300
+
+    Resolvendo um bug ai
+
+[33mcommit d5aaed17e0e37fad1e487f06396440c1949e75de[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 17:35:17 2022 -0300
+
+    Passando mensagens do prepare para o frontend
+
+[33mcommit 93d537f4151da96ab69e2db49a248892991c21f2[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 17:33:15 2022 -0300
+
+    Evitando erros no frontend
+
+[33mcommit 6e06ef4d572b2bc109a422b488109dc7c5fd5f2c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 17:31:00 2022 -0300
+
+    Refatorando login e registro
+
+[33mcommit 97d2866f7150eadabda77eb418c21b2a344128df[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 17:08:02 2022 -0300
+
+    Refatorando rota de deletar item do carrinho
+
+[33mcommit 10fdd74814fbdfb3d5924ce9271a6f42aaf23ef1[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 17:05:11 2022 -0300
+
+    Adicionando rota para deletar review
+
+[33mcommit b31a46e028b9f5d83c00ce7daff84be31b2e4370[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 16:38:29 2022 -0300
+
+    Colocando autenticação nas rotas de review do usuario
+
+[33mcommit 2e0d1d42a64e3d301f8fdd1511106bb1fbf51b26[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 16:23:29 2022 -0300
+
+    Ops
+
+[33mcommit cbe4cbd47266bb9c14ce019af736564faf0c1eb8[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 16:21:26 2022 -0300
+
+    Arrumando wildcard dando conflito
+
+[33mcommit 50e0e33e7e18fa33bc989da5159803bde67484cd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 16:15:56 2022 -0300
+
+    Rota para retornar apenas as reviews do produto
+
+[33mcommit ea291d96baa0b4446d486186522d4b87eb35c51c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 15:13:05 2022 -0300
+
+    Colocando mensagens em português
+
+[33mcommit 9d0edcab582b5b90ac71adc0c6cc5872a0d15461[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 14:33:47 2022 -0300
+
+    Evitando erro de divisão por 0
+
+[33mcommit b96fa4381766bfe2ebb0324221f507d3a5760dcf[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 13:40:32 2022 -0300
+
+    Adicionando rota para ping
+
+[33mcommit ddc7ede09d0bb6ed0624aceca951a5d4d13afe22[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Jun 19 00:18:05 2022 -0300
+
+    Arrumando logica quebrada
+
+[33mcommit 761baa4704c38b97a5142f30b54eda0311023952[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Jun 18 23:34:41 2022 -0300
+
+    Arrumando logica meio erradinha
+
+[33mcommit b82ec09c656b33d3d82d9adba8f1e01f8afe73f1[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Jun 18 23:22:50 2022 -0300
+
+    Adicionando busca de reviews recebidas por um usuario
+
+[33mcommit 8b0863c3ebe249b126c9d70093b7bbdda3ec7ef6[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Jun 18 20:48:26 2022 -0300
+
+    Colocando mensagem em português mesmo
+
+[33mcommit c6d61aff78ffc0c819a21856a9a82a04e6975a69[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Fri Jun 17 01:22:03 2022 -0300
+
+    Corrigindo problemas de lógica no registro de usuários
+
+[33mcommit cd50949ce694d2882c92cf3899df8683a700abdd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Jun 16 14:16:15 2022 -0300
+
+    Removendo informações repetidas da response da review
+
+[33mcommit 08ce1b575d71ef98f81f4cd6f5a0a31a60137e53[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Jun 16 13:19:05 2022 -0300
+
+    Corrigindo função que estava chamando ela mesmo infinitamente
+
+[33mcommit 6bb5c14073b956a113666f6716b41f97a1d900ac[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 13:52:38 2022 -0300
+
+    Mudando a rota da review
+
+[33mcommit 8895ae3e091d017b269a3fc4cf22ebd52e16b8ff[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 11:08:06 2022 -0300
+
+    Refatorando o metodo convertRawReview
+
+[33mcommit e0b35946ea0ac1f19967c1cfeab395e954b875a4[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 11:02:45 2022 -0300
+
+    Mudando a lógica do DownloadItem
+
+[33mcommit 7478ae7e3a97158c539d4a96bfb88880582d72de[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 10:56:35 2022 -0300
+
+    Eu odeio ponteiros
+
+[33mcommit a119c125d04dc8d72551a5ab03490d907ed916da[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 10:52:30 2022 -0300
+
+    Debug
+
+[33mcommit 68a16788b8c767741b431a4d638a55ce44f1951c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 10:49:57 2022 -0300
+
+    Agora vai se deus quiser
+
+[33mcommit 9d6074b5b13266a321c0c7c1f0762d4707acd3df[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 10:45:11 2022 -0300
+
+    Usando ponteiro ao invés de endereço
+
+[33mcommit c890985f81ba35b67b12202fb264b85657422715[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Jun 15 10:42:49 2022 -0300
+
+    Me suicidarei as 23h47
+
+[33mcommit 3b29d9e89c7f63394ae3bc8c43a522e8b744f573[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 22:23:05 2022 -0300
+
+    Usando outra estratégia para passar review por ponteiro
+
+[33mcommit 0e4176542daa1d1da042dec7eee1257ec9029cd0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 22:16:04 2022 -0300
+
+    Mais debug acho que vou morrer
+
+[33mcommit c64daf467de9573b9e2f220805c48799733b89da[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 22:12:13 2022 -0300
+
+    Mais debug
+
+[33mcommit 1d57da490e93d63e79a588dfeb88f197f18b4e86[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 22:08:20 2022 -0300
+
+    Tentando corrigir reviews
+
+[33mcommit ac914d4389a853c32d17d5c435298a916b225cb2[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 22:03:52 2022 -0300
+
+    Vamos ver se isso resolve
+
+[33mcommit 2ccc3fcbb9989f27468166df1f677d2a73db0dcf[m
+Merge: 1c43913 ff2908a
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 18:53:02 2022 -0300
+
+    Merge branch 'master' of https://github.com/starbuy-commerce/web-api
+
+[33mcommit 1c439132e87650a492c4bc3397929d572a0923a3[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 18:52:01 2022 -0300
+
+    Fazendo com que a query nao seja case sensitive
+
+[33mcommit 4156e0ff6c117abec68018705e1dc17120cfff9b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Jun 14 18:44:34 2022 -0300
+
+    Removendo um espaço que não era para estar aqui
+
+[33mcommit ae2ebbe378564a075758fcf73bcfecc0de1e44ff[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Jun 11 18:41:56 2022 -0300
+
+    Adicionando rota para fazer query de itens pelo titulo
+
+[33mcommit ff2908a15f2035406551435f69a0632cc63c2713[m
+Author: Victor <cl200154@g.unicamp.br>
+Date:   Thu Jun 9 13:31:25 2022 -0300
+
+    Transferring API Description file from Apiary.io
+
+[33mcommit 949184d15698fa8ee00bc495facc99cf0e5606d2[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon May 30 14:18:44 2022 -0300
+
+    Tirando omitempty do seller que estava impedindo o dado de vir
+
+[33mcommit 7d5f35a44a0f44835edc1abf18d26df094dc0211[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon May 9 13:56:13 2022 -0300
+
+    Adicionando a média das avaliações de um produto na response das reviews
+
+[33mcommit 4c2f75ef960f03c944700b26d93c8acedffe7b03[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon May 2 14:26:53 2022 -0300
+
+    Adicionando funcionalidade de notificações
+
+[33mcommit d9ec6ff7be47a9ceb050090874578c6100b0fa15[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Apr 13 14:04:49 2022 -0300
+
+    Removendo redundancia das rotas de endereço
+
+[33mcommit 9d2698a5aa8c4cab66f10fe0e430dff30a2b8595[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 20:31:37 2022 -0300
+
+    Arrumando rota
+
+[33mcommit 726d2e503475e532ab8144dc273c5c0be1bee7d6[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 20:30:07 2022 -0300
+
+    Arrumando nome da coluna
+
+[33mcommit e6e80d5ecb4eeb654e2a4020059d6cb51eb1c1e6[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 20:27:52 2022 -0300
+
+    Arrumando chave do banco
+
+[33mcommit 2fdb23d3450d46890a9d996064e6e819d40d1b92[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 20:26:32 2022 -0300
+
+    Arrumando chave do banco
+
+[33mcommit 6a940ff561e1c1700d978f26526baf9e7614b958[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 19:29:44 2022 -0300
+
+    Eu realmente não sei
+
+[33mcommit ba4e63ca8d1e5229f0f7d7bc94fa105c3b4ffad5[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 19:00:14 2022 -0300
+
+    Atualizando nome de tabela
+
+[33mcommit a4398d868d779dfcac97e7e0ad346a2ea8b91c2b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:54:15 2022 -0300
+
+    Adaptando código para reviews sem id
+
+[33mcommit 3de597ccd296162dd10942c72f9bde04bc838483[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:50:41 2022 -0300
+
+    Reviews podem ser identificadas pelo usuário e pelo produto
+
+[33mcommit 109e0f001d8a285745b8fd8dbb535bdba5c31f54[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:41:03 2022 -0300
+
+    Arrumando condição redundante
+
+[33mcommit 84c3be31a761fe39bfaaa6c05e96d641a5c1eba0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:29:55 2022 -0300
+
+    Corrigindo insert com número de parametros errado
+
+[33mcommit 0d60ac34885ebdeb6195e4543a39962866041c74[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:26:51 2022 -0300
+
+    Corrigindo mais um erro
+
+[33mcommit 9d1aa91ac91c0af0f2e023bae4fe67b27fdbd559[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:25:31 2022 -0300
+
+    Corrigindo erros
+
+[33mcommit 7e6cb9f2beecafcc1445f2ef75c13fe8483cbd0a[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:24:23 2022 -0300
+
+    Usando BindJSON aqui também
+
+[33mcommit d3064f89a9674539c9ef01d50ed9ffd092ffe232[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 18:22:00 2022 -0300
+
+    Atualizando rotas
+
+[33mcommit 1a3a65795a15694aca7ffaad210d6c810ecd0da4[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:54:26 2022 -0300
+
+    Corrigindo chave do banco
+
+[33mcommit 32c62e377cb4edaf894b96ec6f87e7621a1e291f[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:52:03 2022 -0300
+
+    Corrigindo funções para baixar pedidos do banco
+
+[33mcommit 2ed971aa5e7aacc0aedac87dc6f6ed98e1922db9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:29:49 2022 -0300
+
+    Corrigindo número de parametros
+
+[33mcommit 6bf104bf6bdb701e185111767e03a65b8612b3c3[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:26:07 2022 -0300
+
+    Usando termo order ao invés de purchase
+
+[33mcommit 8888741e81dd7ad265f55fe9dc549acc95271bad[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:21:31 2022 -0300
+
+    Ops
+
+[33mcommit 4a5c50018734d7b9d5a1d8f11ddc2ab19843ad73[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:20:37 2022 -0300
+
+    Corrigindo função que baixa carrinho do banco
+
+[33mcommit 9581b928fd5d3bd0866163c5137b39f2e5938bd9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:13:12 2022 -0300
+
+    Somando no statement
+
+[33mcommit 2808beda67507cfebdb082fb0cc0cb2894809526[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:08:55 2022 -0300
+
+    Corrigindo chave do banco errada
+
+[33mcommit 24f163604157f81f9931073ef723829e629dc356[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 15:01:42 2022 -0300
+
+    Debug
+
+[33mcommit ddc65d59545f89bb5ce8c2953faa24ec071fb81c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 14:31:03 2022 -0300
+
+    Debug
+
+[33mcommit b511d62090cf39078d61d2047ddc607fc3885cbf[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 14:26:17 2022 -0300
+
+    Mais debug
+
+[33mcommit df8bb19ae3eab5699f3501783ee10446e90c1c04[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 14:20:24 2022 -0300
+
+    Debugando
+
+[33mcommit fe6f49f552ee9e47a299a013e9235a5a3f7607b3[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 14:16:42 2022 -0300
+
+    Tentando arrumar denovo um bug no update de cart
+
+[33mcommit 5e9b41a1cf3fd02f71c3a53aa95c59bd5f27cd40[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 11:39:50 2022 -0300
+
+    Evitando ambiguidade usando tabela virtual EXCLUDED
+
+[33mcommit 641b68a26d65f23a6de34d27095ac7155d323264[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 11:32:54 2022 -0300
+
+    Arrumando umas coisas
+
+[33mcommit e9337973dd41f7dc56a3f4759e1f91c91d5470ac[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 11:14:25 2022 -0300
+
+    Fazendo update de um jeito diferente
+
+[33mcommit 7c8439630da907cf718e3ea70612b70eeb32f97b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 10:59:00 2022 -0300
+
+    Corrigindo conflito de sintaxe
+
+[33mcommit ee01de0bea5c4de82fe4cc470ced7a2f94cdeccd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 10:57:59 2022 -0300
+
+    Definindo primary keys
+
+[33mcommit cfda49e6660ca7f8dad6ce8fd92ce2e2ad981b48[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 10:46:27 2022 -0300
+
+    Tentando resolver erro de ambiguidade
+
+[33mcommit 65025f3586aa8166e95a2551b30738325b8d5b4f[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 10:42:59 2022 -0300
+
+    Referenciando tabela no update
+
+[33mcommit 0120a01419619b6b5d90c5ea2350c4acb4306c2b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 10:39:53 2022 -0300
+
+    Evitando conflitos em caso de insert de cart já existente
+
+[33mcommit 5b48342d1d5cc949c1f5ecaecd8502b86bb727a7[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 09:53:52 2022 -0300
+
+    Melhorando a função de post do cart: adicionando verificação de estoque e retornando item/usuário na response
+
+[33mcommit 0743478e423c1c34ce6fbc47d75d0f686fdae802[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 09:35:43 2022 -0300
+
+    Arrumando mapping de json da request
+
+[33mcommit 833168f018d4817cc482629429521af386de673f[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 02:19:57 2022 -0300
+
+    Usando get ao invés de select
+
+[33mcommit b08f6e4276958c333b2a3ec485997c7c326a1dc6[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 02:15:50 2022 -0300
+
+    Garantindo que o CEP terá 8 caracteres
+
+[33mcommit 4ef0bf7eb6e6ef5914667292fff3873ca9c19771[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 02:09:26 2022 -0300
+
+    Inserindo endereço no banco
+
+[33mcommit f2fac406c893a0aed51905dd46c51cb9c040f63d[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 01:38:44 2022 -0300
+
+    Arrumando wildcard desatualizada
+
+[33mcommit 44909d11e87e9122d09de5b45d4cafe0d4f884ab[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 01:29:41 2022 -0300
+
+    Incluindo vendedor no objeto da response
+
+[33mcommit 6a2d642f936cbb4306ab3e9623016c86aa7bb835[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 01:16:45 2022 -0300
+
+    Corrigindo uns status http
+
+[33mcommit f2356d77352a741dc0e3aa3479fe2d869df470de[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 10 01:12:59 2022 -0300
+
+    Refatorando handler funcs e mais umas coisas
+
+[33mcommit 0bc88fe0a4145ec1360b4c453e477bb0e50ec085[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Apr 9 10:00:14 2022 -0300
+
+    Fazendo logging de erros
+
+[33mcommit f978cd0e686d942c532c95aaab737c8067c0920f[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Apr 9 09:53:54 2022 -0300
+
+    Debugando
+
+[33mcommit 1eba3bad1ea984aed9d5845a36bdc07cc6f7a741[m
+Merge: 7521336 54fa437
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Apr 9 09:47:37 2022 -0300
+
+    Merge branch 'master' of https://git.heroku.com/tcc-web-api
+
+[33mcommit 7521336583d73b25c0543395ab075873b8111d01[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Apr 9 09:46:00 2022 -0300
+
+    Mudando wildcard
+
+[33mcommit 54fa437c7170e332d6635bcaebd63490998f84fd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Apr 4 16:20:49 2022 -0300
+
+    Arrumando paths
+
+[33mcommit d41b55f8bc355f4fcdbc87c29cd39322aad9c2d9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Apr 4 16:17:52 2022 -0300
+
+    Corrigindo outro path
+
+[33mcommit 439f93c07c695637d15168f04daad5173ecee26b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Apr 4 16:16:11 2022 -0300
+
+    Mudando path
+
+[33mcommit 6cfc15759d05d8c810c79d780a0fea76f2911213[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Apr 4 16:11:44 2022 -0300
+
+    Corrigindo metodo
+
+[33mcommit 64db1359446eadb444f5230d7a02d0edfc600aad[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Apr 4 15:08:04 2022 -0300
+
+    Terminando de portar o código para o gin
+
+[33mcommit e3426604d5f8a2f70ab56be3d8cbd94aff3515c4[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 3 18:55:58 2022 -0300
+
+    Corrigindo response
+
+[33mcommit d672bbe7394cfff69180f19a074cc488782f6590[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 3 18:55:21 2022 -0300
+
+    Portando cart controller para o gin
+
+[33mcommit 00582bacc063fcbd506378f159ca9634613765cc[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 3 17:59:35 2022 -0300
+
+    Portando controllers de endereço
+
+[33mcommit 58afb82e060128bf3f8737857205b4edac1ed370[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 3 16:16:30 2022 -0300
+
+    Usando o termo order no banco de dados
+
+[33mcommit 26445e6ea6e0a4c682989182b3ce90d5746f6c46[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Apr 3 15:05:13 2022 -0300
+
+    Usando constraint do nothing para evitar linhas repetidas
+
+[33mcommit 019121efba8bb9170a3de1405a2306bcba237f6d[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Apr 2 18:17:18 2022 -0300
+
+    Substituindo o termo purchase por order
+
+[33mcommit dfbfb2b9fe17b5715791a92b6cd554111b9bf7e7[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Fri Apr 1 16:04:47 2022 -0300
+
+    Adicionando função para inserir um endereço no banco de dados
+
+[33mcommit 61400e347e76ea85e99dfa98df8b80724cbe089b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Fri Apr 1 15:55:45 2022 -0300
+
+    Adicionando rotas para pegar os endereços de um usuário
+
+[33mcommit e342c10ee30402b697fb12b92db81723905db858[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 28 15:29:53 2022 -0300
+
+    Adicionando opção para incluir reviews do item na response
+
+[33mcommit 1ad9f9ab2222842846355f7bc3abc313c742ad52[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 27 22:03:06 2022 -0300
+
+    Arrumando um erro besta
+
+[33mcommit a4b59f3b45bede860862cdf4065d881762140919[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 27 21:52:44 2022 -0300
+
+    Colocando a opção de incluir produtos do usuario na URL ao invés do body da request
+
+[33mcommit dfb33a3e1f31a4433367435b8abdbc25f9db1302[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 17:32:57 2022 -0300
+
+    Adicionando rota para editar reviews
+
+[33mcommit b19ba3401634b444445de2e435752266a3f69cad[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 16:58:45 2022 -0300
+
+    Simplificando request para o cliente
+
+[33mcommit 331af2560fae3dd33e0816438b37b4467ce18d73[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 16:38:53 2022 -0300
+
+    Movendo as rotas para arquivos separados
+
+[33mcommit ac822a89014c2fbb408fa97e250074194ad8b300[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 16:29:01 2022 -0300
+
+    Adicionando rotas para buscar reviews de usuarios e reviews especificas
+
+[33mcommit 997dffc8fe01a77983c678824e783ea03e68e5b0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 08:10:50 2022 -0300
+
+    Adicionando response de not found na rota get de compra
+
+[33mcommit 52ea1b0c97dfdc1f7034ff51efb8e1e08ff2ad10[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 08:08:03 2022 -0300
+
+    Corrigindo umas rotas e adicionando rota de get unitário para compra
+
+[33mcommit 92a70996e60e0a106dbcdf40b5c7c605af0e29b0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 24 08:01:21 2022 -0300
+
+    Verificando se o usuario comprou um produto antes de postar review
+
+[33mcommit 36b0393feafebafb9e0b6f1b5016fc35d984ac1b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 23 22:31:53 2022 -0300
+
+    Adaptando banco e implementando rota para postar compras
+
+[33mcommit 0d371546e2568b67a933ed64cd49f06c7192b3ed[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 22 19:03:46 2022 -0300
+
+    Adicionando rota para colocar item no carrinho
+
+[33mcommit e0ba04692382bd62173899612cd66469d5fcca30[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 22 14:01:26 2022 -0300
+
+    Adicionando modelo de review e movendo função do cart para um arquivo proprio
+
+[33mcommit d425a5eb6afcba15b55db1d1db0d2a71d4fe79f7[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 22 13:46:13 2022 -0300
+
+    Refatorando arquivo de setup sql e adicionando tabela de avaliações
+
+[33mcommit 194067230f950cd5b094000015bea797fcd8ee2f[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 20 19:50:33 2022 -0300
+
+    Removendo chave usuário se duplicando na response
+
+[33mcommit d157fdd1b65590b6c463898d6c5fc64bc62fe4b5[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 20 19:43:51 2022 -0300
+
+    Refatorando código e implementando download de produtos de um usuario especifico
+
+[33mcommit 9ca8089fc25a79f9b7324fdc16b1332a7c37077a[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 20 18:56:55 2022 -0300
+
+    Corrigindo include items sempre false
+
+[33mcommit 52a7669ee6a79c1d3e1b542c7e05ef32532a35a2[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 20 18:53:34 2022 -0300
+
+    Adicionando opção para incluir os itens de um usuario na response
+
+[33mcommit b99fc51dcb093ac85febc040d44725681785819e[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 15 14:10:29 2022 -0300
+
+    Nao era pra ter tirado isso
+
+[33mcommit 4e5f271bef8fc882cc0c665856b27bbabab92071[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 15 14:02:23 2022 -0300
+
+    Movendo umas coisas do register para o pacote de repositorio
+
+[33mcommit d001443116ae3dec68a51b25f59cfbb39bdcbbab[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 15 13:51:39 2022 -0300
+
+    Adicionando rota para obter carrinho de compras
+
+[33mcommit 4a6054d502be3b2b2ebe2381df6b51c54de79279[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 14 16:09:07 2022 -0300
+
+    Incluindo usuário na response
+
+[33mcommit 55d3140b1c7181b8f5ebcdcf178abea46560e9ab[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 12 21:00:58 2022 -0300
+
+    Melhorando mais uma mensagem de erro
+
+[33mcommit 9870c3fef7d308f4c28d0d4a2aaecc276618ba81[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 12 20:46:29 2022 -0300
+
+    Enviando mensagem de erro amigavel
+
+[33mcommit 54f0202468404319f711e025f742de0dec828d61[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 12 18:45:00 2022 -0300
+
+    Enviando informações do usuário na response do login
+
+[33mcommit 53c444c9fc6376b48eab403b0fb6d5b4dfc397a8[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Fri Mar 11 22:09:06 2022 -0300
+
+    Usando struct na response do jwt
+
+[33mcommit 22cd8f0d24ad69eeeca569ba7f2dc14ed15f3ef3[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Fri Mar 11 08:03:49 2022 -0300
+
+    Refatorando função que baixa itens unitariamente do banco
+
+[33mcommit 5775125f4e45c266064b63253ff02d5d7808293a[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 17:05:58 2022 -0300
+
+    Baixando usuário também
+
+[33mcommit a5dffed6a754739713dc0fa2e5c3062805f61a56[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 16:54:25 2022 -0300
+
+    Colocando arquivo sql de setup do banco
+
+[33mcommit bdb3def6d424addedfea7566ebfc8a7ea64b6b1f[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 16:46:54 2022 -0300
+
+    Removendo essa linha aqui, n funfa mais
+
+[33mcommit b31b06491462b251062cc1a579e135c1240a096e[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 16:36:01 2022 -0300
+
+    Inserindo id e vendedor do item automaticamente
+
+[33mcommit 254c09562f85ad4ec7113d213feb541114e3c31c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 16:20:54 2022 -0300
+
+    Arrumando named exec para mandar produto pro banco
+
+[33mcommit 3ce69a30032c8bce2e42b7fe16a746afba544292[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 16:12:04 2022 -0300
+
+    Criando transaction dentro do for
+
+[33mcommit e49f39046d6c5183eddb6758486929524028abcf[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 16:06:33 2022 -0300
+
+    Reiniciando transaction
+
+[33mcommit 48babc755fead0f80afe81b99d629bd601989e3c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 15:38:43 2022 -0300
+
+    Continuação da rota de post de item e atualizando structs de item
+
+[33mcommit 7283c6a5a8f7ced931449fd3eb930d286a5f7dd8[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 12:59:14 2022 -0300
+
+    Fazendo verificação de sessão antes de postar produto
+
+[33mcommit b394fbd4c9a94e4947cc855b90d5cea6d72d4f88[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 12:54:00 2022 -0300
+
+    Adicionando função para extrair usuário do jwt
+
+[33mcommit 130253bc2945c70e2a3c9491bd2d8ee8dcd74310[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 08:16:47 2022 -0300
+
+    Começando a implementar metodo post para produtos
+
+[33mcommit dce316a5a07010d8cd99510f8fb7ea46bb63a650[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 08:02:34 2022 -0300
+
+    Readicionando checagem de key
+
+[33mcommit 51a00101cef54f33090f4aa2abb896da2a3ef158[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 08:00:57 2022 -0300
+
+    Alterando método de assinatura do jwt
+
+[33mcommit e407ce435acec131a1924de055d14d9420c63a80[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 07:59:43 2022 -0300
+
+    Verificando JWT sign
+
+[33mcommit 832b6c8e40d0ae42fc2a07f1249cf09809eeacab[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 07:55:55 2022 -0300
+
+    Mais testes
+
+[33mcommit 884d12612a229f8ea9a14d96e4ab630f1e764d17[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 10 07:51:24 2022 -0300
+
+    Testes
+
+[33mcommit 85de8752ea2c4749d4a2d01aeb0e9277faf612a3[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 22:21:21 2022 -0300
+
+    Usando slice de byte aqui também
+
+[33mcommit f4a5f5886e504409ca85d049f0c6c7dc431e82fd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 22:17:43 2022 -0300
+
+    Usando slice de bytes para a key
+
+[33mcommit e7f95f7fbea331a0051a0d1a33b4b270c2867012[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 22:11:37 2022 -0300
+
+    Terminando rota de login
+
+[33mcommit e4193e357446d2de4f1a445b3190bece2322f017[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 21:29:13 2022 -0300
+
+    Adicionando middleware de autenticação
+
+[33mcommit cf051cb224c3ad126ac9164beb85fd3c225ba009[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 19:53:08 2022 -0300
+
+    Corrigindo uma query
+
+[33mcommit a44fe278d929032dc027e84efee0352148519299[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 19:48:09 2022 -0300
+
+    Informando a categoria
+
+[33mcommit 1003e8483ffccbda24f5dce4096b367faa6153c4[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 19:17:18 2022 -0300
+
+    Adicionando rota para procurar por categoria
+
+[33mcommit 5b7ed090809ef55859c247762629fecd39b23e3a[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 9 18:19:12 2022 -0300
+
+    Melhorando query de baixar items
+
+[33mcommit da664ea0645686f22ad2a48e4f78d6600cf87291[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 8 18:32:31 2022 -0300
+
+    Arrumando literal
+
+[33mcommit de4ac8cee04786fa3f644bdbf731c6b34275ad99[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 8 18:29:04 2022 -0300
+
+    Corrigindo estrutura do item para que o sqlx consiga ler
+
+[33mcommit 768b3eb5046905ab304301cdcec3267e479cfa6c[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 8 17:23:35 2022 -0300
+
+    Adicionando rota para todos os produtos
+
+[33mcommit ad98ffeb2a0ec8d5f142944cdcada5048d505ec9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Tue Mar 8 14:41:50 2022 -0300
+
+    Adicionando função para pegar todos os itens (vou remover depois)
+
+[33mcommit 6b4efe147b3a70764f983f2e52eba45b8a61c064[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:36:20 2022 -0300
+
+    Ops
+
+[33mcommit 24cd617208f1d218cbbbbb9ee34eadad4287c6ec[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:35:43 2022 -0300
+
+    Usando string
+
+[33mcommit db0a286e10164fbe8da98b76dbe3a2b78c0d910a[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:34:10 2022 -0300
+
+    Usando credenciais do banco novo
+
+[33mcommit 87f5854b67654292bea50f078c29dfcbed406ba2[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:13:02 2022 -0300
+
+    Mais testes
+
+[33mcommit 23262b70878ede4d8584749a69bdd9b577556f22[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:10:55 2022 -0300
+
+    Eu odeio a heroku por me obrigar a fazer commit para cada teste
+
+[33mcommit dd8a4ac571f8a0e3e18f7d49eb010d22e24838eb[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:06:38 2022 -0300
+
+    Debugando
+
+[33mcommit 8b803d41cfeab6e21c11d4faa26c36dc4df7504e[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:04:50 2022 -0300
+
+    Testando erro internal
+
+[33mcommit 18eed77cb9275e735edd473f50f528019aedd9e2[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 14:01:27 2022 -0300
+
+    Testes
+
+[33mcommit 29e0b404658062fe41f885088f3985bfe61ceff9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 13:54:13 2022 -0300
+
+    Testes
+
+[33mcommit d8e9b2a36bf5964b4ea78681f1a97dcb11511ca7[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Mon Mar 7 13:47:58 2022 -0300
+
+    Utilizando sprint
+
+[33mcommit aa28b0be75e33942041a866d7192fea2c0ed868b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 21:00:30 2022 -0300
+
+    Ops
+
+[33mcommit cf5877c8db2cd703beb7a116906bc15a77cdb2d4[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 20:59:48 2022 -0300
+
+    Adaptando porta para produção
+
+[33mcommit 4c24b9b6ad6365e33dc1985654b6a925bfc168cb[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 20:22:18 2022 -0300
+
+    Corrigindo query
+
+[33mcommit 5d95dc012737afa2ab6ffa1d0fc430ec835c3ae9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 20:16:32 2022 -0300
+
+    Adicionando rota para items
+
+[33mcommit cd6a903550f07eec69f1c56f71ce85ad1fe3b5a6[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 19:20:25 2022 -0300
+
+    Terminando de implementar rota para buscar usuário
+
+[33mcommit 58c0296751c2636b5e7272a260ba1dc3fef4bfcd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 17:34:23 2022 -0300
+
+    Corrigindo umas coisas
+
+[33mcommit b00dd081a6c3f0a60e46a50fecc6fb7afbde971b[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 16:29:27 2022 -0300
+
+    Adicionando métodos de preparação antes da criação do usuário
+
+[33mcommit 5840417c4942000cd89673739d87b7b95f96c842[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sun Mar 6 12:16:51 2022 -0300
+
+    Movendo usuário para o pacote model
+
+[33mcommit 1bad98ec7dd6a8aab58ba1fdadba4dd2ec601e7e[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 23:59:18 2022 -0300
+
+    Usando slice de bytes ao invés de string
+
+[33mcommit 49ff26a964bf897ad00a472927a2f0396396c3e0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 23:54:49 2022 -0300
+
+    Adicionando método para assinar JWT e usando config global
+
+[33mcommit ce07324da51d45a5af959de137ba845efa5d7d29[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 23:24:33 2022 -0300
+
+    Ajustando umas coisas
+
+[33mcommit d485e875c3dc116215a36ad92ba25f966224356e[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 23:13:39 2022 -0300
+
+    Criando uma nova transaction para salvar login
+
+[33mcommit 91fc22e7a850b0d54abf59efb743018ef3422efd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 23:11:01 2022 -0300
+
+    Melhor deixar isso aqui
+
+[33mcommit def10d337743a300dae818cec35ebce3757f57d1[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 22:56:18 2022 -0300
+
+    Enfiando os dados na tabela de login
+
+[33mcommit 005289783a77350d7dc74c2d74fd69d90fb2baf8[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 21:30:10 2022 -0300
+
+    Usando insert nomeado e ajustando algumas coisas
+
+[33mcommit 240bb6c2032b77230e2e4e194827f3c53965c8f9[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 20:55:59 2022 -0300
+
+    Arrumando URIs e impedindo o código de colocar o head mais de uma vez na response
+
+[33mcommit 024c02917bc87e70d66a0a4544516a85914947c0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 19:29:47 2022 -0300
+
+    Adicionando rota de register
+
+[33mcommit 25124d62a427f1d0b3e785bd1a5ea343938ec374[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 16:00:41 2022 -0300
+
+    Implementando rota de login e pacote responses para retornar responses padronizadas
+
+[33mcommit 661561b8c9ca3b333822eca827f2a0b11e750d9a[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 12:50:58 2022 -0300
+
+    Adicionando métodos de hash
+
+[33mcommit 8b8e7c79d1f43d9aa8f6f4998734bc34828f8795[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 10:20:55 2022 -0300
+
+    Fazendo verificação de email
+
+[33mcommit e2b5ba2f40363de175c7e733d288acf94b4d9f49[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 10:14:50 2022 -0300
+
+    Configurando roteador
+
+[33mcommit d3ee33688cef7b4fc4bc9716a1a69fa273a6ab7d[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 10:09:57 2022 -0300
+
+    Adicionando modelo das rotas e rotas de autenticação
+
+[33mcommit d3495b14a7735b29fc0b111521934d6fd5e401cd[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 09:52:58 2022 -0300
+
+    Movendo variável do DB para o pacote database
+
+[33mcommit 85d2f4a4d4b76768f13edfd1700fab7309380522[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 09:38:31 2022 -0300
+
+    Mais ajustes
+
+[33mcommit 205b0ee8ddd3e8b5130ca52c86d50907b53f1d71[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 09:36:23 2022 -0300
+
+    Arrumando lógica de ponteiro
+
+[33mcommit a6b7df0b58ecfc460f0e07dcff8feec32196eb97[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 09:33:23 2022 -0300
+
+    Colocando conexão em um pacote separado
+
+[33mcommit 88ca34f37825e12f95ed5c62b5d0cc1791be7e87[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Sat Mar 5 09:01:18 2022 -0300
+
+    Utilizando a biblioteca sqlx e ativando ssl
+
+[33mcommit f7466f0c852a2bc61d11beaef792a6b1b4f9aaaf[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Thu Mar 3 22:02:05 2022 -0300
+
+    Atualizando credenciais
+
+[33mcommit b5001da2def1bfc3c4012566f343c5968f3562c0[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 2 21:36:40 2022 -0300
+
+    Arrumando diretórios
+
+[33mcommit 86a7938aa3001d6114400888b6f3d2f300fcb6b3[m
+Author: Victor Betoni <victorbetoni@protonmail.com>
+Date:   Wed Mar 2 21:28:47 2022 -0300
+
+    Primeiro commit
