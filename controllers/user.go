@@ -70,14 +70,17 @@ func PostUserProfilePicture(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	
+
 	username, err := authorization.ExtractUser(c)
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
 	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{
 		PublicID: "profile_pic/" + username})
 
+	fmt.Println(resp.SecureURL)
+	fmt.Println(resp.Error.Message)
+
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	db := database.GrabDB()
