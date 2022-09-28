@@ -85,7 +85,7 @@ func PostUserProfilePicture(c *gin.Context) error {
 
 	db := database.GrabDB()
 	tx := db.MustBegin()
-	tx.MustExec("UPDATE users SET profile_picture=$1 WHERE username=$2", resp.SecureURL, username)
+	tx.MustExec("UPDATE users SET profile_picture=$1 WHERE username=$2", resp.URL, username)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
