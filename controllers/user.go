@@ -62,25 +62,23 @@ func Register(c *gin.Context) error {
 }
 
 func PostUserProfilePicture(c *gin.Context) error {
-	fileHeader, _ := c.FormFile("file")
-	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
-	file, err := fileHeader.Open()
-
+	fileH, err := c.FormFile("file")
 	if err != nil {
 		return err
 	}
-
-	user, _ := authorization.ExtractUser(c)
-
-	resp, as := cld.Upload.Upload(c, file, uploader.UploadParams{PublicID: fmt.Sprintf("/profile_pic/%s", user)})
-	fmt.Println("URL: ", resp.SecureURL)
-
-	if as != nil {
-		fmt.Println(as.Error())
-		return as
+	file, err := fileH.Open()
+	if err != nil {
+		return err
 	}
+	
+	username, err := authorization.ExtractUser(c)
+	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{
+		PublicID: "profile_pic/" + username})
 
-	username, _ := authorization.ExtractUser(c)
+	if err != nil {
+		panic(err)
+	}
 
 	db := database.GrabDB()
 	tx := db.MustBegin()

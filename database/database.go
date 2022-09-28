@@ -19,7 +19,7 @@ func Connect() (err error) {
 	"password=%s dbname=%s sslmode=require", config.HostAddress, config.Port, config.Username, config.Password, config.Schema)*/
 
 	var database *sqlx.DB
-	if database, err = sqlx.Open(config.Driver, os.Getenv("DB_URI")); err != nil {
+	if database, err = sqlx.Open(config.Driver, os.Getenv("DATABASE_URL")); err != nil {
 		return err
 	}
 	db = *database
