@@ -46,6 +46,8 @@ func Register(c *gin.Context) error {
 		Registration:   time.Now().Format("2006-01-02"),
 	}
 
+	fmt.Println(user)
+
 	if err := user.Prepare(); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error(), "user": nil, "jwt": ""})
 		return nil
