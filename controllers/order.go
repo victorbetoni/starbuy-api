@@ -2,14 +2,12 @@ package controllers
 
 import (
 	"database/sql"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
-	"strings"
-
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func GetOrders(c *gin.Context) error {
@@ -49,22 +47,13 @@ func GetOrder(c *gin.Context) error {
 	return nil
 }
 
-func PostOrder(c *gin.Context) error {
+func OrderCart(c *gin.Context) error {
 
 	user, _ := authorization.ExtractUser(c)
 
-	type Request struct {
-		Item     string `json:"item"`
-		Quantity int    `json:"quantity"`
-	}
-
-	req := Request{}
-	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-		return nil
-	}
-
+	var seller model.User
 	var customer model.User
+
 	if err := repository.DownloadUser(user, &customer); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
@@ -74,18 +63,7 @@ func PostOrder(c *gin.Context) error {
 		return err
 	}
 
-	var item model.ItemWithAssets
-	if err := repository.DownloadItem(req.Item, &item); err != nil {
-		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Produto não encontrado"})
-			return nil
-		}
-		return err
-	}
-
-	var seller model.User
-	if err := repository.DownloadUser(item.Item.Seller.Username, &seller); err != nil {
+	if err := repository.DownloadUser(user, &seller); err != nil {
 		if err == sql.ErrNoRows {
 			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Vendedor não encontrado"})
@@ -94,16 +72,25 @@ func PostOrder(c *gin.Context) error {
 		return err
 	}
 
-	final := model.Order{
-		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
-		Seller:     seller,
-		Customer:   customer,
-		Item:       item,
-		Price:      float64(item.Item.Price * (float64)(req.Quantity)),
-		Quantity:   req.Quantity,
+	var items []model.CartItem
+	if err := repository.DownloadCart(user, &items); err != nil {
+		return err
 	}
 
-	repository.InsertPurchase(final)
+	for _, cart := range items {
+		order := model.Order{
+			Identifier: uuid.New().String(),
+			Quantity:   cart.Quantity,
+			Item:       *cart.Item,
+			Customer:   customer,
+			Seller:     seller,
+			Price:      cart.Item.Item.Price * float64(cart.Quantity),
+		}
+		if err := repository.InsertPurchase(order); err != nil {
+			return err
+		}
+	}
+
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Compra realizada com sucesso!"})
 
 	return nil

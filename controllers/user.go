@@ -79,9 +79,6 @@ func PostUserProfilePicture(c *gin.Context) error {
 	resp, err := cld.Upload.Upload(c, incoming.Image, uploader.UploadParams{
 		PublicID: "profile_pic/" + username})
 
-	fmt.Println(resp.SecureURL)
-	fmt.Println(resp.Error.Message)
-
 	if err != nil {
 		return err
 	}
