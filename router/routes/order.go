@@ -11,7 +11,7 @@ var Order = []Route{
 	{
 		URI:         "/order",
 		RequireAuth: true,
-		Action:      controllers.PostOrder,
+		Action:      controllers.OrderCart,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.POST(uri, hf)
 		},
