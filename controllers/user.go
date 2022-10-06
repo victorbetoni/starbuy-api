@@ -1,23 +1,16 @@
 package controllers
 
 import (
-	"bytes"
 	"database/sql"
-	"encoding/base64"
-	"errors"
 	"fmt"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"image"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"starbuy/authorization"
 	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -70,28 +63,6 @@ func Register(c *gin.Context) error {
 	return nil
 }
 
-func writeImage(fileNameBase, data string) (io.Reader, error) {
-	idx := strings.Index(data, ";base64,")
-	if idx < 0 {
-		return nil, errors.New("Imagem inválida")
-	}
-	reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(data[idx+8:]))
-	buff := bytes.Buffer{}
-	_, err := buff.ReadFrom(reader)
-	if err != nil {
-		return nil, err
-	}
-	_, fm, err := image.DecodeConfig(bytes.NewReader(buff.Bytes()))
-	if err != nil {
-		return nil, err
-	}
-
-	fileName := fileNameBase + "." + fm
-	ioutil.WriteFile(fileName, buff.Bytes(), 0644)
-
-	return reader, nil
-}
-
 func PostUserProfilePicture(c *gin.Context) error {
 	type Body struct {
 		Image string `json:"imageB64"`
@@ -103,14 +74,9 @@ func PostUserProfilePicture(c *gin.Context) error {
 		return nil
 	}
 
-	file, err := writeImage("img", incoming.Image)
-	if err != nil {
-		return err
-	}
-
 	username, err := authorization.ExtractUser(c)
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
-	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{
+	resp, err := cld.Upload.Upload(c, incoming.Image, uploader.UploadParams{
 		PublicID: "profile_pic/" + username})
 
 	fmt.Println(resp.SecureURL)
