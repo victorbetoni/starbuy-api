@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
@@ -64,18 +65,32 @@ func Register(c *gin.Context) error {
 }
 
 func PostUserProfilePicture(c *gin.Context) error {
-	fileH, err := c.FormFile("file")
+	type Body struct {
+		Image string `json:"imageB64"`
+	}
+
+	incoming := Body{}
+	if err := c.BindJSON(&incoming); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
+		return nil
+	}
+
+	dec, err := base64.StdEncoding.DecodeString(incoming.Image)
 	if err != nil {
 		return err
 	}
-	file, err := fileH.Open()
+
+	f, err := os.Create("img")
 	if err != nil {
+		return err
+	}
+	if _, err := f.Write(dec); err != nil {
 		return err
 	}
 
 	username, err := authorization.ExtractUser(c)
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
-	resp, err := cld.Upload.Upload(c, file, uploader.UploadParams{
+	resp, err := cld.Upload.Upload(c, f, uploader.UploadParams{
 		PublicID: "profile_pic/" + username})
 
 	fmt.Println(resp.SecureURL)
