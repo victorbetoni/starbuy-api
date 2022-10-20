@@ -53,6 +53,16 @@ func Register(c *gin.Context) error {
 		return nil
 	}
 
+	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	resp, err := cld.Upload.Upload(c, user.ProfilePicture, uploader.UploadParams{
+		PublicID: "profile_pic/" + user.Username})
+
+	if err != nil {
+		return err
+	}
+
+	user.ProfilePicture = resp.URL
+
 	if err := repository.InsertUser(user, incoming.Password); err != nil {
 		return nil
 	}

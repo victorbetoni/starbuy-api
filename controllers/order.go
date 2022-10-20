@@ -47,7 +47,7 @@ func GetOrder(c *gin.Context) error {
 	return nil
 }
 
-func OrderCart(c *gin.Context) error {
+func CreateOrder(c *gin.Context) error {
 
 	user, _ := authorization.ExtractUser(c)
 
