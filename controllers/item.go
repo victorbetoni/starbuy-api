@@ -42,7 +42,9 @@ func PostItem(c *gin.Context) error {
 	item.Assets[0] = resp.URL
 
 	item.Item.Seller = user
-	repository.InsertItem(item)
+	if err := repository.InsertItem(item); err != nil {
+		return err
+	}
 	c.JSON(http.StatusOK, item)
 	return nil
 }

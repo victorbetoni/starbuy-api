@@ -20,6 +20,7 @@ func InsertItem(item model.PostedItem) error {
 		transaction.MustExec("INSERT INTO product_images VALUES ($1, $2)", item.Item.Identifier, url)
 		transaction.Commit()
 	}
+	return nil
 }
 
 func DownloadItem(id string, item *model.ItemWithAssets) error {
