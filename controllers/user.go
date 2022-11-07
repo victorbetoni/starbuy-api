@@ -48,11 +48,6 @@ func Register(c *gin.Context) error {
 
 	fmt.Println(user)
 
-	if err := user.Prepare(); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error(), "user": nil, "jwt": ""})
-		return nil
-	}
-
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
 	resp, err := cld.Upload.Upload(c, user.ProfilePicture, uploader.UploadParams{
 		PublicID: "profile_pic/" + user.Username})

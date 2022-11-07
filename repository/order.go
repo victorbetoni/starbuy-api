@@ -46,6 +46,18 @@ func DownloadOrders(seller string, orders *[]model.OrderWithItem) error {
 	return nil
 }
 
+func UpdateOrder(order model.Order) error {
+	db := database.GrabDB()
+
+	tx := db.MustBegin()
+	tx.MustExec("UPDATE orders SET status=$1 WHERE identifier=$2", order.Status+1, order.Identifier)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func DownloadPurchase(identifier string, order *model.Order) error {
 	db := database.GrabDB()
 
@@ -79,7 +91,7 @@ func InsertPurchase(purchase model.Order) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()
-	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5,$6)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price)
+	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5,$6,$7)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price, 0)
 	if err := tx.Commit(); err != nil {
 		return err
 	}

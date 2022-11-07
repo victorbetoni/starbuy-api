@@ -7,6 +7,7 @@ type Order struct {
 	Item       ItemWithAssets `json:"item"`
 	Price      float64        `json:"price"`
 	Quantity   int            `json:"quantity"`
+	Status     int            `json:"status"`
 }
 
 type OrderWithItem struct {

@@ -27,7 +27,6 @@ func Configure(router *gin.Engine) *gin.Engine {
 	routes = append(routes, Review)
 	routes = append(routes, Order)
 	routes = append(routes, Address)
-	routes = append(routes, Notification)
 
 	for _, x := range routes {
 		for _, route := range x {

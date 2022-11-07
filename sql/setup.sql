@@ -54,14 +54,6 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (product)            REFERENCES products (identifier)
 );
 
-CREATE TABLE IF NOT EXISTS juridic_id (
-    holder     VARCHAR(20) NOT NULL PRIMARY KEY,
-    identifier VARCHAR(20) NOT NULL,
-    type       INT         NOT NULL,
-
-    FOREIGN KEY (holder) REFERENCES users (username)
-);
-
 CREATE TABLE IF NOT EXISTS addresses (
     identifier VARCHAR(64) NOT NULL PRIMARY KEY,
     holder     VARCHAR(20) NOT NULL,
@@ -71,14 +63,6 @@ CREATE TABLE IF NOT EXISTS addresses (
 
     FOREIGN KEY (holder) REFERENCES users (username),
     PRIMARY KEY (holder, cep, number)
-);
-
-CREATE TABLE IF NOT EXISTS tags (
-    product VARCHAR(64) NOT NULL,
-    tag     VARCHAR(15) NOT NULL,
-
-    FOREIGN KEY (product) REFERENCES products (identifier),
-    PRIMARY KEY (product, tag)
 );
 
 CREATE TABLE IF NOT EXISTS login (
@@ -105,17 +89,9 @@ CREATE TABLE IF NOT EXISTS orders (
     product       VARCHAR(64)    NOT NULL,
     amount        INTEGER        NOT NULL,
     price         DECIMAL(10, 2) NOT NULL,
+    status INTEGER NOT NULL,
 
     FOREIGN KEY (holder) REFERENCES users (username)
-);
-
-CREATE TABLE IF NOT EXISTS orders_update (
-    order_id    VARCHAR(64) NOT NULL,
-    status      INTEGER     NOT NULL,
-    update_date DATE        NOT NULL,
-
-    PRIMARY KEY(order_id, status),
-    FOREIGN KEY (order_id) REFERENCES orders (identifier)
 );
 
 CREATE TABLE IF NOT EXISTS product_images (
@@ -123,13 +99,4 @@ CREATE TABLE IF NOT EXISTS product_images (
     url     VARCHAR(512) NOT NULL,
 
     FOREIGN KEY (product) REFERENCES products (identifier)
-);
-
-CREATE TABLE IF NOT EXISTS notifications (
-    identifier VARCHAR(64)  PRIMARY KEY NOT NULL,
-    holder     VARCHAR(20)              NOT NULL,
-    text       VARCHAR(128)             NOT NULL,
-    sent_in    DATE                     NOT NULL,
-
-    FOREIGN KEY (holder) REFERENCES users(username)
 );

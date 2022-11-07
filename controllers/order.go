@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -92,6 +93,41 @@ func CreateOrder(c *gin.Context) error {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Compra realizada com sucesso!"})
+
+	return nil
+}
+
+func UpdateOrder(c *gin.Context) error {
+	user, _ := authorization.ExtractUser(c)
+	queried := c.Param("id")
+
+	var order model.Order
+	if err := repository.DownloadPurchase(queried, &order); err != nil {
+		return err
+	}
+
+	if order.Seller.Username != user && order.Customer.Username != user {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Vendedor não encontrado"})
+		return errors.New("vendedor não encontrado")
+	}
+
+	if order.Status == 2 {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "A venda ja foi finalizada."})
+		return errors.New("Não autorizado")
+	}
+
+	if order.Status == 1 && order.Seller.Username == user {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você não pode atualizar esse pedido."})
+		return errors.New("Não autorizado")
+	}
+	if order.Status == 0 && order.Customer.Username == user {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você não pode atualizar esse pedido."})
+		return errors.New("Não autorizado")
+	}
+
+	if err := repository.UpdateOrder(order); err != nil {
+		return err
+	}
 
 	return nil
 }
