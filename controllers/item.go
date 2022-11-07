@@ -4,7 +4,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
+	"os"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
@@ -31,6 +34,12 @@ func PostItem(c *gin.Context) error {
 		c.AbortWithError(http.StatusUnauthorized, errors.New("invalid token"))
 		return nil
 	}
+
+	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	resp, err := cld.Upload.Upload(c, item.Assets[0], uploader.UploadParams{
+		PublicID: "assets/" + item.Item.Identifier})
+
+	item.Assets[0] = resp.URL
 
 	item.Item.Seller = user
 	repository.InsertItem(item)
