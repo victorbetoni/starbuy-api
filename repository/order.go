@@ -83,6 +83,7 @@ func DownloadPurchase(identifier string, order *model.Order) error {
 	order.Seller = item.Item.Seller
 	order.Price = raw.Price
 	order.Item = item
+	order.Status = raw.Status
 
 	return nil
 }

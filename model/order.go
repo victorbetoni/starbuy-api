@@ -22,7 +22,5 @@ type RawOrder struct {
 	Item       string  `json:"item" db:"product"`
 	Price      float64 `json:"price" db:"price"`
 	Quantity   int     `json:"quantity" db:"amount"`
-}
-
-type PurchaseUpdate struct {
+	Status     int     `json:"status" db:"status"`
 }
