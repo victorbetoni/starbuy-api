@@ -9,7 +9,7 @@ func InsertItem(item model.PostedItem) error {
 	db := database.GrabDB()
 
 	var transaction = db.MustBegin()
-	transaction.MustExec("INSERT INTO products VALUES ($1,$2,$3,$4,$5,$6,$7)", item.Item.Identifier, item.Item.Identifier, item.Item.Seller, item.Item.Price, item.Item.Stock, item.Item.Category, item.Item.Description)
+	transaction.MustExec("INSERT INTO products VALUES ($1,$2,$3,$4,$5,$6,$7)", item.Item.Identifier, item.Item.Title, item.Item.Seller, item.Item.Price, item.Item.Stock, item.Item.Category, item.Item.Description)
 
 	if err := transaction.Commit(); err != nil {
 		return err
