@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
@@ -45,8 +44,6 @@ func Register(c *gin.Context) error {
 		City:           incoming.City,
 		Registration:   time.Now().Format("2006-01-02"),
 	}
-
-	fmt.Println(user)
 
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
 	resp, err := cld.Upload.Upload(c, user.ProfilePicture, uploader.UploadParams{
@@ -184,8 +181,6 @@ func GetUser(c *gin.Context) error {
 	}
 
 	response.User = user
-
-	fmt.Println(user)
 	c.JSON(http.StatusOK, response)
 	return nil
 }

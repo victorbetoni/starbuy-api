@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
@@ -96,8 +95,6 @@ func GetItem(c *gin.Context) error {
 		}
 		return err
 	}
-
-	fmt.Println(average)
 
 	type Response struct {
 		Item    model.ItemWithAssets `json:"item,omitempty"`

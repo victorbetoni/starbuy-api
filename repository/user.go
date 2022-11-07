@@ -53,8 +53,6 @@ func DownloadUser(username string, user *model.User) error {
 		return err
 	}
 
-	fmt.Println(temp)
-
 	*user = temp
 
 	return nil

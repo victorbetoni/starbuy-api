@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"starbuy/database"
 	"starbuy/model"
 )
@@ -23,8 +22,6 @@ func QueryUserReceivedReviews(username string, reviews *[]model.Review) (float64
 			return 0, err
 		}
 		sum += review.Rate
-		fmt.Println("Soma: ", sum)
-		fmt.Println("Contagem: ", count)
 		*reviews = append(*reviews, rev)
 	}
 
@@ -74,9 +71,7 @@ func QueryProductReviews(product string, reviews *[]model.Review) (float64, erro
 			return 0, err
 		}
 		*reviews = append(*reviews, rev)
-		fmt.Println("Contagem: ", count)
 		sum += review.Rate
-		fmt.Println("Soma: ", sum)
 	}
 
 	if count == 0 {
@@ -152,8 +147,6 @@ func convertRawReview(raw model.RawReview, review *model.Review) error {
 	if err := DownloadReview(raw.User, raw.Item, &rev); err != nil {
 		return err
 	}
-
-	fmt.Println(rev)
 
 	*review = rev
 
