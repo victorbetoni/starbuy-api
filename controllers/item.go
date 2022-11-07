@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
@@ -70,21 +71,30 @@ func GetItem(c *gin.Context) error {
 	key, ok := c.GetQuery("reviews")
 	includeReviews := ok && key == "true"
 
+	fmt.Println("1 ", queried)
+
 	type ItemReview struct {
 		User    model.User `json:"user,omitempty"`
 		Message string     `json:"message"`
 		Rate    int        `json:"rate"`
 	}
 
+	average := float64(-1)
+
 	var incoming []model.Review
 	var reviews []ItemReview
-	average, err := repository.QueryProductReviews(queried, &incoming)
-	if err != nil && err != sql.ErrNoRows {
-		return err
+	if includeReviews {
+		var err error
+		average, err = repository.QueryProductReviews(queried, &incoming)
+		if err != nil && err != sql.ErrNoRows {
+			return err
+		}
+		for _, review := range incoming {
+			reviews = append(reviews, ItemReview{User: review.User, Message: review.Message, Rate: review.Rate})
+		}
 	}
-	for _, review := range incoming {
-		reviews = append(reviews, ItemReview{User: review.User, Message: review.Message, Rate: review.Rate})
-	}
+
+	fmt.Println("2")
 
 	var item model.ItemWithAssets
 	if err := repository.DownloadItem(queried, &item); err != nil {
@@ -95,6 +105,8 @@ func GetItem(c *gin.Context) error {
 		}
 		return err
 	}
+
+	fmt.Println("3")
 
 	type Response struct {
 		Item    model.ItemWithAssets `json:"item,omitempty"`
@@ -108,6 +120,8 @@ func GetItem(c *gin.Context) error {
 	}
 	response.Item = item
 	response.Average = average
+
+	fmt.Println(response)
 
 	c.JSON(http.StatusOK, response)
 	return nil
