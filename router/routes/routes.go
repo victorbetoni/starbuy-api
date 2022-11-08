@@ -1,12 +1,10 @@
 package routes
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"starbuy/middleware"
 	"starbuy/util"
-	"time"
 )
 
 type AssignFunction func(*gin.Engine, gin.HandlerFunc, string)
@@ -29,21 +27,21 @@ func Configure(router *gin.Engine) *gin.Engine {
 	routes = append(routes, Order)
 	routes = append(routes, Address)
 
-	router.Use(cors.New(cors.Config{
+	/*router.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"PUT", "DELETE", "POST", "GET"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "X-Requested-With", "Access-Control-Allow-Origin", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowAllOrigins:  true,
 		MaxAge:           12 * time.Hour,
-	}))
+	}))*/
 
 	for _, x := range routes {
 		for _, route := range x {
 			if route.RequireAuth {
-				Assign(route.Assign, middleware.Authorize(middleware.AbortOnError(route.Action)), route.URI, router)
+				Assign(route.Assign, middleware.CORS(middleware.Authorize(middleware.AbortOnError(route.Action))), route.URI, router)
 			} else {
-				Assign(route.Assign, middleware.AbortOnError(route.Action), route.URI, router)
+				Assign(route.Assign, middleware.CORS(middleware.AbortOnError(route.Action)), route.URI, router)
 			}
 		}
 	}
