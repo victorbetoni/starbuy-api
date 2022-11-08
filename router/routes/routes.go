@@ -36,12 +36,14 @@ func Configure(router *gin.Engine) *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))*/
 
+	router.Use(middleware.CORS())
+
 	for _, x := range routes {
 		for _, route := range x {
 			if route.RequireAuth {
-				Assign(route.Assign, middleware.CORS(middleware.Authorize(middleware.AbortOnError(route.Action))), route.URI, router)
+				Assign(route.Assign, middleware.Authorize(middleware.AbortOnError(route.Action)), route.URI, router)
 			} else {
-				Assign(route.Assign, middleware.CORS(middleware.AbortOnError(route.Action)), route.URI, router)
+				Assign(route.Assign, middleware.AbortOnError(route.Action), route.URI, router)
 			}
 		}
 	}
