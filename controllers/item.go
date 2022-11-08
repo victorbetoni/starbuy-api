@@ -123,8 +123,10 @@ func GetAllItems(c *gin.Context) (int, error) {
 		}
 		return http.StatusInternalServerError, err
 	}
-	c.JSON(http.StatusOK, items)
 
+	fmt.Println(items)
+
+	c.JSON(http.StatusOK, items)
 	return 0, nil
 }
 
