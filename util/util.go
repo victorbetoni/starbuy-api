@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-type HandlerFuncError func(*gin.Context) error
+type HandlerFunc func(*gin.Context) (int, error)
 
 type GlobalConfig struct {
 	Driver  string `mapstructure:"DRIVER"`

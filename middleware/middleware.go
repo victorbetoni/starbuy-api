@@ -8,32 +8,32 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Authorize(next util.HandlerFuncError) util.HandlerFuncError {
-	return func(c *gin.Context) error {
+func Authorize(next util.HandlerFunc) util.HandlerFunc {
+	return func(c *gin.Context) (int, error) {
 		if err := authorization.ValidateToken(c); err != nil {
-			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
+			return 0, nil
 		}
 
 		if _, err := authorization.ExtractUser(c); err != nil {
-			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+			return 0, nil
 		}
 		return next(c)
 	}
 }
 
-func AbortOnError(handler util.HandlerFuncError) util.HandlerFuncError {
-	return func(c *gin.Context) error {
-		if err := handler(c); err != nil {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"status": false, "message": err.Error()})
+func AbortOnError(next util.HandlerFunc) util.HandlerFunc {
+	return func(c *gin.Context) (int, error) {
+		if status, err := next(c); err != nil {
+			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error()})
+			return 0, nil
 		}
-		return nil
+		return next(c)
 	}
 }
 
-func Convert(handler util.HandlerFuncError) gin.HandlerFunc {
+func Convert(handler util.HandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		handler(c)
 	}

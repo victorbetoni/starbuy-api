@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -10,28 +11,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func QueryCart(c *gin.Context) error {
+func QueryCart(c *gin.Context) (int, error) {
 	user, _ := authorization.ExtractUser(c)
 
 	var items []model.CartItem
-	repository.DownloadCart(user, &items)
+	if err := repository.DownloadCart(user, &items); err != nil {
+		if err == sql.ErrNoRows {
+			return http.StatusNoContent, errors.New("no content")
+		}
+		return http.StatusInternalServerError, err
+	}
 	c.JSON(http.StatusOK, items)
-	return nil
+	return 0, nil
 }
 
-func DeleteCart(c *gin.Context) error {
+func DeleteCart(c *gin.Context) (int, error) {
 	item := c.Param("item")
 	username, _ := authorization.ExtractUser(c)
 
 	if err := repository.DeleteFromCart(username, item); err != nil {
-		return nil
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Item removido do carrinho"})
-	return nil
+	return 0, nil
 }
 
-func PostCart(c *gin.Context) error {
+func PostCart(c *gin.Context) (int, error) {
 
 	type Request struct {
 		Item     string `json:"item"`
@@ -41,8 +47,7 @@ func PostCart(c *gin.Context) error {
 	req := Request{}
 
 	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-		return nil
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	username, _ := authorization.ExtractUser(c)
@@ -51,31 +56,28 @@ func PostCart(c *gin.Context) error {
 	var item model.ItemWithAssets
 	if err := repository.DownloadItem(req.Item, &item); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "item not found"})
-			return nil
+			return http.StatusNotFound, errors.New("item not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	if item.Item.Stock < cart.Quantity {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "Estoque insuficiente."})
-		return nil
+		return http.StatusUnauthorized, errors.New("Estoque insuficiente")
 	}
 
 	var user model.User
 	if err := repository.DownloadUser(username, &user); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "user not found"})
-			return nil
+			return http.StatusNotFound, errors.New("user not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	cart.Holder = username
-	repository.InsertCartItem(cart)
+	if err := repository.InsertCartItem(cart); err != nil {
+		return http.StatusInternalServerError, err
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Item adicionado ao carrinho!"})
-	return nil
+	return 0, nil
 }

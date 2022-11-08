@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
@@ -26,12 +27,11 @@ type IncomingUser struct {
 	Password       string `json:"password"`
 }
 
-func Register(c *gin.Context) error {
+func Register(c *gin.Context) (int, error) {
 
 	incoming := IncomingUser{}
 	if err := c.BindJSON(&incoming); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-		return nil
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	user := model.User{
@@ -50,30 +50,29 @@ func Register(c *gin.Context) error {
 		PublicID: "profile_pic/" + user.Username})
 
 	if err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	user.ProfilePicture = resp.URL
 
 	if err := repository.InsertUser(user, incoming.Password); err != nil {
-		return nil
+		return http.StatusInternalServerError, err
 	}
 
 	token := authorization.GenerateToken(user.Username)
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Registrado com sucesso", "user": user, "jwt": token})
-	return nil
+	return 0, nil
 }
 
-func PostUserProfilePicture(c *gin.Context) error {
+func PostUserProfilePicture(c *gin.Context) (int, error) {
 	type Body struct {
 		Image string `json:"imageB64"`
 	}
 
 	incoming := Body{}
 	if err := c.BindJSON(&incoming); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-		return nil
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	username, err := authorization.ExtractUser(c)
@@ -82,30 +81,21 @@ func PostUserProfilePicture(c *gin.Context) error {
 		PublicID: "profile_pic/" + username})
 
 	if err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	db := database.GrabDB()
 	tx := db.MustBegin()
 	tx.MustExec("UPDATE users SET profile_picture=$1 WHERE username=$2", resp.URL, username)
 	if err := tx.Commit(); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
-	return nil
+	return 0, nil
 }
 
-func GetUser(c *gin.Context) error {
+func GetUser(c *gin.Context) (int, error) {
 	queried := c.Param("user")
-
-	includeItems, includeReviews := false, false
-
-	if key, ok := c.GetQuery("includeItems"); ok && key == "true" {
-		includeItems = true
-	}
-	if key, ok := c.GetQuery("includeReviews"); ok && key == "true" {
-		includeReviews = true
-	}
 
 	var user model.User
 
@@ -119,18 +109,16 @@ func GetUser(c *gin.Context) error {
 	response := Response{}
 	if err := repository.DownloadUser(queried, &user); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
-			return nil
+			return http.StatusNotFound, errors.New("not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 	response.User = user
 
-	if includeItems {
+	if key, ok := c.GetQuery("includeItems"); ok && key == "true" {
 		var local []model.ItemWithAssets
 		if err := repository.DownloadUserProducts(queried, &local); err != nil && err != sql.ErrNoRows {
-			return err
+			return http.StatusInternalServerError, err
 		}
 
 		var items []model.ItemWithAssets
@@ -149,13 +137,13 @@ func GetUser(c *gin.Context) error {
 		response.Items = items
 	}
 
-	if includeReviews {
+	if key, ok := c.GetQuery("includeReviews"); ok && key == "true" {
 		var reviews []model.Review
 		var local []model.Review
 		var average float64
 		if loc, err := repository.QueryUserReceivedReviews(queried, &local); err != nil && err != sql.ErrNoRows {
 			average = loc
-			return err
+			return http.StatusInternalServerError, err
 		}
 
 		//Removing reviewer (duplicated data)
@@ -173,14 +161,13 @@ func GetUser(c *gin.Context) error {
 
 	if err := repository.DownloadUser(queried, &user); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
-			return nil
+			return http.StatusNotFound, errors.New("not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	response.User = user
 	c.JSON(http.StatusOK, response)
-	return nil
+
+	return http.StatusOK, nil
 }

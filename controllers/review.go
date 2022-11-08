@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"database/sql"
+	"errors"
+	"math"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/database"
@@ -11,18 +13,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetItemReviews(c *gin.Context) error {
+func GetItemReviews(c *gin.Context) (int, error) {
 	queried := c.Param("item")
 
 	var reviews []model.Review
 	average, err := repository.QueryProductReviews(queried, &reviews)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
-			return nil
+			return http.StatusNoContent, errors.New("no content")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	type ItemReviews struct {
@@ -31,21 +31,19 @@ func GetItemReviews(c *gin.Context) error {
 	}
 
 	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews, Average: average})
-	return nil
+	return 0, nil
 }
 
-func GetUserReceivedReviews(c *gin.Context) error {
+func GetUserReceivedReviews(c *gin.Context) (int, error) {
 	username := c.Param("user")
 
 	var reviews []model.Review
 	average, err := repository.QueryUserReceivedReviews(username, &reviews)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
-			return nil
+			return http.StatusNoContent, errors.New("no content")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	type ItemReviews struct {
@@ -54,20 +52,18 @@ func GetUserReceivedReviews(c *gin.Context) error {
 	}
 
 	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews, Average: average})
-	return nil
+	return 0, nil
 }
 
-func GetUserReviews(c *gin.Context) error {
+func GetUserReviews(c *gin.Context) (int, error) {
 	username, _ := authorization.ExtractUser(c)
 
 	var reviews []model.Review
 	if err := repository.QueryUserReviews(username, &reviews); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
-			return nil
+			return http.StatusNoContent, errors.New("no content")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	type ItemReviews struct {
@@ -76,28 +72,26 @@ func GetUserReviews(c *gin.Context) error {
 	}
 
 	c.JSON(http.StatusOK, ItemReviews{Reviews: reviews})
-	return nil
+	return 0, nil
 }
 
-func GetReview(c *gin.Context) error {
+func GetReview(c *gin.Context) (int, error) {
 	user := c.Query("user")
 	product := c.Query("product")
 
 	var review model.Review
 	if err := repository.DownloadReview(user, product, &review); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNoContent, gin.H{"status": false, "message": "no content"})
-			return nil
+			return http.StatusNoContent, errors.New("no content")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, review)
-	return nil
+	return 0, nil
 }
 
-func PostReview(c *gin.Context) error {
+func PostReview(c *gin.Context) (int, error) {
 
 	type Request struct {
 		Rating  int    `json:"rate"`
@@ -107,34 +101,25 @@ func PostReview(c *gin.Context) error {
 
 	req := Request{}
 	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "opaaa"})
-		return nil
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
-	if req.Rating > 10 {
-		req.Rating = 10
-	}
-
-	if req.Rating < 0 {
-		req.Rating = 0
-	}
+	req.Rating = int(math.Min(10, float64(req.Rating)))
+	req.Rating = int(math.Max(0, float64(req.Rating)))
 
 	db := database.GrabDB()
 	username, _ := authorization.ExtractUser(c)
 
 	var foo model.RawReview
 	if err := db.Get(&foo, "SELECT * FROM reviews WHERE username=$1 AND product=$2", username, req.Item); err == nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você já avaliou este produto."})
-		return nil
+		return http.StatusUnauthorized, errors.New("Você já avaliou este produto.")
 	}
 
 	if err := db.Get(&model.RawOrder{}, "SELECT * FROM orders WHERE holder=$1 AND product=$2", username, req.Item); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "Você não pode avaliar esse produto."})
-			return nil
+			return http.StatusUnauthorized, errors.New("Você não pode avaliar este produto.")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	final := model.RawReview{
@@ -144,13 +129,15 @@ func PostReview(c *gin.Context) error {
 		Rate:    req.Rating,
 	}
 
-	repository.InsertReview(final)
+	if err := repository.InsertReview(final); err != nil {
+		return http.StatusInternalServerError, err
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Avaliação adicionada com sucesso"})
-	return nil
+	return 0, nil
 }
 
-func PutReview(c *gin.Context) error {
+func PutReview(c *gin.Context) (int, error) {
 	type Request struct {
 		User    string `json:"user"`
 		Item    string `json:"item"`
@@ -162,46 +149,46 @@ func PutReview(c *gin.Context) error {
 	username, _ := authorization.ExtractUser(c)
 
 	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request"})
-		return nil
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	var review model.Review
 	if err := repository.DownloadReview(req.User, req.Item, &review); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
-			return nil
+			return http.StatusNotFound, errors.New("not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	if review.User.Username != username {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
-		return nil
+		return http.StatusUnauthorized, errors.New("unauthorized")
 	}
 
 	final := model.RawReview{User: username, Message: req.Message, Rate: req.Rate, Item: review.Item.Item.Identifier}
 
-	repository.UpdateReview(final)
+	if err := repository.UpdateReview(final); err != nil {
+		return 0, err
+	}
+
 	c.JSON(http.StatusOK, final)
-	return nil
+	return 0, nil
 }
 
-func DeleteReview(c *gin.Context) error {
+func DeleteReview(c *gin.Context) (int, error) {
 	item := c.Param("item")
 	username, _ := authorization.ExtractUser(c)
 
 	db := database.GrabDB()
 	if err := db.Get(nil, "SELECT * FROM reviews WHERE username=$1 AND product=$2", username, item); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Nenhuma avaliação encontrada"})
-			return nil
+			return http.StatusNotFound, errors.New("Nenhuma avaliação encontrada")
 		}
 	}
 
-	repository.DeleteReview(username, item)
+	if err := repository.DeleteReview(username, item); err != nil {
+		return 0, err
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Avaliação excluída com sucesso"})
-	return nil
+	return 0, nil
 }

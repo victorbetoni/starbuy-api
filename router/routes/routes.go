@@ -14,7 +14,7 @@ type AssignFunction func(*gin.Engine, gin.HandlerFunc, string)
 type Route struct {
 	RequireAuth bool
 	URI         string
-	Action      util.HandlerFuncError
+	Action      util.HandlerFunc
 	Assign      AssignFunction
 }
 
@@ -44,7 +44,7 @@ func Configure(router *gin.Engine) *gin.Engine {
 	return router
 }
 
-func Assign(assign AssignFunction, handler util.HandlerFuncError, uri string, router *gin.Engine) {
+func Assign(assign AssignFunction, handler util.HandlerFunc, uri string, router *gin.Engine) {
 	assign(router, func(context *gin.Context) {
 		handler(context)
 	}, uri)

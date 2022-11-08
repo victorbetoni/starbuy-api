@@ -29,7 +29,7 @@ func QueryUserReceivedReviews(username string, reviews *[]model.Review) (float64
 		return -1, nil
 	}
 
-	return (float64(sum) / float64(count)), nil
+	return float64(sum) / float64(count), nil
 
 }
 
@@ -78,7 +78,7 @@ func QueryProductReviews(product string, reviews *[]model.Review) (float64, erro
 		return -1, nil
 	}
 
-	return (float64(sum) / float64(count)), nil
+	return float64(sum) / float64(count), nil
 }
 
 func DeleteReview(user string, item string) error {

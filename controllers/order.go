@@ -11,44 +11,40 @@ import (
 	"starbuy/repository"
 )
 
-func GetOrders(c *gin.Context) error {
+func GetOrders(c *gin.Context) (int, error) {
 	user, _ := authorization.ExtractUser(c)
 
 	var purchases []model.Order
-	err := repository.DownloadPurchases(user, &purchases)
-	if err != nil {
-		return err
+	if err := repository.DownloadPurchases(user, &purchases); err != nil {
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, purchases)
 
-	return nil
+	return 0, nil
 }
 
-func GetOrder(c *gin.Context) error {
+func GetOrder(c *gin.Context) (int, error) {
 	queried := c.Param("id")
 	user, _ := authorization.ExtractUser(c)
 
 	var purchase model.Order
 	if err := repository.DownloadPurchase(queried, &purchase); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
-			return nil
+			return http.StatusNotFound, errors.New("not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	if purchase.Customer.Username != user {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
-		return nil
+		return http.StatusUnauthorized, errors.New("unauthorized")
 	}
 
 	c.JSON(http.StatusOK, purchase)
-	return nil
+	return 0, nil
 }
 
-func CreateOrder(c *gin.Context) error {
+func CreateOrder(c *gin.Context) (int, error) {
 
 	user, _ := authorization.ExtractUser(c)
 
@@ -57,25 +53,21 @@ func CreateOrder(c *gin.Context) error {
 
 	if err := repository.DownloadUser(user, &customer); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Cliente não encontrado"})
-			return nil
+			return http.StatusNotFound, errors.New("Cliente não encontrado")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	if err := repository.DownloadUser(user, &seller); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Vendedor não encontrado"})
-			return nil
+			return http.StatusNotFound, errors.New("Vendedor não encontrado")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	var items []model.CartItem
 	if err := repository.DownloadCart(user, &items); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	for _, cart := range items {
@@ -88,63 +80,57 @@ func CreateOrder(c *gin.Context) error {
 			Price:      cart.Item.Item.Price * float64(cart.Quantity),
 		}
 		if err := repository.InsertPurchase(order); err != nil {
-			return err
+			return http.StatusInternalServerError, err
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Compra realizada com sucesso!"})
 
-	return nil
+	return 0, nil
 }
 
-func UpdateOrder(c *gin.Context) error {
+func UpdateOrder(c *gin.Context) (int, error) {
 	user, _ := authorization.ExtractUser(c)
 	queried := c.Param("id")
 
 	var order model.Order
 	if err := repository.DownloadPurchase(queried, &order); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	if order.Seller.Username != user && order.Customer.Username != user {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Vendedor não encontrado"})
-		return errors.New("vendedor não encontrado")
+		return http.StatusNotFound, errors.New("Vendedor não encontrado")
 	}
 
 	if order.Status == 2 {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "A venda ja foi finalizada."})
-		return errors.New("Não autorizado")
+		return http.StatusUnauthorized, errors.New("Venda já finalizada")
 	}
 
 	if order.Status == 1 && order.Seller.Username == user {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você não pode atualizar esse pedido."})
-		return errors.New("Não autorizado")
+		return http.StatusUnauthorized, errors.New("Você não pode atualizar esse pedido")
 	}
 	if order.Status == 0 && order.Customer.Username == user {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Você não pode atualizar esse pedido."})
-		return errors.New("Não autorizado")
+		return http.StatusUnauthorized, errors.New("Você não pode atualizar esse pedido")
 	}
 
 	if err := repository.UpdateOrder(order); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
-	return nil
+	return 0, nil
 }
 
-func GetReceivedOrders(c *gin.Context) error {
+func GetReceivedOrders(c *gin.Context) (int, error) {
 	user, _ := authorization.ExtractUser(c)
 
 	var orders []model.OrderWithItem
 	if err := repository.DownloadOrders(user, &orders); err != nil {
 		if err == sql.ErrNoRows {
-			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found"})
-			return nil
+			return http.StatusNotFound, errors.New("not found")
 		}
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, orders)
-	return nil
+	return 0, nil
 }

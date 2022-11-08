@@ -65,7 +65,9 @@ func QueryItemsByName(query string, items *[]model.ItemWithAssets) error {
 
 	for _, item := range raws {
 		var itemWithAssets model.ItemWithAssets
-		convertRawItem(item, &itemWithAssets)
+		if err := convertRawItem(item, &itemWithAssets); err != nil {
+			return err
+		}
 		*items = append(*items, itemWithAssets)
 	}
 	return nil
@@ -81,7 +83,9 @@ func DownloadAllItems(items *[]model.ItemWithAssets) error {
 
 	for _, item := range raws {
 		var itemWithAssets model.ItemWithAssets
-		convertRawItem(item, &itemWithAssets)
+		if err := convertRawItem(item, &itemWithAssets); err != nil {
+			return err
+		}
 		*items = append(*items, itemWithAssets)
 	}
 	return nil
@@ -97,7 +101,9 @@ func DownloadItemByCategory(category int, items *[]model.ItemWithAssets) error {
 
 	for _, item := range raws {
 		var itemWithAssets model.ItemWithAssets
-		convertRawItem(item, &itemWithAssets)
+		if err := convertRawItem(item, &itemWithAssets); err != nil {
+			return err
+		}
 		*items = append(*items, itemWithAssets)
 	}
 
@@ -113,7 +119,9 @@ func DownloadUserProducts(username string, items *[]model.ItemWithAssets) error 
 
 	for _, item := range raws {
 		var itemWithAssets model.ItemWithAssets
-		convertRawItem(item, &itemWithAssets)
+		if err := convertRawItem(item, &itemWithAssets); err != nil {
+			return err
+		}
 		*items = append(*items, itemWithAssets)
 	}
 
