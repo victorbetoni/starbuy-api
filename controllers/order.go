@@ -16,6 +16,9 @@ func GetOrders(c *gin.Context) (int, error) {
 
 	var purchases []model.Order
 	if err := repository.DownloadPurchases(user, &purchases); err != nil {
+		if err == sql.ErrNoRows {
+			return http.StatusNotFound, errors.New("Nenhum pedido encontrado")
+		}
 		return http.StatusInternalServerError, err
 	}
 

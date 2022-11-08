@@ -29,7 +29,7 @@ func AbortOnError(next util.HandlerFunc) util.HandlerFunc {
 			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error()})
 			return 0, nil
 		}
-		return next(c)
+		return 0, nil
 	}
 }
 
