@@ -23,6 +23,14 @@ func Authorize(next util.HandlerFunc) util.HandlerFunc {
 	}
 }
 
+func CORS(next util.HandlerFunc) util.HandlerFunc {
+	return func(c *gin.Context) (int, error) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+		return next(c)
+	}
+}
+
 func AbortOnError(next util.HandlerFunc) util.HandlerFunc {
 	return func(c *gin.Context) (int, error) {
 		if status, err := next(c); err != nil {
