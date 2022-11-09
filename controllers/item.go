@@ -22,7 +22,7 @@ func PostItem(c *gin.Context) (int, error) {
 
 	var item model.PostedItem
 	if err := c.BindJSON(&item); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error()})
 		return 0, nil
 	}
 
@@ -30,7 +30,7 @@ func PostItem(c *gin.Context) (int, error) {
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": false, "message": err.Error()})
 		return 0, nil
 	}
 
@@ -42,7 +42,7 @@ func PostItem(c *gin.Context) (int, error) {
 
 	item.Item.Seller = user
 	if err := repository.InsertItem(item); err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": false, "message": err.Error()})
+		c.JSON(http.StatusOK, gin.H{"status": false, "message": err.Error()})
 		return 0, nil
 	}
 
