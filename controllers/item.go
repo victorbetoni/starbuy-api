@@ -22,8 +22,6 @@ func PostItem(c *gin.Context) (int, error) {
 
 	var item model.PostedItem
 	if err := c.BindJSON(&item); err != nil {
-		c.Error(err)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": false, "message": err.Error()})
 		return 0, nil
 		//return http.StatusBadRequest, errors.New("bad request")
 	}
