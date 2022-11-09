@@ -22,18 +22,14 @@ func PostItem(c *gin.Context) (int, error) {
 
 	var item model.PostedItem
 	if err := c.BindJSON(&item); err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": false, "message": err.Error()})
-		return 0, nil
-		//return http.StatusBadRequest, errors.New("bad request")
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	item.Item.Identifier = strings.Replace(uuid.New().String(), "-", "", 4)
 	user, err := authorization.ExtractUser(c)
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": false, "message": err.Error()})
-		//return http.StatusInternalServerError, err
-		return 0, nil
+		return http.StatusInternalServerError, err
 	}
 
 	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
@@ -44,9 +40,7 @@ func PostItem(c *gin.Context) (int, error) {
 
 	item.Item.Seller = user
 	if err := repository.InsertItem(item); err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"status": false, "message": err.Error()})
-		return 0, nil
-		//return http.StatusInternalServerError, err
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, item)
