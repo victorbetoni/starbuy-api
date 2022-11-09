@@ -121,10 +121,10 @@ func GetItem(c *gin.Context) (int, error) {
 func GetAllItems(c *gin.Context) (int, error) {
 	var items []model.ItemWithAssets
 	if err := repository.DownloadAllItems(&items); err != nil {
-		if err == sql.ErrNoRows {
+		/*if err == sql.ErrNoRows {
 			return http.StatusNoContent, errors.New("no content")
 		}
-		return http.StatusInternalServerError, err
+		return http.StatusInternalServerError, err*/
 	}
 
 	c.JSON(http.StatusOK, items)
