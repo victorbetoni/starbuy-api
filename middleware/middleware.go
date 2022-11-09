@@ -11,12 +11,12 @@ import (
 func Authorize(next util.HandlerFunc) util.HandlerFunc {
 	return func(c *gin.Context) (int, error) {
 		if err := authorization.ValidateToken(c); err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
 			return 0, nil
 		}
 
 		if _, err := authorization.ExtractUser(c); err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
 			return 0, nil
 		}
 		return next(c)
