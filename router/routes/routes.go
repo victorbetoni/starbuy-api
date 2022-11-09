@@ -30,12 +30,11 @@ func Configure(router *gin.Engine) *gin.Engine {
 	routes = append(routes, Address)
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:8080", "https://starbuycommerce.herokuapp.com"},
+		AllowOrigins:     []string{"http://localhost:3000", "https://starbuycommerce.herokuapp.com"},
 		AllowMethods:     []string{"PUT", "DELETE", "POST", "GET"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "X-Requested-With", "Access-Control-Allow-Origin", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		AllowAllOrigins:  true,
 		MaxAge:           12 * time.Hour,
 	}))
 	for _, x := range routes {
