@@ -22,8 +22,7 @@ func PostItem(c *gin.Context) (int, error) {
 
 	var item model.PostedItem
 	if err := c.BindJSON(&item); err != nil {
-		return 0, nil
-		//return http.StatusBadRequest, errors.New("bad request")
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	item.Item.Identifier = strings.Replace(uuid.New().String(), "-", "", 4)
