@@ -31,7 +31,7 @@ func AbortOnError(next util.HandlerFunc) util.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
 
 		if status, err := next(c); err != nil {
-			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error()})
+			c.JSON(status, gin.H{"status": false, "message": err.Error()})
 		}
 		return 0, nil
 	}
