@@ -17,6 +17,15 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = fmt.Sprint(util.GrabConfig().PortAPI)
+		if err := os.Setenv("CLOUDINARY_URL", util.GrabConfig().CloudinaryURL); err != nil {
+			return
+		}
+		if err := os.Setenv("JWT_SIGN", util.GrabConfig().JWTSign); err != nil {
+			return
+		}
+		if err := os.Setenv("DATABASE_URL", util.GrabConfig().DatabaseURL); err != nil {
+			return
+		}
 	}
 
 	var err = database.Connect()

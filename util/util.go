@@ -2,7 +2,6 @@ package util
 
 import (
 	"errors"
-
 	"github.com/badoux/checkmail"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -11,8 +10,11 @@ import (
 type HandlerFunc func(*gin.Context) (int, error)
 
 type GlobalConfig struct {
-	Driver  string `mapstructure:"DRIVER"`
-	PortAPI int    `mapstructure:"API_PORT"`
+	Driver        string `mapstructure:"DRIVER"`
+	PortAPI       int    `mapstructure:"API_PORT"`
+	JWTSign       string `mapstructure:"JWT_SIGN"`
+	DatabaseURL   string `mapstructure:"DATABASE_URL"`
+	CloudinaryURL string `mapstructure:"CLOUDINARY_URL"`
 }
 
 var config GlobalConfig
