@@ -30,15 +30,11 @@ func Configure(router *gin.Engine) *gin.Engine {
 	routes = append(routes, Address)
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://foo.com"},
-		AllowMethods:     []string{"PUT", "PATCH"},
-		AllowHeaders:     []string{"Origin"},
+		AllowMethods:     []string{"PUT", "POST", "DELETE", "GET"},
 		ExposeHeaders:    []string{"Content-Length"},
+		AllowAllOrigins:  true,
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://github.com"
-		},
-		MaxAge: 12 * time.Hour,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	for _, x := range routes {

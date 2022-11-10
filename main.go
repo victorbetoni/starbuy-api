@@ -12,7 +12,10 @@ import (
 
 func main() {
 
-	util.LoadConfig(".")
+	err := util.LoadConfig(".")
+	if err != nil {
+		return
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -28,13 +31,12 @@ func main() {
 		}
 	}
 
-	var err = database.Connect()
-	var db = database.GrabDB()
-	if err != nil {
+	if err := database.Connect(); err != nil {
 		panic(err.Error())
-	} else {
-		fmt.Println("Database connection stablished")
 	}
+	var db = database.GrabDB()
+	fmt.Println("Database connection stablished")
+
 	err = nil
 	if err = db.Ping(); err != nil {
 		fmt.Println(err.Error())
