@@ -45,5 +45,8 @@ func main() {
 	fmt.Println("Listening and serving port ", port)
 
 	router := router.Build()
-	router.Run(fmt.Sprintf(":%s", port))
+	err = router.Run(fmt.Sprintf(":%s", port))
+	if err != nil {
+		return
+	}
 }
