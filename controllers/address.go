@@ -2,7 +2,10 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -76,7 +79,23 @@ func PostAddress(c *gin.Context) (int, error) {
 		return http.StatusBadRequest, errors.New("bad request")
 	}
 
-	//TODO: Usar alguma API para verificar se o CEP bate com algum existente
+	resp, err := http.Get(fmt.Sprintf("viacep.com.br/ws/%s/json/", req.CEP))
+	if err != nil {
+		return http.StatusBadRequest, errors.New("bad request")
+	}
+
+	type CEPResp struct {
+		_ bool `json:"error"`
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return http.StatusInternalServerError, errors.New(err.Error())
+	}
+
+	if err := json.Unmarshal(body, &CEPResp{}); err == nil {
+		return http.StatusBadRequest, errors.New("bad request")
+	}
 
 	address := model.RawAddress{
 		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
