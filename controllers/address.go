@@ -62,6 +62,7 @@ func PostAddress(c *gin.Context) (int, error) {
 	user, _ := authorization.ExtractUser(c)
 
 	type Request struct {
+		Name       string `json:"name"`
 		CEP        string `json:"cep"`
 		Number     int    `json:"number"`
 		Complement string `json:"complement"`
@@ -103,6 +104,7 @@ func PostAddress(c *gin.Context) (int, error) {
 		CEP:        req.CEP,
 		Number:     req.Number,
 		Complement: req.Complement,
+		Name:       req.Name,
 	}
 
 	if err := repository.InsertAddress(address); err != nil {

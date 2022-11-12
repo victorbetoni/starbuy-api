@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 CREATE TABLE IF NOT EXISTS addresses (
     identifier VARCHAR(64) NOT NULL PRIMARY KEY,
+    name       VARCHAR(64) NOT NULL,
     holder     VARCHAR(20) NOT NULL,
     cep        CHAR(8)     NOT NULL,
     number     INTEGER     NOT NULL,
@@ -89,8 +90,11 @@ CREATE TABLE IF NOT EXISTS orders (
     product       VARCHAR(64)    NOT NULL,
     amount        INTEGER        NOT NULL,
     price         DECIMAL(10, 2) NOT NULL,
+    send_to       VARCHAR(64) NOT NULL,
+    date       DATE NOT NULL,
     status INTEGER NOT NULL,
 
+    FOREIGN KEY (send_to) REFERENCES addresses(identifier),
     FOREIGN KEY (holder) REFERENCES users (username)
 );
 

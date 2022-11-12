@@ -8,6 +8,8 @@ type Order struct {
 	Price      float64        `json:"price"`
 	Quantity   int            `json:"quantity"`
 	Status     int            `json:"status"`
+	SendTo     Address        `json:"send_to"`
+	Date       string         `json:"date"`
 }
 
 type OrderWithItem struct {
@@ -23,4 +25,6 @@ type RawOrder struct {
 	Price      float64 `json:"price" db:"price"`
 	Quantity   int     `json:"quantity" db:"amount"`
 	Status     int     `json:"status" db:"status"`
+	SendTo     string  `json:"send_to" db:"send_to"`
+	Date       string  `json:"date" db:"date"`
 }

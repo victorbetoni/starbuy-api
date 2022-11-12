@@ -68,12 +68,17 @@ func DownloadPurchase(identifier string, order *model.Order) error {
 
 	var customer model.User
 	var item model.ItemWithAssets
+	var address model.Address
 
 	if err := DownloadUser(raw.Customer, &customer); err != nil {
 		return err
 	}
 
 	if err := DownloadItem(raw.Item, &item); err != nil {
+		return err
+	}
+
+	if err := DownloadAddress(raw.SendTo, &address); err != nil {
 		return err
 	}
 
@@ -84,6 +89,8 @@ func DownloadPurchase(identifier string, order *model.Order) error {
 	order.Price = raw.Price
 	order.Item = item
 	order.Status = raw.Status
+	order.SendTo = address
+	order.Date = raw.Date
 
 	return nil
 }
@@ -92,7 +99,7 @@ func InsertPurchase(purchase model.Order) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()
-	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5,$6,$7)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price, 0)
+	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price, purchase.SendTo, purchase.Date, 0)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
