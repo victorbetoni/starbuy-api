@@ -82,7 +82,7 @@ func PostAddress(c *gin.Context) (int, error) {
 
 	resp, err := http.Get(fmt.Sprintf("viacep.com.br/ws/%s/json/", req.CEP))
 	if err != nil {
-		return http.StatusBadRequest, errors.New("bad request")
+		return http.StatusInternalServerError, err
 	}
 
 	type CEPResp struct {
@@ -95,7 +95,7 @@ func PostAddress(c *gin.Context) (int, error) {
 	}
 
 	if err := json.Unmarshal(body, &CEPResp{}); err == nil {
-		return http.StatusBadRequest, errors.New("bad request")
+		return http.StatusBadRequest, errors.New("CEP inválido")
 	}
 
 	address := model.RawAddress{
