@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"starbuy/authorization"
 	"starbuy/model"
@@ -82,7 +81,6 @@ func PostAddress(c *gin.Context) (int, error) {
 
 	resp, err := http.Get(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", req.CEP))
 	if err != nil {
-		fmt.Println(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", req.CEP))
 		return http.StatusInternalServerError, err
 	}
 
@@ -90,12 +88,7 @@ func PostAddress(c *gin.Context) (int, error) {
 		_ bool `json:"error"`
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return http.StatusInternalServerError, errors.New(err.Error())
-	}
-
-	if err := json.Unmarshal(body, &CEPResp{}); err == nil {
+	if err := json.NewDecoder(resp.Body).Decode(&CEPResp{}); err == nil {
 		return http.StatusBadRequest, errors.New("CEP inválido")
 	}
 
