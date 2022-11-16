@@ -97,6 +97,8 @@ func PostAddress(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
+	resp.Body.Close()
+
 	if response.Error {
 		return http.StatusBadRequest, errors.New("CEP inválido.")
 	}
