@@ -73,6 +73,8 @@ func PostAddress(c *gin.Context) (int, error) {
 		return http.StatusBadRequest, errors.New("bad request")
 	}
 
+	fmt.Println("1")
+
 	req.CEP = strings.Replace(req.CEP, "-", "", 1)
 
 	if len(req.CEP) > 8 {
@@ -84,6 +86,8 @@ func PostAddress(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
+	fmt.Println("2")
+
 	type CEPResp struct {
 		Error bool `json:"error"`
 	}
@@ -93,9 +97,11 @@ func PostAddress(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	if response.Error == true {
+	if response.Error {
 		return http.StatusBadRequest, errors.New("CEP inválido.")
 	}
+
+	fmt.Println("3")
 
 	address := model.RawAddress{
 		Identifier: strings.Replace(uuid.New().String(), "-", "", 4),
@@ -106,9 +112,13 @@ func PostAddress(c *gin.Context) (int, error) {
 		Name:       req.Name,
 	}
 
+	fmt.Println(address)
+
 	if err := repository.InsertAddress(address); err != nil {
 		return http.StatusInternalServerError, err
 	}
+
+	fmt.Println("4")
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Endereço criado"})
 	return http.StatusOK, nil
