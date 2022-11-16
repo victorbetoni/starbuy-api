@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/lib/pq"
 	"os"
 	"starbuy/database"
 	"starbuy/router"
 	"starbuy/util"
-
-	_ "github.com/lib/pq"
 )
 
-func main() {
+func init() {
 
+}
+
+func main() {
 	err := util.LoadConfig(".")
 	if err != nil {
 		return
