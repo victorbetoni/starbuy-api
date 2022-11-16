@@ -80,8 +80,9 @@ func PostAddress(c *gin.Context) (int, error) {
 		return http.StatusBadRequest, errors.New("bad request")
 	}
 
-	resp, err := http.Get(fmt.Sprintf("https://viacep.com.br/ws/%s/json/", req.CEP))
+	resp, err := http.Get(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", req.CEP))
 	if err != nil {
+		fmt.Println(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", req.CEP))
 		return http.StatusInternalServerError, err
 	}
 
