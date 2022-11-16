@@ -85,11 +85,16 @@ func PostAddress(c *gin.Context) (int, error) {
 	}
 
 	type CEPResp struct {
-		_ bool `json:"error"`
+		Error bool `json:"error"`
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&CEPResp{}); err == nil {
-		return http.StatusBadRequest, errors.New("CEP inválido")
+	response := &CEPResp{}
+	if err := json.NewDecoder(resp.Body).Decode(&response); err == nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if response.Error == true {
+		return http.StatusBadRequest, errors.New("CEP inválido.")
 	}
 
 	address := model.RawAddress{
