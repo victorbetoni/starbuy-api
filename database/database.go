@@ -4,6 +4,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"os"
+	"time"
 )
 
 var db sqlx.DB
@@ -18,6 +19,9 @@ func Connect() (err error) {
 	if database, err = sqlx.Open("postgres", os.Getenv("DATABASE_URL")); err != nil {
 		return err
 	}
+	db.SetMaxIdleConns(5)
+	db.SetMaxOpenConns(20)
+	db.SetConnMaxIdleTime(time.Minute * 5)
 	db = *database
 	return
 }

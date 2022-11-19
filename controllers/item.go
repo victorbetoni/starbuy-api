@@ -4,7 +4,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
+	"os"
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
@@ -29,11 +32,11 @@ func PostItem(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	/*cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
 	resp, err := cld.Upload.Upload(c, item.Assets[0], uploader.UploadParams{
 		PublicID: "assets/" + item.Item.Identifier})
 
-	item.Assets[0] = resp.URL*/
+	item.Assets[0] = resp.URL
 
 	item.Item.Seller = user
 	if err := repository.InsertItem(item); err != nil {
