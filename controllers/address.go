@@ -92,3 +92,16 @@ func PostAddress(c *gin.Context) (int, error) {
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Endereço criado"})
 	return http.StatusOK, nil
 }
+
+func DeleteAddress(c *gin.Context) (int, error) {
+	id := c.Param("id")
+
+	user, _ := authorization.ExtractUser(c)
+
+	if err := repository.DeleteAddress(id, user); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Endereço removido"})
+	return 0, nil
+}

@@ -26,6 +26,14 @@ var Address = []Route{
 	{
 		URI:         "/user/address/:id",
 		RequireAuth: true,
+		Action:      controllers.DeleteAddress,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.DELETE(uri, hf)
+		},
+	},
+	{
+		URI:         "/user/address/:id",
+		RequireAuth: true,
 		Action:      controllers.GetAddress,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
 			e.GET(uri, hf)

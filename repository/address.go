@@ -5,6 +5,17 @@ import (
 	"starbuy/model"
 )
 
+func DeleteAddress(address string, username string) error {
+	db := database.GrabDB()
+	tx := db.MustBegin()
+
+	tx.MustExec("DELETE FROM addresses WHERE identifier=$1 AND holder=$2", address, username)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func DownloadAddress(identifier string, address *model.Address) error {
 	db := database.GrabDB()
 
