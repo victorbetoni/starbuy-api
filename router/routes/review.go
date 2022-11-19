@@ -8,7 +8,7 @@ import (
 
 var Review = []Route{
 	{
-		URI:         "/user/reviews/received/:user",
+		URI:         "/received_reviews/:user",
 		RequireAuth: false,
 		Action:      controllers.GetUserReceivedReviews,
 		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
