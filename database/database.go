@@ -19,10 +19,10 @@ func Connect() (err error) {
 	if database, err = sqlx.Open("postgres", os.Getenv("DATABASE_URL")); err != nil {
 		return err
 	}
+	db = *database
 	db.SetMaxIdleConns(5)
 	db.SetMaxOpenConns(20)
 	db.SetConnMaxIdleTime(time.Minute * 5)
-	db = *database
 	return
 }
 
