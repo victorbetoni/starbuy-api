@@ -34,6 +34,7 @@ func DownloadAddress(identifier string, address *model.Address) error {
 	address.Complement = stored.Complement
 	address.Identifier = stored.Identifier
 	address.Number = stored.Number
+	address.Name = stored.Name
 
 	return nil
 }
