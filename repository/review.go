@@ -10,7 +10,7 @@ func QueryUserReceivedReviews(username string, reviews *[]model.Review) (float64
 
 	count, sum := 0, 0
 	var raw []model.RawReview
-	if err := db.Select(&raw, "SELECT R.product, R.username, R.msg, R.rate  FROM reviews R INNER JOIN products P ON R.product = P.identifier AND P.seller=$1", username); err != nil {
+	if err := db.Select(&raw, "SELECT R.product, R.username, R.message, R.rate  FROM reviews R INNER JOIN products P ON R.product = P.identifier AND P.seller=$1", username); err != nil {
 		return 0, err
 	}
 
