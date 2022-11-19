@@ -9,6 +9,7 @@ import (
 	"starbuy/authorization"
 	"starbuy/model"
 	"starbuy/repository"
+	"time"
 )
 
 func GetOrders(c *gin.Context) (int, error) {
@@ -54,9 +55,27 @@ func CreateOrder(c *gin.Context) (int, error) {
 	var seller model.User
 	var customer model.User
 
+	type OrderReq struct {
+		SendTo string `json:"send_to"`
+	}
+
+	req := &OrderReq{}
+	if err := c.BindJSON(&req); err != nil {
+		return http.StatusBadRequest, errors.New("bad request")
+	}
+
 	if err := repository.DownloadUser(user, &customer); err != nil {
 		if err == sql.ErrNoRows {
 			return http.StatusNotFound, errors.New("Cliente não encontrado")
+		}
+		return http.StatusInternalServerError, err
+	}
+
+	address := model.Address{}
+
+	if err := repository.DownloadAddress(req.SendTo, &address); err != nil {
+		if err == sql.ErrNoRows {
+			return http.StatusNotFound, errors.New("Endereço não encontrado")
 		}
 		return http.StatusInternalServerError, err
 	}
@@ -81,6 +100,8 @@ func CreateOrder(c *gin.Context) (int, error) {
 			Customer:   customer,
 			Seller:     seller,
 			Price:      cart.Item.Item.Price * float64(cart.Quantity),
+			Date:       time.Now().Format("2006-02-01"),
+			SendTo:     address,
 		}
 		if err := repository.InsertPurchase(order); err != nil {
 			return http.StatusInternalServerError, err

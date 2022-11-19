@@ -99,7 +99,7 @@ func InsertPurchase(purchase model.Order) error {
 	db := database.GrabDB()
 
 	tx := db.MustBegin()
-	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price, purchase.SendTo, purchase.Date, 0)
+	tx.MustExec("INSERT INTO orders VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)", purchase.Identifier, purchase.Customer.Username, purchase.Seller.Username, purchase.Item.Item.Identifier, purchase.Quantity, purchase.Price, purchase.SendTo.Identifier, purchase.Date, 0)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
