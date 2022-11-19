@@ -100,7 +100,7 @@ func CreateOrder(c *gin.Context) (int, error) {
 			Customer:   customer,
 			Seller:     seller,
 			Price:      cart.Item.Item.Price * float64(cart.Quantity),
-			Date:       time.Now().Format("2006-02-01"),
+			Date:       time.Now().Format("2006-01-02"),
 			SendTo:     address,
 		}
 		if err := repository.InsertPurchase(order); err != nil {
