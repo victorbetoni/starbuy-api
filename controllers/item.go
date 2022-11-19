@@ -22,6 +22,10 @@ func PostItem(c *gin.Context) (int, error) {
 
 	var item model.PostedItem
 	if err := c.BindJSON(&item); err != nil {
+		if err, raw := c.GetRawData(); err == nil {
+			fmt.Println("nao deu erro")
+			fmt.Println(raw)
+		}
 		return http.StatusBadRequest, errors.New("bad request")
 	}
 
