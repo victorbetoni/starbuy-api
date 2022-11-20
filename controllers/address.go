@@ -113,6 +113,26 @@ func DeleteAddress(c *gin.Context) (int, error) {
 
 	user, _ := authorization.ExtractUser(c)
 
+	type Count struct {
+		Count int `db:"count"`
+	}
+
+	var count Count
+	db := database.GrabDB()
+	if err := db.Get(&count, "SELECT COUNT(*) FROM orders WHERE send_to=$1 AND status != 2", id); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if count.Count != 0 {
+		return http.StatusInternalServerError, errors.New("Você não pode deletar esse endereço pois existem pedidos em andamento nele.")
+	}
+
+	tx := db.MustBegin()
+	tx.MustExec("DELETE FROM orders WHERE send_to=$1 AND holder=$2", id, user)
+	if err := tx.Commit(); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
 	if err := repository.DeleteAddress(id, user); err != nil {
 		return http.StatusInternalServerError, err
 	}
