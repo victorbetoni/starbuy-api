@@ -73,6 +73,14 @@ func CreateOrder(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
+	var item model.ItemWithAssets
+	if err := repository.DownloadItem(user, &item); err != nil {
+		if err == sql.ErrNoRows {
+			return http.StatusNotFound, errors.New("Vendedor não encontrado")
+		}
+		return http.StatusInternalServerError, err
+	}
+
 	address := model.Address{}
 
 	if err := repository.DownloadAddress(req.SendTo, &address); err != nil {
@@ -82,15 +90,7 @@ func CreateOrder(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	if err := repository.DownloadUser(user, &seller); err != nil {
-		if err == sql.ErrNoRows {
-			return http.StatusNotFound, errors.New("Vendedor não encontrado")
-		}
-		return http.StatusInternalServerError, err
-	}
-
-	var item model.ItemWithAssets
-	if err := repository.DownloadItem(user, &item); err != nil {
+	if err := repository.DownloadUser(item.Item.Seller.Username, &seller); err != nil {
 		if err == sql.ErrNoRows {
 			return http.StatusNotFound, errors.New("Vendedor não encontrado")
 		}
@@ -108,6 +108,7 @@ func CreateOrder(c *gin.Context) (int, error) {
 		SendTo:     address,
 		Status:     0,
 	}
+
 	if err := repository.InsertPurchase(order); err != nil {
 		return http.StatusInternalServerError, err
 	}
