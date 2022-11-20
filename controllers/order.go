@@ -56,7 +56,9 @@ func CreateOrder(c *gin.Context) (int, error) {
 	var customer model.User
 
 	type OrderReq struct {
-		SendTo string `json:"send_to"`
+		SendTo   string `json:"send_to"`
+		Item     string `json:"item"`
+		Quantity int    `json:"quantity"`
 	}
 
 	req := &OrderReq{}
@@ -87,25 +89,27 @@ func CreateOrder(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	var items []model.CartItem
-	if err := repository.DownloadCart(user, &items); err != nil {
+	var item model.ItemWithAssets
+	if err := repository.DownloadItem(user, &item); err != nil {
+		if err == sql.ErrNoRows {
+			return http.StatusNotFound, errors.New("Vendedor não encontrado")
+		}
 		return http.StatusInternalServerError, err
 	}
 
-	for _, cart := range items {
-		order := model.Order{
-			Identifier: uuid.New().String(),
-			Quantity:   cart.Quantity,
-			Item:       *cart.Item,
-			Customer:   customer,
-			Seller:     seller,
-			Price:      cart.Item.Item.Price * float64(cart.Quantity),
-			Date:       time.Now().Format("2006-01-02"),
-			SendTo:     address,
-		}
-		if err := repository.InsertPurchase(order); err != nil {
-			return http.StatusInternalServerError, err
-		}
+	order := model.Order{
+		Identifier: uuid.New().String(),
+		Quantity:   req.Quantity,
+		Item:       item,
+		Customer:   customer,
+		Seller:     seller,
+		Price:      item.Item.Price * float64(req.Quantity),
+		Date:       time.Now().Format("2006-01-02"),
+		SendTo:     address,
+		Status:     0,
+	}
+	if err := repository.InsertPurchase(order); err != nil {
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Compra realizada com sucesso!"})
