@@ -5,6 +5,20 @@ import (
 	"starbuy/model"
 )
 
+func DeleteItem(item string) error {
+	db := database.GrabDB()
+
+	tx := db.MustBegin()
+	tx.MustExec("DELETE FROM product_images WHERE product=$1", item)
+
+	tx = db.MustBegin()
+	tx.MustExec("DELETE FROM products WHERE identifier=$1", item)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func InsertItem(item model.PostedItem) error {
 	db := database.GrabDB()
 

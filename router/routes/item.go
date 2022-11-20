@@ -47,4 +47,12 @@ var Item = []Route{
 			e.POST(uri, hf)
 		},
 	},
+	{
+		URI:         "/item/:id",
+		RequireAuth: true,
+		Action:      controllers.DeleteItem,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.DELETE(uri, hf)
+		},
+	},
 }

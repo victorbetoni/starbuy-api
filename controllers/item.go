@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"starbuy/authorization"
+	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
 	"strconv"
@@ -140,5 +141,51 @@ func GetCategory(c *gin.Context) (int, error) {
 	}
 
 	c.JSON(http.StatusOK, items)
+	return 0, nil
+}
+
+func DeleteItem(c *gin.Context) (int, error) {
+	id := c.Param("id")
+
+	user, _ := authorization.ExtractUser(c)
+
+	type Count struct {
+		Count int `db:"count"`
+	}
+
+	var item model.ItemWithAssets
+	if err := repository.DownloadItem(id, &item); err != nil {
+		if err == sql.ErrNoRows {
+			return http.StatusNotFound, errors.New("not found")
+		}
+		return http.StatusInternalServerError, err
+	}
+
+	if item.Item.Seller.Username != user {
+		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
+	}
+
+	var count Count
+	db := database.GrabDB()
+	if err := db.Get(&count, "SELECT COUNT(*) FROM orders WHERE product=$1", id); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if count.Count != 0 {
+		return http.StatusInternalServerError, errors.New("Você não pode deletar esse item pois existem pedidos para ele.")
+	}
+
+	tx := db.MustBegin()
+	tx.MustExec("DELETE FROM shopping_cart WHERE product=$1", id)
+	if err := tx.Commit(); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if err := repository.DeleteAddress(id, user); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Produto removido com sucesso"})
+	return 0, nil
 	return 0, nil
 }
