@@ -181,11 +181,10 @@ func DeleteItem(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	if err := repository.DeleteAddress(id, user); err != nil {
+	if err := repository.DeleteItem(id); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Produto removido com sucesso"})
-	return 0, nil
 	return 0, nil
 }
