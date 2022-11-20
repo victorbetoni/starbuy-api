@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -90,6 +91,7 @@ func CreateOrder(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
+	fmt.Println(item.Item.Seller.Username)
 	if err := repository.DownloadUser(item.Item.Seller.Username, &seller); err != nil {
 		if err == sql.ErrNoRows {
 			return http.StatusNotFound, errors.New("Vendedor não encontrado")
