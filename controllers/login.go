@@ -29,7 +29,7 @@ func Auth(c *gin.Context) (int, error) {
 	recorded := Login{}
 	if err := db.Get(&recorded, "SELECT * FROM login WHERE username=$1", login.Username); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found", "user": "", "jwt": ""})
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Usuário não encontrado", "user": "", "jwt": ""})
 			return 0, nil
 		}
 		return http.StatusInternalServerError, err
@@ -37,7 +37,7 @@ func Auth(c *gin.Context) (int, error) {
 
 	var user model.User
 	if err := repository.DownloadUser(login.Username, &user); err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "not found", "user": nil, "jwt": ""})
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"status": false, "message": "Usuário não encontrado", "user": nil, "jwt": ""})
 		return 0, nil
 	}
 
