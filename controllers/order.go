@@ -75,9 +75,9 @@ func CreateOrder(c *gin.Context) (int, error) {
 	}
 
 	var item model.ItemWithAssets
-	if err := repository.DownloadItem(user, &item); err != nil {
+	if err := repository.DownloadItem(req.Item, &item); err != nil {
 		if err == sql.ErrNoRows {
-			return http.StatusNotFound, errors.New("Vendedor não encontrado")
+			return http.StatusNotFound, errors.New("Item não encontrado")
 		}
 		return http.StatusInternalServerError, err
 	}
