@@ -147,7 +147,7 @@ func UpdateOrder(c *gin.Context) (int, error) {
 func GetReceivedOrders(c *gin.Context) (int, error) {
 	user, _ := authorization.ExtractUser(c)
 
-	var orders []model.OrderWithItem
+	var orders []model.Order
 	if err := repository.DownloadOrders(user, &orders); err != nil {
 		if err == sql.ErrNoRows {
 			return http.StatusNotFound, errors.New("not found")
