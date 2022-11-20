@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"starbuy/authorization"
+	"starbuy/database"
 	"starbuy/model"
 	"starbuy/repository"
 	"strings"
@@ -69,6 +70,20 @@ func PostAddress(c *gin.Context) (int, error) {
 
 	if err := c.BindJSON(&req); err != nil {
 		return http.StatusBadRequest, errors.New("bad request")
+	}
+
+	type Count struct {
+		Count int `db:"count"`
+	}
+
+	var count Count
+	db := database.GrabDB()
+	if err := db.Get(&count, "SELECT COUNT(*) FROM address WHERE name=$1 AND holder=$2", req.Name, user); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if count.Count != 0 {
+		return http.StatusBadRequest, errors.New("Você já tem um endereço com esse nome")
 	}
 
 	req.CEP = strings.Replace(req.CEP, "-", "", 1)

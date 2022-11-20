@@ -109,7 +109,7 @@ func GetUser(c *gin.Context) (int, error) {
 	response := Response{}
 	if err := repository.DownloadUser(queried, &user); err != nil {
 		if err == sql.ErrNoRows {
-			return http.StatusNotFound, errors.New("not found")
+			return http.StatusNotFound, errors.New("Usuário não encontrado")
 		}
 		return http.StatusInternalServerError, err
 	}
@@ -161,7 +161,7 @@ func GetUser(c *gin.Context) (int, error) {
 
 	if err := repository.DownloadUser(queried, &user); err != nil {
 		if err == sql.ErrNoRows {
-			return http.StatusNotFound, errors.New("not found")
+			return http.StatusNotFound, errors.New("Usuário não encontrado")
 		}
 		return http.StatusInternalServerError, err
 	}
