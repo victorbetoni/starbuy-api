@@ -78,7 +78,7 @@ func PostAddress(c *gin.Context) (int, error) {
 
 	var count Count
 	db := database.GrabDB()
-	if err := db.Get(&count, "SELECT COUNT(*) FROM address WHERE name=$1 AND holder=$2", req.Name, user); err != nil {
+	if err := db.Get(&count, "SELECT COUNT(*) FROM addresses WHERE name=$1 AND holder=$2", req.Name, user); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
