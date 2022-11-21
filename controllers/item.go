@@ -33,7 +33,7 @@ func PostItem(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	cld, _ := cloudinary.NewFromURL(os.Getenv("CLOUDINARY_URL"))
+	cld, _ := cloudinary.NewFromURL(os.Getenv("cloudinary://222545453715729:Acuq-7bxOx1L_bYmEpDCfjIe_40@starbuycommmerce"))
 	resp, err := cld.Upload.Upload(c, item.Assets[0], uploader.UploadParams{
 		PublicID: "assets/" + item.Item.Identifier})
 

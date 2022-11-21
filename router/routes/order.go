@@ -32,4 +32,12 @@ var Order = []Route{
 			e.GET(uri, hf)
 		},
 	},
+	{
+		URI:         "/order/:id",
+		RequireAuth: true,
+		Action:      controllers.UpdateOrder,
+		Assign: func(e *gin.Engine, hf gin.HandlerFunc, uri string) {
+			e.POST(uri, hf)
+		},
+	},
 }
