@@ -3,7 +3,6 @@ package controllers
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"net/http"
@@ -113,8 +112,6 @@ func GetItem(c *gin.Context) (int, error) {
 	response.Item = item
 	response.Average = average
 
-	fmt.Println(response)
-
 	c.JSON(http.StatusOK, response)
 	return 0, nil
 }
@@ -149,9 +146,6 @@ func GetCategory(c *gin.Context) (int, error) {
 
 func DeleteItem(c *gin.Context) (int, error) {
 	id := c.Param("id")
-
-	fmt.Println("1")
-
 	user, _ := authorization.ExtractUser(c)
 
 	type Count struct {
@@ -169,16 +163,11 @@ func DeleteItem(c *gin.Context) (int, error) {
 	if item.Item.Seller.Username != user {
 		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
 	}
-
-	fmt.Println("2")
-
 	var count Count
 	db := database.GrabDB()
 	if err := db.Get(&count, "SELECT COUNT(*) FROM orders WHERE product=$1", id); err != nil {
 		return http.StatusInternalServerError, err
 	}
-
-	fmt.Println("3")
 
 	if count.Count != 0 {
 		return http.StatusInternalServerError, errors.New("Você não pode deletar esse item pois existem pedidos para ele.")
@@ -190,13 +179,9 @@ func DeleteItem(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	fmt.Println("4")
-
 	if err := repository.DeleteItem(id); err != nil {
 		return http.StatusInternalServerError, err
 	}
-
-	fmt.Println("5")
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Produto removido com sucesso"})
 	return 0, nil
