@@ -10,6 +10,9 @@ func DeleteItem(item string) error {
 
 	tx := db.MustBegin()
 	tx.MustExec("DELETE FROM product_images WHERE product=$1", item)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
 
 	tx = db.MustBegin()
 	tx.MustExec("DELETE FROM products WHERE identifier=$1", item)
